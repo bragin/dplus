@@ -20,6 +20,8 @@ void a_UIcmd_back(void *vbw);
 void a_UIcmd_back_popup(void *vbw);
 void a_UIcmd_forw(void *vbw);
 void a_UIcmd_forw_popup(void *vbw);
+void a_UIcmd_copy(void *vbw);
+void a_UIcmd_copy_location(void *vbw);
 void a_UIcmd_home(void *vbw);
 void a_UIcmd_reload(void *vbw);
 void a_UIcmd_repush(void *vbw);

@@ -458,6 +458,8 @@ FltkPlatform::FltkPlatform ()
    view = NULL;
    resources = new container::typed::List <ui::FltkResource> (false);
 
+   clipboard = NULL;
+
    resourceFactory.setPlatform (this);
 }
 
@@ -467,6 +469,8 @@ FltkPlatform::~FltkPlatform ()
       Fl::remove_idle (generalStaticIdle, (void*)this);
    delete idleQueue;
    delete resources;
+   if (clipboard)
+     delete clipboard;
 }
 
 void FltkPlatform::setLayout (core::Layout *layout)
@@ -660,7 +664,22 @@ core::style::Tooltip *FltkPlatform::createTooltip (const char *text)
 
 void FltkPlatform::copySelection(const char *text)
 {
+   if (clipboard)
+      delete clipboard;
+
+   // copySelection puts the text into the selection buffer when it's
+   // selected, but we don't have any way to get it back if we want to
+   // copy it to the clipboard later.  Note we can't just put it onto
+   // the clipboard here, since the user may not want to copy it at all.
+   clipboard = new object::String(text);
+
    Fl::copy(text, strlen(text), 0);
+}
+
+void FltkPlatform::copySelectionToClipboard()
+{
+   if (clipboard)
+      Fl::copy(clipboard->chars(), strlen(clipboard->chars()), 1);
 }
 
 core::Imgbuf *FltkPlatform::createImgbuf (core::Imgbuf::Type type,

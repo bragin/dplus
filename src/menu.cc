@@ -120,6 +120,22 @@ static void Menu_add_bookmark_cb(Fl_Widget*, void*)
 }
 
 /*
+ * Copy current location
+ */
+static void Menu_copy_location_cb(Fl_Widget*, void*)
+{
+   a_UIcmd_copy_location(popup_bw);
+}
+
+/*
+ * Copy selected text
+ */
+static void Menu_copy_selection_cb(Fl_Widget*, void*)
+{
+   a_UIcmd_copy(popup_bw);
+}
+
+/*
  * Find text
  */
 static void Menu_find_text_cb(Fl_Widget*, void*)
@@ -297,6 +313,9 @@ void a_Menu_page_popup(BrowserWindow *bw, const DilloUrl *url,
 
    static Fl_Menu_Item *stylesheets = NULL;
    static Fl_Menu_Item pm[] = {
+      {"Copy selected text", 0, Menu_copy_selection_cb,0,0,0,0,0,0},
+      {"Copy current location", 0, Menu_copy_location_cb,0,FL_MENU_DIVIDER,
+       0,0,0,0},
       {"View page source", 0, Menu_view_page_source_cb,0,0,0,0,0,0},
       {"View page bugs", 0, Menu_view_page_bugs_cb,0,0,0,0,0,0},
       {"View stylesheets", 0, Menu_nop_cb,0,FL_SUBMENU_POINTER|FL_MENU_DIVIDER,
@@ -313,12 +332,12 @@ void a_Menu_page_popup(BrowserWindow *bw, const DilloUrl *url,
    a_Url_free(popup_url);
    popup_url = a_Url_dup(url);
 
-   has_bugs == TRUE ? pm[1].activate() : pm[1].deactivate();
+   has_bugs == TRUE ? pm[3].activate() : pm[3].deactivate();
 
    if (strncmp(URL_STR(url), "dpi:/vsource/", 13) == 0)
-      pm[0].deactivate();
+      pm[2].deactivate();
    else
-      pm[0].activate();
+      pm[2].activate();
 
    if (stylesheets) {
       while (stylesheets[j].text) {
@@ -358,10 +377,10 @@ void a_Menu_page_popup(BrowserWindow *bw, const DilloUrl *url,
          stylesheets[j].callback(Menu_stylesheet_cb, a_Url_dup(url));
       }
 
-      pm[2].user_data(stylesheets);
-      pm[2].activate();
+      pm[4].user_data(stylesheets);
+      pm[4].activate();
    } else {
-      pm[2].deactivate();
+      pm[4].deactivate();
    }
 
    a_Timeout_add(0.0, Menu_popup_cb, (void*)pm);

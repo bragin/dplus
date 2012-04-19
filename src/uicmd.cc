@@ -716,6 +716,30 @@ void a_UIcmd_forw_popup(void *vbw)
 }
 
 /*
+ * Copy selected text to clipboard
+ */
+void a_UIcmd_copy(void *vbw)
+{
+   BrowserWindow *bw = (BrowserWindow*)vbw;
+   Layout *l = (Layout *)(bw->render_layout);
+
+   l->copySelectionToClipboard();
+}
+
+/*
+ * Copy the current page's location
+ */
+void a_UIcmd_copy_location(void *vbw)
+{
+   BrowserWindow *bw = (BrowserWindow*)vbw;
+   Layout *l = (Layout *)(bw->render_layout);
+   const DilloUrl *url = a_History_get_url(NAV_TOP_UIDX(bw));
+
+   l->copySelection(URL_STR(url));
+   l->copySelectionToClipboard();
+}
+
+/*
  * Send the browser to home URL
  */
 void a_UIcmd_home(void *vbw)
@@ -1020,6 +1044,7 @@ void a_UIcmd_copy_urlstr(BrowserWindow *bw, const char *urlstr)
 {
    Layout *layout = (Layout*)bw->render_layout;
    layout->copySelection(urlstr);
+   layout->copySelectionToClipboard();
 }
 
 /*

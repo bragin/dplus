@@ -717,6 +717,9 @@ int UI::handle(int event)
       } else if (cmd == KEYS_BOOKMARKS) {
          a_UIcmd_book(a_UIcmd_get_bw_by_widget(this));
          ret = 1;
+      } else if (cmd == KEYS_COPY) {
+         a_UIcmd_copy(a_UIcmd_get_bw_by_widget(this));
+         ret = 1;
       } else if (cmd == KEYS_FIND) {
          findbar_toggle(1);
          ret = 1;

@@ -142,6 +142,8 @@ private:
    FltkView *view;
    lout::container::typed::List <ui::FltkResource> *resources;
 
+   lout::object::String *clipboard;
+
 public:
    FltkPlatform ();
    ~FltkPlatform ();
@@ -171,6 +173,7 @@ public:
    core::Imgbuf *createImgbuf (core::Imgbuf::Type type, int width, int height);
 
    void copySelection(const char *text);
+   void copySelectionToClipboard();
 
    core::ui::ResourceFactory *getResourceFactory ();
 

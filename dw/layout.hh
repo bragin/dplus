@@ -352,6 +352,11 @@ public:
       platform->copySelection(text);
    }
 
+   inline void copySelectionToClipboard()
+   {
+      platform->copySelectionToClipboard();
+   }
+
    inline ui::ResourceFactory *getResourceFactory ()
    {
       return platform->getResourceFactory ();

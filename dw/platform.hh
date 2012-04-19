@@ -149,6 +149,11 @@ public:
    virtual void copySelection(const char *text) = 0;
 
    /**
+    * \brief Save copySelection text to clipboard.
+    */
+   virtual void copySelectionToClipboard() = 0;
+
+   /**
     * ...
     */
    virtual ui::ResourceFactory *getResourceFactory () = 0;
