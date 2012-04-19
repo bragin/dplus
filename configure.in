@@ -43,6 +43,14 @@ AC_PROG_CXX
 AC_PROG_RANLIB
 AC_PROG_CPP
 
+AC_SUBST(RC)
+AC_CHECK_TOOL(RC, windres,)
+AC_ARG_VAR(RC, [Resource Compiler for Windows resources])
+if eval "test x$RC != x"; then
+  windres=yes
+fi
+AM_CONDITIONAL(HAVE_WIN32RES, [test x$windres = xyes])
+
 dnl ----------------------------
 dnl Check our char and int types
 dnl ----------------------------

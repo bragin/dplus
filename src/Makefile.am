@@ -117,5 +117,14 @@ dillo_SOURCES = \
 	xembed.cc \
 	xembed.hh
 
+if HAVE_WIN32RES
+dillo_LDADD += dillo.res
+endif
+
+if HAVE_WIN32RES
+dillo.res: dillo.rc dillo.ico
+	$(RC) -O coff -o $@ $<
+endif
+
 EXTRA_DIST = chg srch keysrc
 sysconf_DATA = keysrc
