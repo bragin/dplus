@@ -18,6 +18,8 @@ AC_ARG_WITH(jpeg-inc, [  --with-jpeg-inc=DIR     Specify where to find libjpeg's
 
 AC_ARG_ENABLE(debug,  [  --enable-debug          Build with additional debugging symbols],
 		    , enable_debug=no)
+AC_ARG_ENABLE(dpi,    [  --enable-dpi            Build Dillo plugins (DPI)],
+                 ,    enable_dpi=no)
 AC_ARG_ENABLE(efence, [  --enable-efence         Try to compile and run with Electric Fence],
                     , enable_efence=no)
 AC_ARG_ENABLE(gprof,  [  --enable-gprof          Try to compile and run with profiling enabled],
@@ -426,6 +428,18 @@ pthread_ok=yes, pthread_ok=no)
 
 esac
 fi
+
+dnl -----------------------------
+dnl Forcibly Disable DPI on MinGW
+dnl -----------------------------
+dnl
+case $target in
+  *-*-mingw*)
+    enable_dpi=no
+    ;;
+
+esac
+AM_CONDITIONAL(BUILD_DPI, [test x$enable_dpi = xyes])
 
 dnl --------------------
 dnl Command line options

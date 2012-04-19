@@ -20,8 +20,10 @@ noinst_PROGRAMS = \
 	dw-resource-test \
 	dw-ui-test \
 	fltk-browser \
-	shapes \
-	cookies
+	shapes
+if BUILD_DPI
+noinst_PROGRAMS += cookies
+endif
 
 dw_anchors_test_SOURCES = dw_anchors_test.cc
 dw_anchors_test_LDADD = \
