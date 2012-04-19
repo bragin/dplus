@@ -95,6 +95,10 @@ dillo_SOURCES = \
 	form.hh \
 	table.cc \
 	table.hh \
+	bms.h \
+	bms.c \
+	bookgui.hh \
+	bookgui.cc \
 	bookmark.c \
 	bookmark.h \
 	dns.c \

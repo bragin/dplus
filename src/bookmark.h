@@ -12,6 +12,9 @@ void a_Bookmarks_add(BrowserWindow *bw, const DilloUrl *url);
 /* TODO: this is for testing purposes */
 void a_Bookmarks_chat_add(BrowserWindow *Bw, char *Cmd, char *answer);
 
+void a_Bookmarks_init(void);
+void a_Bookmarks_freeall(void);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

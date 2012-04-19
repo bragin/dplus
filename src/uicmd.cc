@@ -41,6 +41,7 @@
 #include "msg.h"
 #include "prefs.h"
 #include "misc.h"
+#include "bookgui.hh"
 
 #include "../dw/fltkviewport.hh"
 
@@ -991,11 +992,9 @@ void a_UIcmd_save_link(BrowserWindow *bw, const DilloUrl *url)
 /*
  * Request the bookmarks page
  */
-void a_UIcmd_book(void *vbw)
+void a_UIcmd_book(void *vbw, void *v_wid)
 {
-   DilloUrl *url = a_Url_new("dpi:/bm/", NULL);
-   a_UIcmd_open_url((BrowserWindow*)vbw, url);
-   a_Url_free(url);
+   a_Bookgui_popup((BrowserWindow*)vbw, v_wid);
 }
 
 /*
@@ -1004,6 +1003,15 @@ void a_UIcmd_book(void *vbw)
 void a_UIcmd_add_bookmark(BrowserWindow *bw, const DilloUrl *url)
 {
    a_Bookmarks_add(bw, url);
+}
+
+/*
+ * Add a bookmark for the URL in the active browser window
+ */
+void a_UIcmd_add_bookmark_from_vbw(void *vbw)
+{
+   BrowserWindow *bw = (BrowserWindow*)vbw;
+   a_UIcmd_add_bookmark(bw, a_History_get_url(NAV_TOP_UIDX(bw)));
 }
 
 

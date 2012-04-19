@@ -333,7 +333,7 @@ static void b1_cb(Fl_Widget *wid, void *cb_data)
       break;
    case UI_BOOK:
       if (b == FL_LEFT_MOUSE) {
-         a_UIcmd_book(a_UIcmd_get_bw_by_widget(wid));
+         a_UIcmd_book(a_UIcmd_get_bw_by_widget(wid), wid);
       }
       break;
    case UI_TOOLS:
@@ -410,7 +410,8 @@ void UI::make_toolbar(int tw, int th)
    Reload->tooltip("Reload");
    Save->tooltip("Save this page");
    Stop->tooltip("Stop loading");
-   Bookmarks->tooltip("View bookmarks");
+   Bookmarks->tooltip("Open the bookmarks menu\n"
+                      "(right-click a bookmark or section to edit)");
    Tools->tooltip("Settings");
 }
 
@@ -715,7 +716,10 @@ int UI::handle(int event)
          a_UIcmd_forw(a_UIcmd_get_bw_by_widget(this));
          ret = 1;
       } else if (cmd == KEYS_BOOKMARKS) {
-         a_UIcmd_book(a_UIcmd_get_bw_by_widget(this));
+         a_UIcmd_book(a_UIcmd_get_bw_by_widget(this), this);
+         ret = 1;
+      } else if (cmd == KEYS_ADD_BOOKMARK) {
+         a_UIcmd_add_bookmark_from_vbw(a_UIcmd_get_bw_by_widget(this));
          ret = 1;
       } else if (cmd == KEYS_COPY) {
          a_UIcmd_copy(a_UIcmd_get_bw_by_widget(this));
