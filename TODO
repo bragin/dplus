@@ -1,0 +1,41 @@
+----------------------
+ D+ Browser TODO List
+----------------------
+
+Short-term goals for the initial D+ Browser release.
+Basically this will be Dillo-Win32 the way I would have done it
+if I hadn't wasted so much time trying to cooperate with mainline.
+
+General:
+[X] Merge patches from Dillo-Win32
+[ ] Rebrand the browser as D+ (DPlus?)
+[ ] Update documentation:
+    [ ] README
+    [ ] BUILDING/INSTALL
+    [ ] HACKING and developer documentation
+
+Network:
+[ ] Remove all remaining DPI code
+[ ] Make DlGui a standard feature
+[ ] Clean up the HTTPS code
+[ ] Move directory list generation from file.c into a separate module
+
+Preferences:
+[ ] Add portable application support on Windows (save prefs to current dir)
+[ ] Save preferences in prefs.c, not PrefsGui
+[ ] Initialize default search list in prefs.c
+
+User interface:
+[ ] Find a better UI font
+[ ] Right-click menu for input boxes
+[ ] Switch to a Firefox-style search bar
+[ ] Use the arrow cursor over the status bar
+[ ] Add zoom controls in the status bar
+[ ] Add a "new tab" button to the tab bar
+[ ] Show the tab bar when only one tab is open
+[ ] Fix keyboard navigation in the bookmarks menu
+[ ] Switch to a more conventional menu/toolbar layout
+
+Packaging:
+[ ] Create a script to package release tarballs
+[ ] Integrate packaging (Windows, DOS, Linux) into the build system
