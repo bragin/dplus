@@ -2,8 +2,13 @@
 (^|/)\.hg($|/)
 (^|/)\.deps($|/)
 (^|/)html($|/)
+~$
 \.a$
 \.o$
+\.exe$
+\.swp$
+\.rej$
+\.orig$
 ^config\.
 ^autom4te\.cache$
 (^|/)Makefile$
