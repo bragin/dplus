@@ -398,6 +398,8 @@ int main(int argc, char **argv)
     */
    ((Fl_Widget *)bw->ui)->window()->make_current();
 
+   Fl::get_system_colors();
+
    /* Proxy authentication */
    if (prefs.http_proxyuser && !a_Http_proxy_auth()) {
       const char *passwd = a_UIcmd_get_passwd(prefs.http_proxyuser);

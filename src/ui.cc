@@ -219,10 +219,6 @@ static void search_cb(Fl_Widget *wid, void *data)
 
    if (b == FL_LEFT_MOUSE) {
       a_UIcmd_search_dialog(a_UIcmd_get_bw_by_widget(wid));
-   } else if (b == FL_MIDDLE_MOUSE) {
-      ((UI*)data)->color_change_cb_i();
-   } else if (b == FL_RIGHT_MOUSE) {
-      // nothing ATM
    }
 }
 
@@ -434,7 +430,6 @@ void UI::make_location(int ww)
     p_xpos += b->w();
 
     Fl_Input *i = Location = new CustInput(p_xpos,0,ww-p_xpos-32,lh,0);
-    i->color(CuteColor);
     i->when(FL_WHEN_ENTER_KEY);
     i->callback(location_cb, this);
     i->tooltip("Location");
@@ -467,14 +462,12 @@ void UI::make_progress_bars(int wide, int thin_up)
     IProg = new CustProgressBox(p_xpos,p_ypos,pw,bh);
     IProg->labelsize(12);
     IProg->box(thin_up ? FL_THIN_UP_BOX : FL_EMBOSSED_BOX);
-    IProg->labelcolor(FL_GRAY_RAMP + 2);
     IProg->update_label(wide ? "Images\n0 of 0" : "0 of 0");
     p_xpos += pw;
     // Page
     PProg = new CustProgressBox(p_xpos,p_ypos,pw,bh);
     PProg->labelsize(12);
     PProg->box(thin_up ? FL_THIN_UP_BOX : FL_EMBOSSED_BOX);
-    PProg->labelcolor(FL_GRAY_RAMP + 2);
     PProg->update_label(wide ? "Page\n0.0KB" : "0.0KB");
 }
 
@@ -635,14 +628,12 @@ UI::UI(int x, int y, int ui_w, int ui_h, const char* label, const UI *cur_ui) :
    PanelTemporary = false;
    if (cur_ui) {
       PanelSize = cur_ui->PanelSize;
-      CuteColor = cur_ui->CuteColor;
       Small_Icons = cur_ui->Small_Icons;
       Panelmode = cur_ui->Panelmode;
    } else {
      // Set some default values
      PanelSize = prefs.panel_size;
      Small_Icons = prefs.small_icons;
-     CuteColor = 206;
      Panelmode = (prefs.fullwindow_start) ? UI_HIDDEN : UI_NORMAL;
    }
 
@@ -654,11 +645,9 @@ UI::UI(int x, int y, int ui_w, int ui_h, const char* label, const UI *cur_ui) :
     Main = new Fl_Group(0,0,0,0,"Welcome..."); // size is set by rearrange()
     Main->align(FL_ALIGN_CENTER|FL_ALIGN_INSIDE);
     Main->box(FL_FLAT_BOX);
-    Main->color(FL_GRAY_RAMP + 3);
     Main->labelfont(FL_HELVETICA_BOLD_ITALIC);
     Main->labelsize(36);
     Main->labeltype(FL_SHADOW_LABEL);
-    Main->labelcolor(FL_WHITE);
     TopGroup->add(Main);
     TopGroup->resizable(Main);
     MainIdx = TopGroup->find(Main);
@@ -968,21 +957,6 @@ void UI::change_panel(int new_size, int small_icons)
 
    TopGroup->rearrange();
    Location->take_focus();
-}
-
-/*
- * On-the-fly color style change
- */
-void UI::color_change_cb_i()
-{
-   const int cols[] = {7,17,26,51,140,156,205,206,215,-1};
-   static int ncolor = 0;
-
-   ncolor = (cols[ncolor+1] < 0) ? 0 : ncolor + 1;
-   CuteColor = cols[ncolor];
-   MSG("Location color %d\n", CuteColor);
-   Location->color(CuteColor);
-   Location->redraw();
 }
 
 /*
