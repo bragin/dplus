@@ -118,6 +118,8 @@ dillo_SOURCES = \
 	findbar.hh \
 	dlgui.cc \
 	dlgui.hh \
+	print.cc \
+	print.hh \
 	xembed.cc \
 	xembed.hh
 

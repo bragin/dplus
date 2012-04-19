@@ -74,6 +74,14 @@ public:
    void setCursor (core::style::Cursor cursor);
    void setBgColor (core::style::Color *color);
 
+#ifdef ENABLE_PRINTER
+   inline void getCanvasSize (int *w, int *h)
+   {
+      *w = canvasWidth;
+      *h = canvasHeight;
+   }
+#endif /* ENABLE_PRINTER */
+
    void startDrawing (core::Rectangle *area);
    void finishDrawing (core::Rectangle *area);
    void queueDraw (core::Rectangle *area);

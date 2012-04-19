@@ -17,6 +17,9 @@ typedef enum {
    KEYS_INVALID = -1,
    KEYS_NOP,   /* No operation bound */
    KEYS_OPEN,
+#ifdef ENABLE_PRINTER
+   KEYS_PRINT,
+#endif /* ENABLE_PRINTER */
    KEYS_NEW_WINDOW,
    KEYS_NEW_TAB,
    KEYS_LEFT_TAB,

@@ -12,6 +12,9 @@
 /* Enable PNG images */
 #undef ENABLE_PNG
 
+/* Enable printing support */
+#undef ENABLE_PRINTER
+
 /* Enable SSL support */
 #undef ENABLE_SSL
 

@@ -239,6 +239,10 @@ public:
    void attachView (View *view);
    void detachView (View *view);
 
+#ifdef ENABLE_PRINTER
+   inline View* viewport() { return view; }
+#endif /* ENABLE_PRINTER */
+
    inline bool getUsesViewport () { return usesViewport; }
    inline int getWidthViewport () { return viewportWidth; }
    inline int getHeightViewport ()  { return viewportHeight; }

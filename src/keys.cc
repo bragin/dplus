@@ -99,6 +99,9 @@ static const Mapping_t modifierNames[] = {
 static const KeyBinding_t default_keys[] = {
    { "nop"          , KEYS_NOP          , 0         , 0               },
    { "open"         , KEYS_OPEN         , FL_CTRL   , 'o'             },
+#ifdef ENABLE_PRINTER
+   { "print"        , KEYS_PRINT        , FL_CTRL   , 'p'             },
+#endif /* ENABLE_PRINTER */
    { "new-window"   , KEYS_NEW_WINDOW   , FL_CTRL   , 'n'             },
    { "new-tab"      , KEYS_NEW_TAB      , FL_CTRL   , 't'             },
    { "left-tab"     , KEYS_LEFT_TAB     , FL_CTRL |

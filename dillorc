@@ -42,6 +42,10 @@
 # Set your default directory for download/save operations
 #save_dir=/tmp
 
+# Set your preferred date format (e.g., for print headers)
+# This uses the same format as strftime(3)
+#date_format="%m/%d/%Y %I:%M%p"
+
 #-------------------------------------------------------------------------
 #                           RENDERING SECTION
 #-------------------------------------------------------------------------

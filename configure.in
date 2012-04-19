@@ -47,6 +47,8 @@ AC_ARG_ENABLE(mozilla-user-agent,[  --enable-mozilla-user-agent  Use a Mozilla/4
               enable_mozilla_user_agent=$enableval, enable_mozilla_user_agent=yes)
 AC_ARG_ENABLE(internal-dlgui,[  --enable-internal-dlgui  Use built-in downloads GUI (requires libcurl)],
               enable_internal_dlgui=$enableval, enable_internal_dlgui=yes)
+AC_ARG_ENABLE(printer,[  --enable-printer        Build with printing support],
+              enable_printer=$enableval, enable_printer=no)
 AC_ARG_ENABLE(rtfl,   [  --enable-rtfl           Build with rtfl messages (for debugging rendering)])
 AC_PROG_CC
 AC_PROG_CXX
@@ -60,6 +62,14 @@ if eval "test x$RC != x"; then
   windres=yes
 fi
 AM_CONDITIONAL(HAVE_WIN32RES, [test x$windres = xyes])
+
+dnl -------------------------
+dnl Test for printing support
+dnl -------------------------
+dnl
+if test "x$enable_printer" = "xyes"; then
+  AC_DEFINE([ENABLE_PRINTER], [1], [Enable printing support])
+fi
 
 dnl ----------------------------
 dnl Check our char and int types
@@ -553,6 +563,9 @@ fi
 if test "x$enable_internal_dlgui" = "xyes" && test "x$curl_ok" = "xyes" ; then
   CFLAGS="$CFLAGS -DENABLE_INTERNAL_DLGUI -DCURL_STATICLIB"
   CXXFLAGS="$CXXFLAGS -DENABLE_INTERNAL_DLGUI -DCURL_STATICLIB"
+fi
+if test "x$enable_printer" = "xyes" ; then
+  CPPFLAGS="$CPPFLAGS -DENABLE_PRINTER"
 fi
 if test "x$enable_rtfl" = "xyes" ; then
   CXXFLAGS="$CXXFLAGS -DDBG_RTFL"

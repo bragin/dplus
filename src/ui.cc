@@ -741,6 +741,11 @@ int UI::handle(int event)
       } else if (cmd == KEYS_OPEN) {
          a_UIcmd_open_file(a_UIcmd_get_bw_by_widget(this));
          ret = 1;
+#ifdef ENABLE_PRINTER
+      } else if (cmd == KEYS_PRINT) {
+         a_UIcmd_print_page(a_UIcmd_get_bw_by_widget(this));
+         ret = 1;
+#endif /* ENABLE_PRINTER */
       } else if (cmd == KEYS_HOME) {
          a_UIcmd_home(a_UIcmd_get_bw_by_widget(this));
          ret = 1;

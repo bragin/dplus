@@ -60,6 +60,10 @@ static void filemenu_cb(Fl_Widget*, void *data)
       a_UIcmd_open_file(popup_bw);
    } else if (strcmp((char*)data, "ou") == 0) {
       a_UIcmd_focus_location(popup_bw);
+#ifdef ENABLE_PRINTER
+   } else if (strcmp((char*)data, "pr") == 0) {
+      a_UIcmd_print_page(popup_bw);
+#endif /* ENABLE_PRINTER */
    } else if (strcmp((char*)data, "cw") == 0) {
       a_Timeout_add(0.0, a_UIcmd_close_bw, popup_bw);
    } else if (strcmp((char*)data, "ed") == 0) {
@@ -505,6 +509,10 @@ void a_Menu_file_popup(BrowserWindow *bw, void *v_wid)
        (void*)"ou",0,0,0,0,0},
       {"Close", Keys::getShortcut(KEYS_CLOSE_TAB), filemenu_cb,
        (void*)"cw", FL_MENU_DIVIDER,0,0,0,0},
+#ifdef ENABLE_PRINTER
+      {"Print...", Keys::getShortcut(KEYS_PRINT), filemenu_cb,
+       (void*)"pr", FL_MENU_DIVIDER,0,0,0,0},
+#endif /* ENABLE_PRINTER */
       {"Exit Dillo", Keys::getShortcut(KEYS_CLOSE_ALL), filemenu_cb,
        (void*)"ed",0,0,0,0,0},
       {0,0,0,0,0,0,0,0,0}

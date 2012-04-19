@@ -34,6 +34,7 @@
 #include "menu.hh"
 #include "dialog.hh"
 #include "xembed.hh"
+#include "print.hh"
 #include "icon.h"
 #include "bookmark.h"
 #include "history.h"
@@ -928,6 +929,19 @@ static char *UIcmd_make_search_str(const char *str)
    search_url = ds->str;
    dStr_free(ds, 0);
    return search_url;
+}
+
+/*
+ * Print the current page
+ */
+void a_UIcmd_print_page(void *vbw)
+{
+#ifdef ENABLE_PRINTER
+   a_Print_page(vbw);
+#else /* ENABLE_PRINTER */
+   // Note: You should never see this message.
+   a_Dialog_msg("No printing support available.");
+#endif /* ENABLE_PRINTER */
 }
 
 /*

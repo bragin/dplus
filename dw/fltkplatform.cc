@@ -33,6 +33,7 @@
  * Local data
  */
 
+#ifndef ENABLE_PRINTER
 /* Use of Fl_Text_Display links in a lot of printer code that we don't have
  * any need for currently. This stub prevents that. */
 class FL_EXPORT Fl_Printer : public Fl_Paged_Device {
@@ -41,6 +42,7 @@ public:
    Fl_Printer(void) {};
 };
 const char *Fl_Printer::class_id = "Fl_Printer";
+#endif /* ENABLE_PRINTER */
 
 /* Tooltips */
 static Fl_Menu_Window *tt_window = NULL;
