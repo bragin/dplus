@@ -754,15 +754,16 @@ bool DilloHtml::HtmlLinkReceiver::click (Widget *widget, int link, int img,
 
       Html_set_link_coordinates(html, link, x, y);
 
-      if (event->button == 1) {
-         a_UIcmd_open_url(bw, url);
-      } else if (event->button == 2) {
+      if (event->button == 2 ||
+          (event->button == 1 && event->state & CONTROL_MASK)) {
          if (prefs.middle_click_opens_new_tab) {
             int focus = prefs.focus_new_tab ? 1 : 0;
-            if (event->state == SHIFT_MASK) focus = !focus;
+            if (event->state & SHIFT_MASK) focus = !focus;
             a_UIcmd_open_url_nt(bw, url, focus);
          } else
             a_UIcmd_open_url_nw(bw, url);
+      } else if (event->button == 1) {
+         a_UIcmd_open_url(bw, url);
       } else {
          return false;
       }
