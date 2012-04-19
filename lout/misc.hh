@@ -7,6 +7,14 @@
 #include <string.h>
 #include <assert.h>
 
+#ifdef min
+#  undef min
+#endif
+
+#ifdef max
+#  undef max
+#endif
+
 /**
  * \brief Miscellaneous stuff, which does not fit anywhere else.
  *

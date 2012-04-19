@@ -369,11 +369,11 @@ void FltkViewport::scrollTo (int x, int y)
    int hdiff = vscrollbar->visible () ? SCROLLBAR_THICKNESS : 0;
    int vdiff = hscrollbar->visible () ? SCROLLBAR_THICKNESS : 0;
 
-   x = misc::min (x, canvasWidth - w() + hdiff);
-   x = misc::max (x, 0);
+   x = misc::min<int> (x, canvasWidth - w() + hdiff);
+   x = misc::max<int> (x, 0);
 
-   y = misc::min (y, canvasHeight - h() + vdiff);
-   y = misc::max (y, 0);
+   y = misc::min<int> (y, canvasHeight - h() + vdiff);
+   y = misc::max<int> (y, 0);
 
    if (x == scrollX && y == scrollY) {
       return;

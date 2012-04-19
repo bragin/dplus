@@ -20,6 +20,7 @@
 #include <stdio.h>
 
 #include "../lout/msg.h"
+#include "../lout/misc.hh"
 #include "fltkcore.hh"
 
 #include <FL/fl_draw.H>
@@ -125,7 +126,7 @@ FltkFont::FltkFont (core::style::FontAttrs *attrs)
    fl_font(font, size);
    /* WORKAROUND: fl_width(uint_t) is not working on non-xft X.
     * Reported to FLTK as STR #2688 */
-   spaceWidth = misc::max(0, (int)fl_width(" ") + letterSpacing);
+   spaceWidth = misc::max<int>(0, (int)fl_width(" ") + letterSpacing);
    int xx, xy, xw, xh;
    fl_text_extents("x", xx, xy, xw, xh);
    xHeight = xh;

@@ -438,7 +438,7 @@ private:
    void setCumHeight (int row, int value)
    {
       if (value != cumHeight->get (row)) {
-         redrawY = lout::misc::min ( redrawY, value );
+         redrawY = lout::misc::min<int> ( redrawY, value );
          cumHeight->set (row, value);
       }
    }
@@ -446,7 +446,7 @@ private:
    inline void setColWidth (int col, int value)
    {
       if (value != colWidths->get (col)) {
-         redrawX = lout::misc::min (redrawX, value);
+         redrawX = lout::misc::min<int> (redrawX, value);
          colWidths->set (col, value);
       }
    }

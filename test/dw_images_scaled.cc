@@ -50,7 +50,7 @@ static void imageDrawTimeout (void *data)
 {
    if (imgbuf) {
       for (int i = 0; i < 1; i++) {
-         byte buf[4 * 400];
+         unsigned char buf[4 * 400];
          for(int x = 0; x < 400; x++) {
             buf[4 * x + 0] = x * 255 / 399;
             buf[4 * x + 1] = (399 - x) * 255 / 399;
@@ -73,7 +73,7 @@ static void imageDrawTimeout (void *data)
 {
    if (imgbuf) {
       for (int i = 0; i < 1; i++) {
-         byte buf[3 * 400];
+         unsigned char buf[3 * 400];
          for(int x = 0; x < 400; x++) {
             buf[3 * x + 0] = x * 255 / 399;
             buf[3 * x + 1] = (399 - x) * 255 / 399;
