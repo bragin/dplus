@@ -30,6 +30,7 @@ Preferences:
 [ ] Initialize default search list in prefs.c
 
 User interface:
+[ ] Normalize keyboard shortcuts
 [ ] Find a better UI font
 [ ] Right-click menu for input boxes
 [ ] Switch to a Firefox-style search bar
