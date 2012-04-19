@@ -119,27 +119,54 @@ public:
  * A button that highlights on mouse over
  */
 class CustLightButton : public Fl_Button {
+protected:
+   bool flat;
    Fl_Color norm_color, light_color;
 public:
    CustLightButton(int x, int y, int w, int h, const char *l=0) :
-      Fl_Button(x,y,w,h,l) { norm_color = color(); light_color = 51; };
+      Fl_Button(x,y,w,h,l)
+   {
+      flat = false;
+      norm_color = color();
+      light_color = 51;
+   }
    virtual int handle(int e)
    {
       if (active()) {
          if (e == FL_ENTER) {
+            if (flat)
+               box(FL_THIN_UP_BOX);
             color(light_color); // {17,26,51}
             redraw();
          } else if (e == FL_LEAVE || e == FL_RELEASE || e == FL_HIDE) {
+            if (flat)
+               box(FL_FLAT_BOX);
             color(norm_color);
             redraw();
          }
       } else if (e == FL_DEACTIVATE && color() != norm_color) {
+         if (flat)
+            box(FL_FLAT_BOX);
          color(norm_color);
          redraw();
       }
       return Fl_Button::handle(e);
    }
    void hl_color(Fl_Color col) { light_color = col; };
+};
+
+/*
+ * A flat button that raises on mouse over
+ */
+class FlatLightButton : public CustLightButton {
+public:
+   FlatLightButton(int x, int y, int w, int h, const char *l=0) :
+      CustLightButton(x,y,w,h,l)
+   {
+      flat = true;
+      box(FL_FLAT_BOX);
+      down_box(FL_THIN_DOWN_FRAME);
+   }
 };
 
 //

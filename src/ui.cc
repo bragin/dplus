@@ -350,7 +350,7 @@ Fl_Button *UI::make_button(const char *label, Fl_Image *img, Fl_Image *deimg,
    if (start)
       p_xpos = 0;
 
-   Fl_Button *b = new CustLightButton(p_xpos, 0, bw, bh, (lbl) ? label : NULL);
+   Fl_Button *b = new FlatLightButton(p_xpos, 0, bw, bh, (lbl) ? label : NULL);
    if (img)
       b->image(img);
    if (deimg)
@@ -358,8 +358,6 @@ Fl_Button *UI::make_button(const char *label, Fl_Image *img, Fl_Image *deimg,
    b->callback(b1_cb, INT2VOIDP(b_n));
    b->clear_visible_focus();
    b->labelsize(12);
-   b->box(FL_FLAT_BOX);
-   b->down_box(FL_THIN_DOWN_FRAME);
    p_xpos += bw;
    return b;
 }
@@ -455,7 +453,7 @@ Fl_Widget *UI::make_filemenu_button()
    Fl_Button *btn;
    int w = 0, h = 0, padding;
 
-   FileButton = btn = new Fl_Button(p_xpos,0,bw,bh,"W");
+   FileButton = btn = new CustLightButton(p_xpos,0,bw,bh,"W");
    btn->labeltype(FL_FREE_LABELTYPE);
    btn->measure_label(w, h);
    padding = w;
