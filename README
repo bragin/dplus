@@ -1,0 +1,55 @@
+------------
+ D+ Browser
+------------
+
+DPlus is a graphical web browser with an emphasis on security, performance,
+and portability.
+
+It is based on Dillo (http://www.dillo.org/); the name "D+" reflects the
+developer's opinion of the Dillo Project's code quality and organization.
+
+DPlus currently supports Windows, DOS, OS X, and Unix systems.
+
+
+Table of Contents
+-----------------
+
+  1. Current Plans
+  2. Building and Installing
+  3. Developer Information
+  4. Contact
+
+
+1. Current Plans
+----------------
+
+DPlus continues where Dillo-Win32 (http://dillo-win32.sourceforge.net/)
+left off.  The initial release will essentially be "Dillo-Win32 improved,"
+with a cleaner user interface, greater portability, and less legacy code
+than was possible when we were attempting to maintain upstream compatibility.
+
+At the moment there are no plans for long-term development.
+I (Benjamin Johnson) am releasing DPlus because I personally find it useful,
+and I think others might find it useful as well; however, I have neither the
+time nor the interest to make this anything more than a one-off release.
+
+
+2. Building and Installing
+--------------------------
+
+Please see the `BUILDING' file.
+
+
+3. Developer Information
+------------------------
+
+Please see the `HACKING' file.
+
+
+4. Contact
+----------
+
+Benjamin Johnson <obeythepenguin@users.sourceforge.net>
+
+PLEASE NOTE: I do NOT provide technical support for DPlus; chances are I
+will delete such emails unanswered and unread.
