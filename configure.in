@@ -16,6 +16,8 @@ dnl Options
 AC_ARG_WITH(jpeg-lib, [  --with-jpeg-lib=DIR     Specify where to find libjpeg], LIBJPEG_LIBDIR=$withval)
 AC_ARG_WITH(jpeg-inc, [  --with-jpeg-inc=DIR     Specify where to find libjpeg's headers], LIBJPEG_INCDIR=$withval)
 
+AC_ARG_ENABLE(debug,  [  --enable-debug          Build with additional debugging symbols],
+		    , enable_debug=no)
 AC_ARG_ENABLE(efence, [  --enable-efence         Try to compile and run with Electric Fence],
                     , enable_efence=no)
 AC_ARG_ENABLE(gprof,  [  --enable-gprof          Try to compile and run with profiling enabled],
@@ -104,6 +106,25 @@ if test "$ac_cv_socklen_t" != "socklen_t"; then
   AC_DEFINE_UNQUOTED([socklen_t], [$ac_cv_socklen_t],
                      [Define the real type of socklen_t])
 fi
+
+dnl ---------------------------------
+dnl Test for socket libs (Win32, DOS)
+dnl ---------------------------------
+dnl
+case $target in
+  *-*-mingw*)
+    dnl Building on MinGW: use Windows sockets
+    LIBS="$LIBS -lws2_32"
+    ;;
+
+  *-*-*djgpp*)
+    dnl Building on DJGPP: use Watt-32 sockets
+    LIBS="$LIBS -lwatt"
+    LDFLAGS="$LDFLAGS -L/dev/env/WATT_ROOT/lib"
+    CPPFLAGS="$CPPFLAGS -I/dev/env/WATT_ROOT/inc"
+    ;;
+
+esac
 
 
 dnl ----------------------
@@ -356,6 +377,14 @@ case $target in
     AC_MSG_NOTICE([Minix detected, skipping pthread detection])
     ;;
 
+  *-*-mingw*)
+    AC_MSG_NOTICE([MinGW detected, skipping pthread detection])
+    ;;
+
+  *-*-*djgpp*)
+    AC_MSG_NOTICE([DJGPP detected, skipping pthread detection])
+    ;;
+
   *)
     AC_MSG_CHECKING(whether threads work with -pthread)
     LDSAVEFLAGS=$LDFLAGS
@@ -400,6 +429,10 @@ if test "x$enable_cookies" = "xno" ; then
 fi
 if test "x$enable_ipv6" = "xyes" ; then
   CFLAGS="$CFLAGS -DENABLE_IPV6"
+fi
+if test "x$enable_debug" = "xyes" ; then
+  CFLAGS="$CFLAGS -g"
+  CXXFLAGS="$CXXFLAGS -g"
 fi
 if test "x$enable_efence" = "xyes" ; then
   LIBS="-lefence $LIBS"
