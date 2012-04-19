@@ -149,11 +149,13 @@ public:
 int SearchInput::handle(int e)
 {
    void *wid = (void*)this;
-   int b = Fl::event_button(), s = Fl::event_state();
+   int b = Fl::event_button(), k = Fl::event_key();
 
-   if (e == FL_RELEASE && (b == 3 || (b == 1 && s == FL_CTRL))) {
+   if ((e == FL_RELEASE && b == 3) ||
+       (e == FL_KEYBOARD && k == FL_Down)) {
       /* display the list of search engines */
       a_UIcmd_search_popup(a_UIcmd_get_bw_by_widget(wid), wid);
+      return 1;
 
    } else if (e == FL_UNFOCUS && !strlen(value())) {
       /* if empty, display the name of the selected search engine */
@@ -165,12 +167,10 @@ int SearchInput::handle(int e)
       value(label);
       textcolor(FL_INACTIVE_COLOR);
 
-   } else if (e == FL_FOCUS) {
+   } else if (e == FL_FOCUS && textcolor() == FL_INACTIVE_COLOR) {
       /* clear the name of the selected search engine */
-      if (textcolor() == FL_INACTIVE_COLOR) {
-         value(NULL);
-         textcolor(FL_FOREGROUND_COLOR);
-      }
+      value(NULL);
+      textcolor(FL_FOREGROUND_COLOR);
    }
 
    return CustInput::handle(e);

@@ -547,8 +547,8 @@ void a_Menu_search_popup(BrowserWindow *bw, void *v_wid)
    int i, n = dList_length(prefs.search_urls);
 
    popup_bw = bw;
-   popup_x = Fl::event_x();
-   popup_y = Fl::event_y();
+   popup_x = wid->x();
+   popup_y = wid->y() + wid->h();
 
    if (pm)
       delete [] pm;
