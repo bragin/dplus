@@ -14,7 +14,7 @@
 
 #define PREFS_START_PAGE      "about:splash"
 #define PREFS_HOME            "http://dillo-win32.sourceforge.net/"
-#define PREFS_SEARCH_URL      "http://duckduckgo.com/lite/?kp=-1&q=%s"
+#define PREFS_SEARCH_URL      "http://www.google.com/search?q=%s"
 #define PREFS_NO_PROXY        "localhost 127.0.0.1"
 #define PREFS_HTTP_REFERER    "host"
   
