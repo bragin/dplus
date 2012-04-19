@@ -482,10 +482,7 @@ static void Nav_reload_callback(void *data)
    a_Nav_cancel_expect(bw);
    if (a_Nav_stack_size(bw)) {
       h_url = a_History_get_url(NAV_TOP_UIDX(bw));
-      if (strncmp(URL_STR(h_url), "dpi:/vsource/", 13) == 0) {
-         /* disable reload for view source dpi */
-         confirmed = 0;
-      } else if (URL_FLAGS(h_url) & URL_Post) {
+      if (URL_FLAGS(h_url) & URL_Post) {
          /* Attempt to repost data, let's confirm... */
          choice = a_Dialog_choice5("Repost form data?",
                                    "No", "Yes", "Cancel", NULL, NULL);
@@ -588,12 +585,4 @@ int a_Nav_get_buf(const DilloUrl *Url, char **PBuf, int *BufSize)
 void a_Nav_unref_buf(const DilloUrl *Url)
 {
    a_Capi_unref_buf(Url);
-}
-
-/*
- * Wrapper for a_Capi_set_vsource_url().
- */
-void a_Nav_set_vsource_url(const DilloUrl *Url)
-{
-   a_Capi_set_vsource_url(Url);
 }

@@ -57,8 +57,6 @@ enum {
 /* Data list for active dpi connections */
 static Dlist *CapiConns;      /* Data list for active connections; it holds
                                * pointers to capi_conn_t structures. */
-/* Last URL asked for view source */
-static DilloUrl *CapiVsUrl = NULL;
 
 /*
  * Forward declarations
@@ -213,15 +211,6 @@ void a_Capi_conn_abort_by_url(const DilloUrl *url)
 /* ------------------------------------------------------------------------- */
 
 /*
- * Store the last URL requested by "view source"
- */
-void a_Capi_set_vsource_url(const DilloUrl *url)
-{
-   a_Url_free(CapiVsUrl);
-   CapiVsUrl = a_Url_dup(url);
-}
-
-/*
  * Safety test: only allow GET|POST dpi-urls from dpi-generated pages.
  */
 int a_Capi_dpi_verify_request(BrowserWindow *bw, DilloUrl *url)
@@ -231,9 +220,6 @@ int a_Capi_dpi_verify_request(BrowserWindow *bw, DilloUrl *url)
 
    if (dStrcasecmp(URL_SCHEME(url), "dpi") == 0) {
       if (!(URL_FLAGS(url) & (URL_Post + URL_Get))) {
-         allow = TRUE;
-      } else if (!(URL_FLAGS(url) & URL_Post) &&
-                 strncmp(URL_STR(url), "dpi:/vsource/", 13) == 0) {
          allow = TRUE;
       } else {
          /* only allow GET&POST dpi-requests from dpi-generated urls */
@@ -310,32 +296,6 @@ static char *Capi_dpi_build_cmd(DilloWeb *web, char *server)
       cmd = a_Dpip_build_cmd("cmd=%s url=%s", "open_url", URL_STR(web->url));
    }
    return cmd;
-}
-
-/*
- * Send the requested URL's source to the "view source" dpi
- */
-static void Capi_dpi_send_source(BrowserWindow *bw,  DilloUrl *url)
-{
-   char *p, *buf, *cmd, size_str[32], *server="vsource";
-   int buf_size;
-
-   if (!(p = strchr(URL_STR(url), ':')) || !(p = strchr(p + 1, ':')))
-      return;
-
-   if (a_Capi_get_buf(CapiVsUrl, &buf, &buf_size)) {
-      /* send the page's source to this dpi connection */
-      snprintf(size_str, 32, "%d", buf_size);
-      cmd = a_Dpip_build_cmd("cmd=%s url=%s data_size=%s",
-                             "start_send_page", URL_STR(url), size_str);
-      a_Capi_dpi_send_cmd(NULL, bw, cmd, server, 0);
-      a_Capi_dpi_send_data(url, bw, buf, buf_size, server, 0);
-   } else {
-      cmd = a_Dpip_build_cmd("cmd=%s msg=%s",
-                             "DpiError", "Page is NOT cached");
-      a_Capi_dpi_send_cmd(NULL, bw, cmd, server, 0);
-   }
-   dFree(cmd);
 }
 
 /*
@@ -435,13 +395,9 @@ int a_Capi_open_url(DilloWeb *web, CA_Callback_t Call, void *CbData)
       /* dpi request */
       if ((safe = a_Capi_dpi_verify_request(web->bw, web->url))) {
          if (dStrcasecmp(scheme, "dpi") == 0) {
-            if (strcmp(server, "vsource") == 0) {
-               /* don't reload the "view source" page */
-            } else {
-               /* make the other "dpi:/" prefixed urls always reload. */
-               a_Url_set_flags(web->url, URL_FLAGS(web->url) | URL_E2EQuery);
-               reload = 1;
-            }
+            /* make "dpi:/" prefixed urls always reload. */
+            a_Url_set_flags(web->url, URL_FLAGS(web->url) | URL_E2EQuery);
+            reload = 1;
          }
          if (reload) {
             a_Capi_conn_abort_by_url(web->url);
@@ -450,9 +406,6 @@ int a_Capi_open_url(DilloWeb *web, CA_Callback_t Call, void *CbData)
             cmd = Capi_dpi_build_cmd(web, server);
             a_Capi_dpi_send_cmd(web->url, web->bw, cmd, server, 1);
             dFree(cmd);
-            if (strcmp(server, "vsource") == 0) {
-               Capi_dpi_send_source(web->bw, web->url);
-            }
          }
          use_cache = 1;
       }

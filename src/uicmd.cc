@@ -1048,31 +1048,22 @@ void a_UIcmd_copy_urlstr(BrowserWindow *bw, const char *urlstr)
 }
 
 /*
- * Ask the vsource dpi to show this URL's source
+ * Show the browser window's HTML source in a text window
  */
 void a_UIcmd_view_page_source(BrowserWindow *bw, const DilloUrl *url)
 {
+   const int size = 128;
+   char title[size];
    char *buf;
    int buf_size;
-   Dstr *dstr_url;
-   DilloUrl *vs_url;
-   static int post_id = 0;
-   char tag[8];
+
+   if (snprintf(title, size, "Source of %s", URL_STR(url)) >= size) {
+      uint_t i = MIN(size - 4, 1 + a_Utf8_end_of_char(title, size - 8));
+      snprintf(title + i, 4, "...");
+   }
 
    if (a_Nav_get_buf(url, &buf, &buf_size)) {
-      a_Nav_set_vsource_url(url);
-      dstr_url = dStr_new("dpi:/vsource/:");
-      dStr_append(dstr_url, URL_STR(url));
-      if (URL_FLAGS(url) & URL_Post) {
-         /* append a custom string to differentiate POST URLs */
-         post_id = (post_id < 9999) ? post_id + 1 : 0;
-         snprintf(tag, 8, "_%.4d", post_id);
-         dStr_append(dstr_url, tag);
-      }
-      vs_url = a_Url_new(dstr_url->str, NULL);
-      a_UIcmd_open_url_nt(bw, vs_url, 1);
-      a_Url_free(vs_url);
-      dStr_free(dstr_url, 1);
+      a_Dialog_text_window(buf, title);
       a_Nav_unref_buf(url);
    }
 }
