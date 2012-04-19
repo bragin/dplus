@@ -30,6 +30,7 @@
 #include "capi.h"
 #include "decode.h"
 #include "auth.h"
+#include "file.h"
 
 #include "timeout.hh"
 #include "uicmd.hh"
@@ -89,6 +90,7 @@ static CacheEntry_t *Cache_process_queue(CacheEntry_t *entry);
 static void Cache_delayed_process_queue(CacheEntry_t *entry);
 static void Cache_auth_entry(CacheEntry_t *entry, BrowserWindow *bw);
 static void Cache_entry_inject(const DilloUrl *Url, Dstr *data_ds);
+static void Cache_inject_file(const DilloUrl *url);
 
 /*
  * Determine if two cache entries are equal (used by CachedURLs)
@@ -283,6 +285,20 @@ static void Cache_entry_inject(const DilloUrl *Url, Dstr *data_ds)
 }
 
 /*
+ * Inject file:/ protocol content directly into the cache.
+ */
+static void Cache_inject_file(const DilloUrl *url)
+{
+   const char *url_str = URL_STR(url);
+   const char *content_type = a_File_content_type(url_str);
+   void *file = a_File_open(url_str);
+
+   Cache_entry_inject(url, a_File_read(file));
+   a_Cache_set_content_type(url, content_type, "http");
+   a_File_close(file);
+}
+
+/*
  *  Free Authentication fields.
  */
 static void Cache_auth_free(Dlist *auth)
@@ -384,6 +400,12 @@ int a_Cache_open_url(void *web, CA_Callback_t Call, void *CbData)
    if (URL_FLAGS(Url) & URL_E2EQuery) {
       /* remove current entry */
       Cache_entry_remove(NULL, Url);
+   }
+
+   if (!strcmp(URL_SCHEME(Url), "file")) {
+      /* inject the file contents into the cache (putting this
+       * here lets us avoid exposing the cache injection function) */
+      Cache_inject_file(Url);
    }
 
    if ((entry = Cache_entry_search(Url))) {

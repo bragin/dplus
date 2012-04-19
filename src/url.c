@@ -47,6 +47,7 @@
 
 #include "url.h"
 #include "msg.h"
+#include "file.h"  /* for HAVE_DRIVE_LETTERS */
 
 static const char *HEX = "0123456789ABCDEF";
 
@@ -356,15 +357,37 @@ done:
  *
  *  Return NULL if URL is badly formed.
  */
-DilloUrl* a_Url_new(const char *url_str, const char *base_url)
+DilloUrl* a_Url_new(const char *url_str_, const char *base_url)
 {
    DilloUrl *url;
-   char *urlstr = (char *)url_str;  /* auxiliar variable, don't free */
+   char *url_str = (char *)url_str_;
+   char *urlstr = url_str;  /* auxiliar variable, don't free */
    char *p, *str1 = NULL, *str2 = NULL;
    Dstr *SolvedUrl;
    int i, n_ic, n_ic_spc;
 
    dReturn_val_if_fail (url_str != NULL, NULL);
+
+#ifdef HAVE_DRIVE_LETTERS
+   /* A single-letter scheme is probably supposed to be a drive letter */
+   if (strlen(url_str) >= 2 && isalpha(url_str[0]) && url_str[1] == ':') {
+      url_str = dStrconcat("file:/", url_str_, NULL);
+      urlstr = url_str;
+   }
+
+   if (!dStrncasecmp(url_str, "file:", 5)) {
+      /* Substitute '|' for the drive letter separator (this is a
+       * reserved character, so it won't appear in normal filenames) */
+      if ((p = strchr(url_str + 5, ':')) != NULL) {
+         *p = '|';
+         *(p-1) = toupper(*(p-1));  /* always capitalize drive letters */
+      }
+
+      /* Replace backslashes with forward slashes in URLs */
+      for (p = url_str; *p; p++)
+         *p = (*p == '\\') ? '/' : *p;
+   }
+#endif /* HAVE_DRIVE_LETTERS */
 
    /* Count illegal characters (0x00-0x1F, 0x7F and space) */
    n_ic = n_ic_spc = 0;
@@ -409,6 +432,12 @@ DilloUrl* a_Url_new(const char *url_str, const char *base_url)
    url->url_string = SolvedUrl;
    url->illegal_chars = n_ic;
    url->illegal_chars_spc = n_ic_spc;
+
+#ifdef HAVE_DRIVE_LETTERS
+   /* This looks like a mistake, but it is a deliberate memory optimization! */
+   if (url_str != url_str_)   /* Only free this value if it no longer points */
+      dFree(url_str);         /* to the same address as the original string. */
+#endif /* HAVE_DRIVE_LETTERS */
 
    dFree(str1);
    dFree(str2);
@@ -616,7 +645,15 @@ char *a_Url_encode_hex_str(const char *str)
  */
 char *a_Url_string_strip_delimiters(const char *str)
 {
+   int local_file = 0;
    char *p, *new_str, *text;
+
+   /* Don't disregard spaces in (well-formed) local filenames */
+#ifdef HAVE_DRIVE_LETTERS
+   local_file = (strlen(str) >= 2 && str[1] == ':') ? 1 : 0;
+#else
+   local_file = (strlen(str) >= 1 && str[0] == '/') ? 1 : 0;
+#endif
 
    new_str = text = dStrdup(str);
 
@@ -627,7 +664,7 @@ char *a_Url_string_strip_delimiters(const char *str)
          text++;
 
       for (p = new_str; *text; text++)
-         if (*text > 0x1F && *text != 0x7F && *text != ' ')
+         if (*text > 0x1F && *text != 0x7F && (local_file || *text != ' '))
             *p++ = *text;
       if (p > new_str && p[-1] == '>')
          --p;

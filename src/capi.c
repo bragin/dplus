@@ -260,6 +260,7 @@ static int Capi_url_uses_dpi(DilloUrl *url, char **server_ptr)
 #ifdef ENABLE_SSL
        (dStrncasecmp(url_str, "https:", 6) == 0) ||
 #endif /* ENABLE_SSL */
+       (dStrncasecmp(url_str, "file:", 5) == 0) ||
        (dStrncasecmp(url_str, "about:", 6) == 0)) {
       /* URL doesn't use dpi (server = NULL) */
    } else if (dStrncasecmp(url_str, "dpi:/", 5) == 0) {
@@ -446,6 +447,10 @@ int a_Capi_open_url(DilloWeb *web, CA_Callback_t Call, void *CbData)
       }
       use_cache = 1;
 #endif /* ENABLE_SSL */
+
+   } else if (!dStrcasecmp(scheme, "file")) {
+      /* file request */
+      use_cache = 1;
 
    } else if (!dStrcasecmp(scheme, "about")) {
       /* internal request */

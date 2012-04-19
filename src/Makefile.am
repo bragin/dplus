@@ -121,6 +121,8 @@ dillo_SOURCES = \
 	menu.cc \
 	dpiapi.c \
 	dpiapi.h \
+	file.c \
+	file.h \
 	pixmaps.h \
 	findbar.cc \
 	findbar.hh \
