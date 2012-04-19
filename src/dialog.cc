@@ -2,6 +2,7 @@
  * File: dialog.cc
  *
  * Copyright (C) 2005-2007 Jorge Arellano Cid <jcid@dillo.org>
+ * Copyright (C) 2011 Benjamin Johnson <obeythepenguin@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,6 +16,7 @@
 
 #include <FL/Fl_Window.H>
 #include <FL/Fl_File_Chooser.H>
+#include <FL/Fl_Native_File_Chooser.H>
 #include <FL/Fl_Return_Button.H>
 #include <FL/Fl_Text_Display.H>
 #include <FL/Fl_Button.H>
@@ -36,6 +38,9 @@
 static int input_answer;
 static char *input_str = NULL;
 static int choice5_answer;
+
+static char *fname_str = NULL;
+static char *dname_str = NULL;
 
 
 /*
@@ -217,7 +222,22 @@ const char *a_Dialog_passwd(const char *msg)
 const char *a_Dialog_save_file(const char *msg,
                                const char *pattern, const char *fname)
 {
-   return fl_file_chooser(msg, pattern, fname);
+   Fl_Native_File_Chooser fc;
+   fc.type(Fl_Native_File_Chooser::BROWSE_SAVE_FILE);
+
+   fc.title(msg);
+   fc.filter(pattern);
+   fc.preset_file(fname);
+   fc.directory(dname_str);
+
+   /* Save the last used directory */
+   dFree(dname_str);
+   dname_str = dStrdup(fc.directory());
+
+   dFree(fname_str);
+   fname_str = fc.show() ? NULL : dStrdup(fc.filename());
+
+   return fname_str;
 }
 
 /*
@@ -243,10 +263,22 @@ const char *a_Dialog_select_file(const char *msg,
 char *a_Dialog_open_file(const char *msg,
                          const char *pattern, const char *fname)
 {
-   const char *fc_name;
+   Fl_Native_File_Chooser fc;
+   fc.type(Fl_Native_File_Chooser::BROWSE_FILE);
 
-   fc_name = fl_file_chooser(msg, pattern, fname);
-   return (fc_name) ? a_Misc_escape_chars(fc_name, "% ") : NULL;
+   fc.title(msg);
+   fc.filter(pattern);
+   fc.preset_file(fname);
+   fc.directory(dname_str);
+
+   /* Save the last used directory */
+   dFree(dname_str);
+   dname_str = dStrdup(fc.directory());
+
+   dFree(fname_str);
+   fname_str = fc.show() ? NULL : dStrdup(fc.filename());
+
+   return fname_str ? a_Misc_escape_chars(fname_str, "% ") : NULL;
 }
 
 /*
