@@ -437,6 +437,9 @@ void CustTabs::set_tab_label(UI *ui, const char *label)
          Pack->child(idx)->measure_label(w, h);
          Pack->child(idx)->size(w+16,ctab_h);
          update_pack_offset();
+
+         // Set the tooltip to the full page title
+         Pack->child(idx)->copy_tooltip(label);
       }
    }
 }
