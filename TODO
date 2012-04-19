@@ -9,12 +9,13 @@ if I hadn't wasted so much time trying to cooperate with mainline.
 General:
 [X] Merge patches from Dillo-Win32
 [ ] Rebrand the browser as D+ (DPlus?)
-[ ] Update documentation:
-    [ ] README
-    [ ] BUILDING/INSTALL
-    [ ] AUTHORS
-    [ ] ChangeLog
-    [ ] HACKING and developer documentation
+
+Documentation:
+[X] README
+[ ] BUILDING/INSTALL
+[ ] AUTHORS
+[ ] ChangeLog
+[ ] HACKING and developer documentation
 
 Network:
 [ ] Remove all remaining DPI code
@@ -36,6 +37,7 @@ User interface:
 [ ] Add a "new tab" button to the tab bar
 [ ] Show the tab bar when only one tab is open
 [ ] Fix keyboard navigation in the bookmarks menu
+[ ] Allow changing the stored URL for bookmarks
 [ ] Switch to a more conventional menu/toolbar layout
 
 Packaging:
