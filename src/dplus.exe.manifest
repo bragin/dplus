@@ -3,10 +3,10 @@
 <assemblyIdentity
     version="1.0.0.0"
     processorArchitecture="*"
-    name="Dillo-Win32"
+    name="DPlus"
     type="win32"
 />
-<description>Dillo Web Browser</description>
+<description>D+ Browser</description>
 <dependency>
     <dependentAssembly>
         <assemblyIdentity

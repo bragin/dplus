@@ -134,11 +134,11 @@ dillo_SOURCES = \
 	xembed.hh
 
 if HAVE_WIN32RES
-dillo_LDADD += dillo.res
+dillo_LDADD += dplus.res
 endif
 
 if HAVE_WIN32RES
-dillo.res: dillo.rc dillo.ico
+dplus.res: dplus.rc dplus.ico
 	$(RC) -O coff -o $@ $<
 endif
 
