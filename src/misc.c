@@ -466,7 +466,7 @@ Dstr *a_Misc_file2dstr(const char *filename)
    char buf[4096];
    Dstr *dstr = NULL;
 
-   if ((F_in = fopen(filename, "r"))) {
+   if ((F_in = fopen(filename, "rb"))) {
       dstr = dStr_sized_new(4096);
       while ((n = fread (buf, 1, 4096, F_in)) > 0) {
          dStr_append_l(dstr, buf, n);

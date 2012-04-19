@@ -442,7 +442,7 @@ int a_Capi_open_url(DilloWeb *web, CA_Callback_t Call, void *CbData)
       * for http, ftp or https, use the downloads dpi */
      if (a_Capi_get_flags_with_redirection(web->url) & CAPI_IsCached) {
         if (web->filename) {
-           if ((web->stream = fopen(web->filename, "w"))) {
+           if ((web->stream = fopen(web->filename, "wb"))) {
               use_cache = 1;
            } else {
               MSG_WARN("Cannot open \"%s\" for writing.\n", web->filename);
