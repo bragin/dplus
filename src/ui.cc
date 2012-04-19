@@ -730,7 +730,7 @@ int UI::handle(int event)
          a_UIcmd_forw(a_UIcmd_get_bw_by_widget(this));
          ret = 1;
       } else if (cmd == KEYS_BOOKMARKS) {
-         a_UIcmd_book(a_UIcmd_get_bw_by_widget(this), this);
+         a_UIcmd_book(a_UIcmd_get_bw_by_widget(this), Bookmarks);
          ret = 1;
       } else if (cmd == KEYS_ADD_BOOKMARK) {
          a_UIcmd_add_bookmark_from_vbw(a_UIcmd_get_bw_by_widget(this));
