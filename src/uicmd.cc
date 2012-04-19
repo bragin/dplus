@@ -14,6 +14,7 @@
 
 #include <stdio.h>
 #include <stdarg.h>
+#include <unistd.h>     /* for access */
 #include <math.h>       /* for rint */
 
 #include <FL/Fl.H>
@@ -49,6 +50,10 @@
 #include "nav.h"
 
 #define DEFAULT_TAB_LABEL "New tab"
+
+#ifndef HELP_URL
+#  define HELP_URL "http://dillo-win32.sourceforge.net/help/"
+#endif
 
 // Handy macro
 #define BW2UI(bw) ((UI*)((bw)->ui))
@@ -1341,6 +1346,37 @@ void a_UIcmd_set_buttons_sens(BrowserWindow *bw)
    sens = (a_Nav_stack_ptr(bw) < a_Nav_stack_size(bw) - 1 &&
            !a_Bw_expecting(bw));
    BW2UI(bw)->button_set_sens(UI_FORW, sens);
+}
+
+/*
+ * Display Dillo's program help
+ */
+void a_UIcmd_help(BrowserWindow *bw)
+{
+   char *path = dStrconcat(DILLO_DOCDIR, "user_help.html", NULL);
+   char *urlstr;
+   DilloUrl *url;
+
+   if (access(path, R_OK) == 0) {
+      urlstr = dStrconcat("file:", path, NULL);
+   } else {
+      MSG("Can't read local help file at \"%s\"."
+          " Getting remote help...\n", path);
+      urlstr = dStrdup(HELP_URL);
+   }
+   url = a_Url_new(urlstr, NULL);
+
+   // Use a new browser window or tab, depending on the user's
+   // preferences, to avoid disrupting their current activity.
+   if (prefs.middle_click_opens_new_tab)
+      a_UIcmd_open_url_nt((void*)bw, url, 1);
+   else
+      a_UIcmd_open_url_nw(bw, url);
+
+   a_Url_free(url);
+
+   dFree(urlstr);
+   dFree(path);
 }
 
 /*

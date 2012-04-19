@@ -212,19 +212,8 @@ static void search_cb(Fl_Widget *wid, void *data)
  */
 static void help_cb(Fl_Widget *w, void *)
 {
-   char *path = dStrconcat(DILLO_DOCDIR, "user_help.html", NULL);
    BrowserWindow *bw = a_UIcmd_get_bw_by_widget(w);
-
-   if (access(path, R_OK) == 0) {
-      char *urlstr = dStrconcat("file:", path, NULL);
-      a_UIcmd_open_urlstr(bw, urlstr);
-      dFree(urlstr);
-   } else {
-      MSG("Can't read local help file at \"%s\"."
-          " Getting remote help...\n", path);
-      a_UIcmd_open_urlstr(bw, "http://www.dillo.org/dillo3-help.html");
-   }
-   dFree(path);
+   a_UIcmd_help(bw);
 }
 
 /*
@@ -749,6 +738,9 @@ int UI::handle(int event)
          ret = 1;
       } else if (cmd == KEYS_FILE_MENU) {
          a_UIcmd_file_popup(a_UIcmd_get_bw_by_widget(this), FileButton);
+         ret = 1;
+      } else if (cmd == KEYS_HELP) {
+         a_UIcmd_help(a_UIcmd_get_bw_by_widget(this));
          ret = 1;
       }
    } else if (event == FL_RELEASE) {

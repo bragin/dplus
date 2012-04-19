@@ -42,6 +42,7 @@ typedef enum {
    KEYS_FORWARD,
    KEYS_GOTO,
    KEYS_HOME,
+   KEYS_HELP,
    KEYS_SCREEN_UP,
    KEYS_SCREEN_DOWN,
    KEYS_LINE_UP,
