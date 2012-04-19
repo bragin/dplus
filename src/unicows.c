@@ -21,10 +21,10 @@
  * single-executable dillo.exe that works on Windows 95, 98, and Me systems.
  *
  * Note: this code requires libcurl, which we only link when Dillo-Win32's
- * built-in downloader is enabled -- hence the check for ENABLE_INTERNAL_DLGUI.
+ * built-in downloader is enabled -- hence the check for ENABLE_DOWNLOADS.
  */
 
-#if defined(_WIN32) && defined(ENABLE_INTERNAL_DLGUI)
+#if defined(_WIN32) && defined(ENABLE_DOWNLOADS)
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -119,10 +119,10 @@ void a_Unicows_check(void)
    }
 }
 
-#else /* _WIN32 && ENABLE_INTERNAL_DLGUI */
+#else /* _WIN32 && ENABLE_DOWNLOADS */
 
 void a_Unicows_check(void)
 {
 }
 
-#endif /* _WIN32 && ENABLE_INTERNAL_DLGUI */
+#endif /* _WIN32 && ENABLE_DOWNLOADS */

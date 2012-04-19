@@ -14,7 +14,7 @@
  * This is Dillo's simple built-in download manager.
  */
 
-#ifdef ENABLE_INTERNAL_DLGUI
+#ifdef ENABLE_DOWNLOADS
 
 /*
  * These must come BEFORE other includes,
@@ -544,7 +544,7 @@ int Dlgui_progress_callback(void *clientp, double dltotal, double dlnow,
 }
 
 
-#else /* ENABLE_INTERNAL_DLGUI */
+#else /* ENABLE_DOWNLOADS */
 
 
 #include "dlgui.hh"
@@ -565,6 +565,6 @@ void a_Dlgui_freeall()
 }
 
 
-#endif /* ENABLE_INTERNAL_DLGUI */
+#endif /* ENABLE_DOWNLOADS */
 
 /* vim: set sts=3 sw=3 et : */

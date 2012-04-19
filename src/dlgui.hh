@@ -9,9 +9,9 @@ extern "C" {
 void a_Dlgui_init();
 void a_Dlgui_freeall();
 
-#ifdef ENABLE_INTERNAL_DLGUI
+#ifdef ENABLE_DOWNLOADS
 void a_Dlgui_download(char *url, char *fn);
-#endif /* ENABLE_INTERNAL_DLGUI */
+#endif /* ENABLE_DOWNLOADS */
 
 
 #ifdef __cplusplus

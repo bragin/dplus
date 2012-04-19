@@ -28,9 +28,9 @@
 #include "uicmd.hh"
 #include "../dpip/dpip.h"
 
-#ifdef ENABLE_INTERNAL_DLGUI
+#ifdef ENABLE_DOWNLOADS
 #  include "dlgui.hh"
-#endif /* ENABLE_INTERNAL_DLGUI */
+#endif /* ENABLE_DOWNLOADS */
 
 /* for testing dpi chat */
 #include "bookmark.h"
@@ -390,14 +390,9 @@ int a_Capi_open_url(DilloWeb *web, CA_Callback_t Call, void *CbData)
            }
         }
      } else if (a_Cache_download_enabled(web->url)) {
-#ifdef ENABLE_INTERNAL_DLGUI
+#ifdef ENABLE_DOWNLOADS
         a_Dlgui_download(URL_STR(web->url), web->filename);
-#else /* ENABLE_INTERNAL_DLGUI */
-        server = "downloads";
-        cmd = Capi_dpi_build_cmd(web, server);
-        a_Capi_dpi_send_cmd(web->url, web->bw, cmd, server, 1);
-        dFree(cmd);
-#endif /* ENABLE_INTERNAL_DLGUI */
+#endif /* ENABLE_DOWNLOADS */
      }
 
    } else if (Capi_url_uses_dpi(web->url, &server)) {
