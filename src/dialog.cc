@@ -42,35 +42,10 @@
 /*
  * Local Data
  */
-static int input_answer;
-static char *input_str = NULL;
 static int choice5_answer;
 
 static char *fname_str = NULL;
 static char *dname_str = NULL;
-
-
-/*
- * Local sub classes
- */
-
-//----------------------------------------------------------------------------
-/*
- * Used to make the ENTER key activate the CustChoice
- */
-class CustChoice : public Fl_Choice {
-public:
-   CustChoice (int x, int y, int w, int h, const char* l=0) :
-      Fl_Choice(x,y,w,h,l) {};
-   int handle(int e) {
-      if (e == FL_KEYBOARD &&
-          (Fl::event_key() == FL_Enter || Fl::event_key() == FL_Down) &&
-          (Fl::event_state() & (FL_SHIFT|FL_CTRL|FL_ALT|FL_META)) == 0) {
-         return Fl_Choice::handle(FL_PUSH);
-      }
-      return Fl_Choice::handle(e);
-   };
-};
 
 //----------------------------------------------------------------------------
 
@@ -83,99 +58,6 @@ void a_Dialog_msg(const char *msg)
    fl_message("%s", msg);
 }
 
-
-/*
- * Callback for a_Dialog_input()
- */
-static void input_cb(Fl_Widget *button, void *number)
-{
-  input_answer = VOIDP2INT(number);
-  button->window()->hide();
-}
-
-/*
- * Dialog for one line of Input with a message.
- * avoids the sound bell in fl_input(), and allows customization
- *
- * Return value: string on success, NULL upon Cancel or Close window
- */
-const char *a_Dialog_input(const char *msg)
-{
-   static Fl_Menu_Item *pm = 0;
-   int ww = 450, wh = 130, gap = 10, ih = 60, bw = 80, bh = 30;
-
-   input_answer = 0;
-
-   Fl_Window *window = new Fl_Window(ww,wh,"Ask");
-   window->set_modal();
-   window->begin();
-    Fl_Group* ib = new Fl_Group(0,0,window->w(),window->h());
-    ib->begin();
-    window->resizable(ib);
-
-    /* '?' Icon */
-    Fl_Box* o = new Fl_Box(gap, gap, ih, ih);
-    o->box(FL_THIN_UP_BOX);
-    o->labelfont(FL_TIMES_BOLD);
-    o->labelsize(34);
-    o->color(FL_WHITE);
-    o->labelcolor(FL_BLUE);
-    o->label("?");
-    o->show();
-
-    Fl_Box *box = new Fl_Box(ih+2*gap,gap,ww-(ih+3*gap),ih/2, msg);
-    box->labelfont(FL_HELVETICA);
-    box->labelsize(14);
-    box->align(FL_ALIGN_LEFT|FL_ALIGN_INSIDE|FL_ALIGN_CLIP|FL_ALIGN_WRAP);
-
-    Fl_Input *c_inp = new Fl_Input(ih+2*gap,gap+ih/2+gap,ww-(ih+3*gap),24);
-    c_inp->labelsize(14);
-    c_inp->textsize(14);
-
-    CustChoice *ch = new CustChoice(1*gap,ih+3*gap,180,24);
-    if (!pm) {
-       int n_it = dList_length(prefs.search_urls);
-       pm = new Fl_Menu_Item[n_it+1];
-       memset(pm, '\0', sizeof(Fl_Menu_Item[n_it+1]));
-       for (int i = 0, j = 0; i < n_it; i++) {
-          char *label, *url, *source;
-          source = (char *)dList_nth_data(prefs.search_urls, i);
-          if (!source || a_Misc_parse_search_url(source, &label, &url) < 0)
-             continue;
-          pm[j++].label(FL_NORMAL_LABEL, strdup(label));
-       }
-    }
-    ch->tooltip("Select search engine");
-    ch->menu(pm);
-    ch->value(prefs.search_url_idx);
-
-    int xpos = ww-2*(gap+bw), ypos = ih+3*gap;
-    Fl_Return_Button *rb = new Fl_Return_Button(xpos, ypos, bw, bh, "OK");
-    rb->align(FL_ALIGN_INSIDE|FL_ALIGN_CLIP);
-    rb->box(FL_UP_BOX);
-    rb->callback(input_cb, INT2VOIDP(1));
-
-    xpos = ww-(gap+bw);
-    Fl_Button *b = new Fl_Button(xpos, ypos, bw, bh, "Cancel");
-    b->align(FL_ALIGN_INSIDE|FL_ALIGN_CLIP);
-    b->box(FL_UP_BOX);
-    b->callback(input_cb, INT2VOIDP(2));
-
-   window->end();
-
-   window->show();
-   while (window->shown())
-      Fl::wait();
-   if (input_answer == 1) {
-      /* we have a string, save it */
-      dFree(input_str);
-      input_str = dStrdup(c_inp->value());
-      prefs.search_url_idx = ch->value();
-   }
-   delete window;
-
-   return (input_answer == 1) ? input_str : NULL;
-}
 
 /*
  * Dialog for password

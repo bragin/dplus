@@ -965,20 +965,6 @@ void a_UIcmd_print_page(void *vbw)
 }
 
 /*
- * Get a query from a dialog and open it
- */
-void a_UIcmd_search_dialog(void *vbw)
-{
-   const char *query;
-
-   if ((query = a_Dialog_input("Search the Web:"))) {
-      char *url_str = UIcmd_make_search_str(query);
-      a_UIcmd_open_urlstr(vbw, url_str);
-      dFree(url_str);
-   }
-}
-
-/*
  * Get password for user
  */
 const char *a_UIcmd_get_passwd(const char *user)

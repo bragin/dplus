@@ -178,7 +178,7 @@ class UI : public CustGroupVertical {
 
    CustGroupVertical *TopGroup;
    Fl_Button *Back, *Forw, *Home, *Reload, *Save, *Stop, *Bookmarks, *Tools,
-          *Clear, *SearchB, *Help, *BugMeter, *FileButton;
+          *Clear, *Help, *BugMeter, *FileButton;
    CustGroupHorizontal *LocBar, *NavBar, *StatusBar;
    Fl_Input  *Location, *Search;
    CustProgressBox *PProg, *IProg;
@@ -214,6 +214,7 @@ public:
    const char *get_location();
    void set_location(const char *str);
    void focus_location();
+   void focus_search();
    void focus_main();
    void set_status(const char *str);
    void set_page_prog(size_t nbytes, int cmd);

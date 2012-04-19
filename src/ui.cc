@@ -32,7 +32,7 @@
 struct iconset {
    Fl_Image *ImgMeterOK, *ImgMeterBug,
             *ImgHome, *ImgReload, *ImgSave, *ImgBook, *ImgTools,
-            *ImgClear,*ImgSearch, *ImgHelp, *ImgLeft, *ImgLeftIn,
+            *ImgClear, *ImgHelp, *ImgLeft, *ImgLeftIn,
             *ImgRight, *ImgRightIn, *ImgStop, *ImgStopIn;
 };
 
@@ -45,7 +45,6 @@ static struct iconset standard_icons = {
    new Fl_Pixmap(bm_xpm),
    new Fl_Pixmap(tools_xpm),
    new Fl_Pixmap(new_s_xpm),
-   new Fl_Pixmap(search_xpm),
    new Fl_Pixmap(help_xpm),
    new Fl_Pixmap(left_xpm),
    new Fl_Pixmap(left_i_xpm),
@@ -64,7 +63,6 @@ static struct iconset small_icons = {
    new Fl_Pixmap(bm_s_xpm),
    new Fl_Pixmap(tools_s_xpm),
    new Fl_Pixmap(new_s_xpm),
-   standard_icons.ImgSearch,
    standard_icons.ImgHelp,
    new Fl_Pixmap(left_s_xpm),
    new Fl_Pixmap(left_si_xpm),
@@ -217,18 +215,6 @@ public:
 //
 // Callback functions --------------------------------------------------------
 //
-
-/*
- * Callback for the search button.
- */
-static void searchb_cb(Fl_Widget *wid, void *data)
-{
-   int b = Fl::event_button();
-
-   if (b == FL_LEFT_MOUSE) {
-      a_UIcmd_search_dialog(a_UIcmd_get_bw_by_widget(wid));
-   }
-}
 
 /*
  * Callback for the help button.
@@ -446,21 +432,11 @@ void UI::make_location(int ww)
     i->tooltip("Location");
     p_xpos += i->w();
 
-    i = Search = new SearchInput(p_xpos,0,160,lh,0);
+    i = Search = new SearchInput(p_xpos,0,144,lh,0);
     i->when(FL_WHEN_ENTER_KEY);
     i->callback(search_cb, this);
     i->tooltip("Search");
-    i->image(icons->ImgSearch);
-    i->align(FL_ALIGN_INSIDE | FL_ALIGN_RIGHT);
     p_xpos += i->w();
-
-    SearchB = b = new CustLightButton(p_xpos,0,16,lh,0);
-    b->image(icons->ImgSearch);
-    b->callback(searchb_cb, this);
-    b->clear_visible_focus();
-    b->box(FL_THIN_UP_BOX);
-    b->tooltip("Search the Web");
-    p_xpos += b->w();
 
     Help = b = new CustLightButton(p_xpos,0,16,lh,0);
     b->image(icons->ImgHelp);
@@ -746,7 +722,11 @@ int UI::handle(int event)
          findbar_toggle(1);
          ret = 1;
       } else if (cmd == KEYS_WEBSEARCH) {
-         a_UIcmd_search_dialog(a_UIcmd_get_bw_by_widget(this));
+         if (Panelmode == UI_HIDDEN) {
+            panels_toggle();
+            temporaryPanels(true);
+         }
+         focus_search();
          ret = 1;
       } else if (cmd == KEYS_GOTO) {
          if (Panelmode == UI_HIDDEN) {
@@ -840,6 +820,17 @@ void UI::focus_location()
    Location->take_focus();
    // Make text selected when already focused.
    Location->position(Location->size(), 0);
+}
+
+/*
+ * Focus search entry.
+ * If it's not visible, show it until the callback is done.
+ */
+void UI::focus_search()
+{
+   Search->take_focus();
+   // Make text selected when already focused.
+   Search->position(Search->size(), 0);
 }
 
 /*
