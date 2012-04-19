@@ -28,6 +28,8 @@ AC_ARG_ENABLE(insure, [  --enable-insure         Try to compile and run with Ins
                     , enable_insure=no)
 AC_ARG_ENABLE(ssl,    [  --enable-ssl            Enable ssl, https (ALPHA CODE)],
                     , enable_ssl=no)
+AC_ARG_ENABLE(cyassl, [  --enable-cyassl         Enable ssl, https using CyaSSL (ALPHA CODE)],
+                    , enable_cyassl=no)
 AC_ARG_ENABLE(ipv6,   [  --enable-ipv6           Build with support for IPv6], , )
 AC_ARG_ENABLE(cookies,[  --disable-cookies       Don't compile support for cookies],
                     , enable_cookies=yes)
@@ -287,21 +289,42 @@ dnl
 if test "x$enable_ssl" = "xyes"; then
   AC_CHECK_HEADER(openssl/ssl.h, ssl_ok=yes, ssl_ok=no)
 
-  if test "x$ssl_ok" = "xyes"; then
-    old_libs="$LIBS"
-    AC_CHECK_LIB(ssl, SSL_library_init, ssl_ok=yes, ssl_ok=no, -lcrypto)
-    LIBS="$old_libs"
-  fi
-
-  if test "x$ssl_ok" = "xyes"; then
+dnl This test is broken on Win32:
+dnl ----------------------------
+#  if test "x$ssl_ok" = "xyes"; then
+#    old_libs="$LIBS"
+#    AC_CHECK_LIB(ssl, SSL_library_init, ssl_ok=yes, ssl_ok=no, -lcrypto)
+#    LIBS="$old_libs"
+#  fi
+#
+#  if test "x$ssl_ok" = "xyes"; then
     LIBSSL_LIBS="-lcrypto -lssl"
     AC_MSG_WARN([*** Enabling ssl support. THIS IS ALPHA CODE!***])
-  else
-    AC_MSG_WARN([*** No libssl found. Disabling ssl support.***])
-  fi
+#  else
+#    AC_MSG_WARN([*** No libssl found. Disabling ssl support.***])
+#  fi
 fi
 
 if test "x$ssl_ok" = "xyes"; then
+  AC_DEFINE([ENABLE_SSL], [1], [Enable SSL support])
+fi
+
+dnl -----------------------------
+dnl  Test for support for CyaSSL
+dnl -----------------------------
+dnl
+if test "x$enable_cyassl" = "xyes"; then
+  AC_CHECK_HEADER(openssl/ssl.h, cyassl_ok=yes, cyassl_ok=no)
+
+  if test "x$cyassl_ok" = "xyes"; then
+    LIBSSL_LIBS="-lcyassl"
+    AC_MSG_WARN([*** Enabling ssl support. THIS IS ALPHA CODE!***])
+  else
+    AC_MSG_WARN([*** No libcyassl found. Disabling ssl support.***])
+  fi
+fi
+
+if test "x$cyassl_ok" = "xyes"; then
   AC_DEFINE([ENABLE_SSL], [1], [Enable SSL support])
 fi
 
@@ -469,6 +492,11 @@ if test "x$enable_insure" = "xyes" ; then
 fi
 if test "x$enable_threaded_dns" = "xyes" ; then
   CFLAGS="$CFLAGS -DD_DNS_THREADED"
+fi
+if test "x$enable_cyassl" = "xyes" ; then
+  CFLAGS="$CFLAGS -DENABLE_SSL"
+  CXXFLAGS="$CXXFLAGS -DENABLE_SSL"
+  LIBS="$LIBS -lcyassl"
 fi
 if test "x$enable_rtfl" = "xyes" ; then
   CXXFLAGS="$CXXFLAGS -DDBG_RTFL"
