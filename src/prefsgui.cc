@@ -683,8 +683,6 @@ void Prefsgui_search_add_cb(Fl_Widget *widget, void *l)
    // ones I have set up in my Opera browser).
    if (b == FL_RIGHT_MOUSE) {
       sl->clear();
-      sl->add("Scroogle "
-              "https://ssl.scroogle.org/cgi-bin/nbbwssl.cgi?Gw=%s");
       sl->add("Google "
               "http://www.google.com/search?q=%s");
       sl->add("Google Images "
