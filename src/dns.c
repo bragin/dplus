@@ -506,12 +506,15 @@ void a_Dns_freeall(void)
  */
 void a_Dns_dillohost_to_string(DilloHost *host, char *dst, size_t size)
 {
-   if (!inet_ntop(host->af, host->data, dst, size)) {
-      switch (errno) {
-         case EAFNOSUPPORT:
-            snprintf(dst, size, "Unknown address family");
-         case ENOSPC:
-            snprintf(dst, size, "Buffer too small");
-      }
+   struct sockaddr_in sa_host;
+   sa_host.sin_family = host->af;
+   memcpy(&sa_host.sin_addr, host->data, host->alen);
+
+   switch (getnameinfo(&sa_host, sizeof(sa_host),
+		       dst, size, NULL, 0, NI_NUMERICHOST)) {
+      case EAI_FAMILY:
+	 snprintf(dst, size, "Unknown address family");
+      case EAI_MEMORY:
+	 snprintf(dst, size, "Buffer too small");
    }
 }

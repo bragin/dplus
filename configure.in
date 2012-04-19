@@ -127,6 +127,7 @@ case $target in
   *-*-mingw*)
     dnl Building on MinGW: use Windows sockets
     LIBS="$LIBS -lws2_32"
+    enable_threaded_dns=no
     ;;
 
   *-*-*djgpp*)
@@ -134,6 +135,7 @@ case $target in
     LIBS="$LIBS -lwatt"
     LDFLAGS="$LDFLAGS -L/dev/env/WATT_ROOT/lib"
     CPPFLAGS="$CPPFLAGS -I/dev/env/WATT_ROOT/inc"
+    enable_threaded_dns=no
     ;;
 
 esac
