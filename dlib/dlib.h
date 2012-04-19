@@ -175,6 +175,7 @@ void dLib_show_messages(bool_t show);
  */
 char *dGetcwd ();
 char *dGethomedir ();
+char *dGetprofdir ();
 char *dGettempdir ();
 char *dGetline (FILE *stream);
 int dMkdir (const char *path, int mode);

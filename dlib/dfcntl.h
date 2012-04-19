@@ -13,8 +13,14 @@ extern "C" {
 int dFcntl (int fildes, int cmd, ...);
 #endif
 
+/* Call fcntlsocket() on MS-DOS */
+#ifdef MSDOS
+#  include <sys/socket.h>  /* for fcntlsocket() */
+#  define dFcntl(...) fcntlsocket(__VA_ARGS__)
+#endif
+
 /* Call fcntl() directly on others */
-#ifndef _WIN32
+#if !defined(_WIN32) && !defined(MSDOS)
 #  define dFcntl(...) fcntl(__VA_ARGS__)
 #endif
 

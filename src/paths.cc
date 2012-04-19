@@ -42,7 +42,7 @@ void Paths::init(void)
           dStrerror(errno));
    }
 
-   path = dStrconcat(dGethomedir(), "/.dillo", NULL);
+   path = dStrdup(dGetprofdir());
    if (stat(path, &st) == -1) {
       if (errno == ENOENT) {
          MSG("paths: creating directory %s.\n", path);
@@ -71,6 +71,7 @@ char *Paths::getOldWorkingDir(void)
  */
 void Paths::free(void)
 {
+   chdir(oldWorkingDir);
    dFree(oldWorkingDir);
 }
 
@@ -80,7 +81,7 @@ void Paths::free(void)
 FILE *Paths::getPrefsFP(const char *rcFile)
 {
    FILE *fp;
-   char *path = dStrconcat(dGethomedir(), "/.dillo/", rcFile, NULL);
+   char *path = dStrconcat(dGetprofdir(), "/", rcFile, NULL);
 
    if (!(fp = fopen(path, "r"))) {
       MSG("paths: Cannot open file '%s'\n", path);
@@ -105,7 +106,7 @@ FILE *Paths::getPrefsFP(const char *rcFile)
 FILE *Paths::getWriteFP(const char *rcFile)
 {
    FILE *fp;
-   char *path = dStrconcat(dGethomedir(), "/.dillo/", rcFile, NULL);
+   char *path = dStrconcat(dGetprofdir(), "/", rcFile, NULL);
 
    if (!(fp = fopen(path, "w"))) {
       MSG("paths: Cannot open file '%s' for writing\n", path);

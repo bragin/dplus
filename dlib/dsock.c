@@ -84,14 +84,16 @@ int dClose(int fd)
       Sock_ssl_close(conn);
 #endif
 
-#ifdef _WIN32
+#if defined(_WIN32)
    int retval = closesocket(fd);
    if (NOT_A_SOCKET)
-#endif
       return close(fd);
-#ifdef _WIN32
    else
       return retval;
+#elif defined(MSDOS)
+   return closesocket(fd);
+#else
+   return close(fd);
 #endif
 }
 

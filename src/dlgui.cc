@@ -21,7 +21,11 @@
  * or you'll get nasty conflicts on Win32.
  */
 #include <stdio.h>
-#include <libgen.h>
+#ifdef __DJGPP__
+#  include <unistd.h>  /* DJGPP incorrectly puts basename() here */
+#else
+#  include <libgen.h>
+#endif
 #include <curl/curl.h>
 
 #include "dlgui.hh"

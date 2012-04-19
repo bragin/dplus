@@ -332,7 +332,7 @@ void a_Cookies_init(void)
 
 #ifdef ENABLE_COOKIES_TXT
    /* Get a stream for the cookies file */
-   filename = dStrconcat(dGethomedir(), "/.dillo/cookies.txt", NULL);
+   filename = dStrconcat(dGetprofdir(), "/cookies.txt", NULL);
    file_stream = Cookies_fopen(filename, "r+", cookies_txt_header_str);
 
    dFree(filename);
@@ -1339,8 +1339,14 @@ static int Cookie_control_init(void)
    char rule[LINE_MAXLEN];
    bool_t enabled = FALSE;
 
+#ifdef MSDOS
+#  define COOKIESRC "COOKIES.RC"  /* 8.3-safe name ("cookiesrc" is 9 chars) */
+#else
+#  define COOKIESRC "cookiesrc"
+#endif
+
    /* Get a file pointer */
-   filename = dStrconcat(dGethomedir(), "/.dillo/cookiesrc", NULL);
+   filename = dStrconcat(dGetprofdir(), "/" COOKIESRC, NULL);
    stream = Cookies_fopen(filename, "r", "DEFAULT ACCEPT_SESSION\n");
    dFree(filename);
 

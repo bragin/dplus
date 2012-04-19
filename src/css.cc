@@ -622,7 +622,7 @@ void CssContext::buildUserAgentStyle () {
 
 void CssContext::buildUserStyle () {
    Dstr *style;
-   char *filename = dStrconcat(dGethomedir(), "/.dillo/style.css", NULL);
+   char *filename = dStrconcat(dGetprofdir(), "/style.css", NULL);
 
    if ((style = a_Misc_file2dstr(filename))) {
       CssParser::parse (NULL,NULL,this,style->str, style->len,CSS_ORIGIN_USER);

@@ -367,7 +367,7 @@ void Bms_check_import(void)
    int rc;
 
    if (access(BmFile, F_OK) != 0) {
-      OldBmFile = dStrconcat(dGethomedir(), "/.dillo/bookmarks.html", NULL);
+      OldBmFile = dStrconcat(dGetprofdir(), "/bookmarks.html", NULL);
       if (access(OldBmFile, F_OK) != 0) {
 #ifndef _WIN32
          /* FIXME: This code is not portable. */
@@ -531,7 +531,7 @@ void a_Bms_init(void)
    is_ready = 0;
    B_bms = dList_new(512);
    B_secs = dList_new(32);
-   BmFile = dStrconcat(dGethomedir(), "/.dillo/bm.txt", NULL);
+   BmFile = dStrconcat(dGetprofdir(), "/bm.txt", NULL);
 
    /* if we don't already have a bookmarks file, create one */
    if (access(BmFile, F_OK) != 0) {

@@ -1,4 +1,6 @@
-dist_doc_DATA = user_help.html
+# Incompatible with automake-1.7.6 on DJGPP
+# -----------------------------------------
+#dist_doc_DATA = user_help.html
 man_MANS = dillo.1
 EXTRA_DIST = \
         $(man_MANS) \

@@ -27,13 +27,16 @@
 
 #include "dlib.h"
 
-#ifdef _WIN32
+#if defined(_WIN32)
 #  define DLIB_ROOT "C:\\"
 #  define DLIB_TEMP "C:\\WINDOWS\\TEMP"
-#else /* _WIN32 */
+#elif defined(MSDOS)
+#  define DLIB_ROOT "C:\\"
+#  define DLIB_TEMP "C:\\TEMP"
+#else
 #  define DLIB_ROOT "/"
 #  define DLIB_TEMP "/tmp"
-#endif /* _WIN32 */
+#endif
 
 static bool_t dLib_show_msg = TRUE;
 
@@ -859,6 +862,10 @@ char *dGethomedir ()
    if (!homedir) {
       if (getenv("HOME")) {
          homedir = dStrdup(getenv("HOME"));
+#ifdef MSDOS
+      } else if (getenv("DILLO")) {
+         homedir = dStrdup(getenv("DILLO"));  /* set in DILLO.BAT */
+#endif /* MSDOS */
 #ifdef _WIN32
       } else if (getenv("USERPROFILE")) {
          homedir = dStrdup(getenv("USERPROFILE"));
@@ -876,6 +883,26 @@ char *dGethomedir ()
 }
 
 /*
+ * Return the ~/.dillo directory in a static string (don't free)
+ */
+char *dGetprofdir ()
+{
+   static char *profdir = NULL;
+
+#ifdef MSDOS
+   /* Use an 8.3-safe directory name on DOS. */
+   profdir = dStrconcat(getenv("DILLO"), "/CONFIG", NULL);
+#else
+   /* Note: It would be better if we used the Application Data folder on
+    * Windows, but that's not available on Windows 95/98/Me/NT 4.0, and
+    * switching would break upgrading from previous Dillo-Win32 releases. */
+   profdir = dStrconcat(dGethomedir(), "/.dillo", NULL);
+#endif
+
+   return profdir;
+}
+
+/*
  * Return the temporary directory in a static string (don't free)
  */
 char *dGettempdir ()
@@ -887,6 +914,10 @@ char *dGettempdir ()
 	 tempdir = dStrdup(getenv("TEMP"));
       } else if (getenv("TMP")) {
 	 tempdir = dStrdup(getenv("TMP"));
+#ifdef MSDOS
+      } else if (getenv("DILLO")) {
+         tempdir = dStrdup(getenv("DILLO"));
+#endif /* MSDOS */
 #ifdef _WIN32
       } else if (getenv("windir")) {
 	 tempdir = dStrconcat(getenv("windir"), "\\TEMP", NULL);
