@@ -186,6 +186,13 @@ static bool_t IO_read(IOData_t *io)
          } else if (errno == EAGAIN) {
             ret = TRUE;
             break;
+#ifdef MSDOS
+         } else if (errno == EWOULDBLOCK) {
+            /* On most systems this is the same as EAGAIN, but on Watt-32
+             * it's a separate error and handling it like EAGAIN will cause
+             * Dillo to crash.  Thanks to Georg Potthast. */
+            continue;
+#endif /* MSDOS */
          } else {
             io->Status = errno;
             break;
@@ -233,6 +240,11 @@ static bool_t IO_write(IOData_t *io)
          } else if (errno == EAGAIN) {
             ret = TRUE;
             break;
+#ifdef MSDOS
+         } else if (errno == EWOULDBLOCK) {
+            /* See IO_Read */
+            continue;
+#endif /* MSDOS */
          } else {
             io->Status = errno;
             break;
