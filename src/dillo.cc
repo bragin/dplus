@@ -47,6 +47,7 @@
 #include "dicache.h"
 #include "cookies.h"
 #include "auth.h"
+#include "dlgui.hh"
 
 #include "dw/fltkcore.hh"
 
@@ -356,6 +357,7 @@ int main(int argc, char **argv)
    a_Bw_init();
    a_Cookies_init();
    a_Auth_init();
+   a_Dlgui_init();
 
    /* command line options override preferences */
    if (options_got & DILLO_CLI_FULLWINDOW)
@@ -445,6 +447,7 @@ int main(int argc, char **argv)
     * (This can be left to the OS, but we'll do it, with a view to test
     *  and fix our memory management)
     */
+   a_Dlgui_freeall();
    a_Cookies_freeall();
    a_Cache_freeall();
    a_Dicache_freeall();

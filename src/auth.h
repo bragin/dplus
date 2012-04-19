@@ -9,6 +9,7 @@ extern "C" {
 
 
 const char *a_Auth_get_auth_str(const DilloUrl *request_url);
+const char *a_Auth_get_user_password(const DilloUrl *request_url);
 int a_Auth_do_auth(Dlist *auth_string, const DilloUrl *url);
 void a_Auth_init(void);
 

@@ -4,7 +4,7 @@ AM_CPPFLAGS= \
 	-DDILLO_DOCDIR='"$(docdir)/"' \
 	@LIBJPEG_CPPFLAGS@
 AM_CFLAGS = @LIBPNG_CFLAGS@
-AM_CXXFLAGS = @LIBPNG_CFLAGS@ @LIBFLTK_CXXFLAGS@
+AM_CXXFLAGS = @LIBPNG_CFLAGS@ @CURL_CFLAGS@ @LIBFLTK_CXXFLAGS@
 
 SUBDIRS = IO
 
@@ -19,7 +19,7 @@ dillo_LDADD = \
 	$(top_builddir)/dw/libDw-core.a \
 	$(top_builddir)/lout/liblout.a \
 	@LIBJPEG_LIBS@ @LIBPNG_LIBS@ @LIBFLTK_LIBS@ @LIBZ_LIBS@ \
-	@LIBICONV_LIBS@ @LIBPTHREAD_LIBS@
+	@LIBICONV_LIBS@ @LIBPTHREAD_LIBS@ @CURL_LIBS@
 
 dillo_SOURCES = \
 	dillo.cc \
@@ -116,6 +116,8 @@ dillo_SOURCES = \
 	pixmaps.h \
 	findbar.cc \
 	findbar.hh \
+	dlgui.cc \
+	dlgui.hh \
 	xembed.cc \
 	xembed.hh
 

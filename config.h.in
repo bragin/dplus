@@ -3,6 +3,9 @@
 /* Enable GIF images */
 #undef ENABLE_GIF
 
+/* Enable internal downloads GUI */
+#undef ENABLE_INTERNAL_DLGUI
+
 /* Enable JPEG images */
 #undef ENABLE_JPEG
 

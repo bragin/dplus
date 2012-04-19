@@ -31,6 +31,7 @@ typedef struct {
 typedef struct {
    char *name;
    Dlist *paths; /* stripped of any trailing '/', so the root path is "" */
+   char *user_password; /* username and password, needed by dlgui.cc */
    char *authorization; /* the authorization request header */
 } AuthRealm_t;
 
@@ -390,6 +391,21 @@ const char *a_Auth_get_auth_str(const DilloUrl *url)
 }
 
 /*
+ * Return the user:password pair for an HTTP query.
+ * Used by dlgui.cc to set authorization for downloads.
+ */
+const char *a_Auth_get_user_password(const DilloUrl *url)
+{
+   AuthHost_t *host;
+   AuthRealm_t *realm;
+
+   return
+      ((host = Auth_host_by_url(url)) &&
+       (realm = Auth_realm_by_path(host, URL_PATH(url)))) ?
+      realm->user_password : NULL;
+}
+
+/*
  * Determine whether the user needs to authenticate.
  */
 static int Auth_do_auth_required(const char *realm_name, const DilloUrl *url)
@@ -461,6 +477,7 @@ static void Auth_do_auth_dialog_cb(const char *user, const char *password,
       realm = dNew(AuthRealm_t, 1);
       realm->name = dStrdup(data->realm_name);
       realm->paths = dList_new(1);
+      realm->user_password = NULL;
       realm->authorization = NULL;
       dList_append(host->realms, realm);
    }
@@ -473,6 +490,7 @@ static void Auth_do_auth_dialog_cb(const char *user, const char *password,
    authorization =
       dStrconcat("Authorization: Basic ", response, "\r\n", NULL);
    authorization_old = realm->authorization;
+   realm->user_password = user_password;
    realm->authorization = authorization;
    dFree(authorization_old);
    dFree(user_password);

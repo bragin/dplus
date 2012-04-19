@@ -13,6 +13,8 @@
  * A FLTK-based GUI for the downloads dpi (dillo plugin).
  */
 
+#ifndef ENABLE_INTERNAL_DLGUI
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -1167,4 +1169,6 @@ int main()
 
    return Fl::run();
 }
+
+#endif  /* ENABLE_INTERNAL_DLGUI */
 
