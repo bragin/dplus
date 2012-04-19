@@ -9,6 +9,7 @@ if I hadn't wasted so much time trying to cooperate with mainline.
 General:
 [X] Merge patches from Dillo-Win32
 [ ] Rebrand the browser as D+ (DPlus?)
+[ ] Use config.h rather than -DENABLE_* in CPPFLAGS
 
 Documentation:
 [X] README
@@ -19,7 +20,7 @@ Documentation:
 
 Network:
 [ ] Remove all remaining DPI code
-[ ] Make DlGui a standard feature
+[X] Make DlGui a standard feature
 [ ] Clean up the HTTPS code
 [ ] Move directory list generation from file.c into a separate module
 
