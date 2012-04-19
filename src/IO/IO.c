@@ -2,6 +2,7 @@
  * File: IO.c
  *
  * Copyright (C) 2000-2007 Jorge Arellano Cid <jcid@dillo.org>
+ * Copyright (C) 2010 Benjamin Johnson <obeythepenguin@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,13 +15,15 @@
  */
 
 #include <errno.h>
-#include <fcntl.h>
 #include <unistd.h>
 #include "../msg.h"
 #include "../chain.h"
 #include "../klist.h"
 #include "IO.h"
 #include "iowatch.hh"
+
+#include "dlib/dfcntl.h"
+#include "dlib/dsock.h"
 
 /*
  * Symbolic defines for shutdown() function
@@ -136,7 +139,7 @@ static void IO_close_fd(IOData_t *io, int CloseCode)
    if (((io->Flags & IOFlag_ForceClose) || (CloseCode == IO_StopRdWr)) &&
        io->FD != -1) {
       do
-         st = close(io->FD);
+         st = dClose(io->FD);
       while (st < 0 && errno == EINTR);
    } else {
       _MSG(" NOT CLOSING ");
@@ -173,7 +176,7 @@ static bool_t IO_read(IOData_t *io)
    io->Status = 0;
 
    while (1) {
-      St = read(io->FD, Buf, IOBufLen);
+      St = dRead(io->FD, Buf, IOBufLen);
       if (St > 0) {
          dStr_append_l(io->Buf, Buf, St);
          continue;
@@ -222,7 +225,7 @@ static bool_t IO_write(IOData_t *io)
    io->Status = 0;
 
    while (1) {
-      St = write(io->FD, io->Buf->str, io->Buf->len);
+      St = dWrite(io->FD, io->Buf->str, io->Buf->len);
       if (St < 0) {
          /* Error */
          if (errno == EINTR) {
@@ -322,8 +325,8 @@ static void IO_submit(IOData_t *r_io)
         (r_io->Op == IORead) ? "IORead" : "IOWrite", r_io->FD);
 
    /* Set FD to background and to close on exec. */
-   fcntl(r_io->FD, F_SETFL, O_NONBLOCK | fcntl(r_io->FD, F_GETFL));
-   fcntl(r_io->FD, F_SETFD, FD_CLOEXEC | fcntl(r_io->FD, F_GETFD));
+   dFcntl(r_io->FD, F_SETFL, O_NONBLOCK | dFcntl(r_io->FD, F_GETFL));
+   dFcntl(r_io->FD, F_SETFD, FD_CLOEXEC | dFcntl(r_io->FD, F_GETFD));
 
    if (r_io->Op == IORead) {
       a_IOwatch_add_fd(r_io->FD, DIO_READ,

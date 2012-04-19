@@ -24,11 +24,11 @@
 #endif
 
 
-#include <netdb.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <netinet/in.h>
+/* This must come first to avoid conflicts on Win32. */
+#define DSOCK_TCPIP
+#define DSOCK_WSPIAPI
+#include "../dlib/dsock.h"
+
 #include <errno.h>
 #include <unistd.h>
 #include <stdlib.h>

@@ -50,6 +50,8 @@
 
 #include "dw/fltkcore.hh"
 
+#include "dlib/dsock.h"
+
 /*
  * Command line options structure
  */
@@ -280,8 +282,10 @@ int main(int argc, char **argv)
 
    srand((uint_t)(time(0) ^ getpid()));
 
+#ifdef SIGPIPE
    // Some OSes exit dillo without this (not GNU/Linux).
    signal(SIGPIPE, SIG_IGN);
+#endif /* SIGPIPE */
 
    /* Handle command line options */
    opt_argv = dNew0(char*, numOptions(Options) + 1);
@@ -341,6 +345,7 @@ int main(int argc, char **argv)
    dLib_show_messages(prefs.show_msg);
 
    // initialize internal modules
+   a_Sock_init();
    a_Dpi_init();
    a_Dns_init();
    a_Web_init();
@@ -447,6 +452,7 @@ int main(int argc, char **argv)
    a_Prefs_freeall();
    Keys::free();
    Paths::free();
+   a_Sock_freeall();
    /* TODO: auth, css */
 
    //a_Dpi_dillo_exit();

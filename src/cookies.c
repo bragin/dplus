@@ -29,7 +29,6 @@ void a_Cookies_init(void)
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/file.h>
-#include <fcntl.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -41,6 +40,8 @@ void a_Cookies_init(void)
 #include "cookies.h"
 #include "capi.h"
 #include "../dpip/dpip.h"
+
+#include "dlib/dfcntl.h"
 
 
 /* The maximum length of a line in the cookie file */
@@ -101,7 +102,7 @@ static FILE *Cookies_fopen(const char *filename, char *init_str)
 
    if (F_in) {
       /* set close on exec */
-      fcntl(fileno(F_in), F_SETFD, FD_CLOEXEC | fcntl(fileno(F_in), F_GETFD));
+      dFcntl(fileno(F_in), F_SETFD, FD_CLOEXEC | dFcntl(fileno(F_in), F_GETFD));
    }
 
    return F_in;

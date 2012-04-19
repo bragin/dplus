@@ -2,6 +2,7 @@
  * File: dpi.c
  *
  * Copyright (C) 2002-2007 Jorge Arellano Cid <jcid@dillo.org>
+ * Copyright (C) 2010 Benjamin Johnson <obeythepenguin@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,18 +28,19 @@
 #include <fcntl.h>
 #include <ctype.h>           /* isxdigit */
 
-#include <sys/socket.h>
-#include <sys/un.h>
-#include <netinet/in.h>
-#include <netinet/tcp.h>
-#include <arpa/inet.h>
-#include <netdb.h>
-
 #include "../msg.h"
 #include "../klist.h"
 #include "IO.h"
 #include "Url.h"
 #include "../../dpip/dpip.h"
+
+#include "dlib/dsock.h"
+
+/* Note: DJGPP defines __unix__, so we can't use that
+ * to reliably determine if we have sys/un.h or not. */
+#if !defined(_WIN32) && !defined(MSDOS)
+#  include <sys/un.h>
+#endif /* !_WIN32 && !MSDOS */
 
 /* This one is tricky, some sources state it should include the byte
  * for the terminating NULL, and others say it shouldn't. */
@@ -94,7 +96,7 @@ static void Dpi_close_fd(int fd)
 
    dReturn_if (fd < 0);
    do
-      st = close(fd);
+      st = dClose(fd);
    while (st < 0 && errno == EINTR);
 }
 
@@ -270,7 +272,7 @@ static int Dpi_blocking_write(int fd, const char *msg, int msg_len)
    int st, sent = 0;
 
    while (sent < msg_len) {
-      st = write(fd, msg + sent, msg_len - sent);
+      st = dWrite(fd, msg + sent, msg_len - sent);
       if (st < 0) {
          if (errno == EINTR) {
             continue;
@@ -300,7 +302,7 @@ static char *Dpi_blocking_read(int fd)
    Dstr *dstr = dStr_sized_new(buf_sz);
 
    do {
-      st = read(fd, buf, buf_sz);
+      st = dRead(fd, buf, buf_sz);
       if (st < 0) {
          if (errno == EINTR) {
             continue;
@@ -464,7 +466,7 @@ static int Dpi_check_dpid_ids()
       sin.sin_port = htons(dpid_port);
       if ((sock_fd = Dpi_make_socket_fd()) == -1) {
          MSG("Dpi_check_dpid_ids: sock_fd=%d %s\n", sock_fd, dStrerror(errno));
-      } else if (connect(sock_fd, (struct sockaddr *)&sin, sin_sz) == -1) {
+      } else if (dConnect(sock_fd, (struct sockaddr *)&sin, sin_sz) == -1) {
          MSG("Dpi_check_dpid_ids: %s\n", dStrerror(errno));
       } else {
          Dpi_close_fd(sock_fd);
@@ -560,7 +562,7 @@ static int Dpi_get_server_port(const char *server_name)
       sin.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
       sin.sin_port = htons(dpid_port);
       if ((sock_fd = Dpi_make_socket_fd()) == -1 ||
-          connect(sock_fd, (struct sockaddr *)&sin, sin_sz) == -1) {
+          dConnect(sock_fd, (struct sockaddr *)&sin, sin_sz) == -1) {
          MSG("Dpi_get_server_port: %s\n", dStrerror(errno));
       } else {
          ok = 1;
@@ -635,7 +637,7 @@ static int Dpi_connect_socket(const char *server_name, int retry)
 
    if ((sock_fd = Dpi_make_socket_fd()) == -1) {
       perror("[dpi::socket]");
-   } else if (connect(sock_fd, (void*)&sin, sizeof(sin)) == -1) {
+   } else if (dConnect(sock_fd, (void*)&sin, sizeof(sin)) == -1) {
       err = errno;
       sock_fd = -1;
       MSG("[dpi::connect] errno:%d %s\n", errno, dStrerror(errno));

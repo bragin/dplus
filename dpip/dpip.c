@@ -16,8 +16,8 @@
 #include <stdarg.h>
 #include <string.h>
 #include <ctype.h>
-#include <unistd.h>   /* for close */
-#include <fcntl.h>    /* for fcntl */
+#include "dlib/dsock.h"     /* for dClose */
+#include "dlib/dfcntl.h"    /* for dFcntl */
 
 #include "dpip.h"
 #include "d_size.h"
@@ -252,7 +252,7 @@ Dsh *a_Dpip_dsh_new(int fd_in, int fd_out, int flush_sz)
    dsh->rdbuf = dStr_sized_new(8 *1024);
    dsh->flush_sz = flush_sz;
    dsh->mode = DPIP_TAG;
-   if (fcntl(dsh->fd_in, F_GETFL) & O_NONBLOCK)
+   if (dFcntl(dsh->fd_in, F_GETFL) & O_NONBLOCK)
       dsh->mode |= DPIP_NONBLOCK;
    dsh->status = 0;
 
@@ -269,8 +269,8 @@ static int Dpip_dsh_write(Dsh *dsh, int nb, const char *Data, int DataSize)
    req_mode = (nb) ? DPIP_NONBLOCK : 0;
    if ((dsh->mode & DPIP_NONBLOCK) != req_mode) {
       /* change mode temporarily... */
-      old_flags = fcntl(dsh->fd_out, F_GETFL);
-      fcntl(dsh->fd_out, F_SETFL,
+      old_flags = dFcntl(dsh->fd_out, F_GETFL);
+      dFcntl(dsh->fd_out, F_SETFL,
             (nb) ? O_NONBLOCK | old_flags : old_flags & ~O_NONBLOCK);
    }
 
@@ -299,7 +299,7 @@ static int Dpip_dsh_write(Dsh *dsh, int nb, const char *Data, int DataSize)
 
    if ((dsh->mode & DPIP_NONBLOCK) != req_mode) {
       /* restore old mode */
-      fcntl(dsh->fd_out, F_SETFL, old_flags);
+      dFcntl(dsh->fd_out, F_SETFL, old_flags);
    }
 
    return ret;
@@ -385,8 +385,8 @@ static void Dpip_dsh_read(Dsh *dsh, int blocking)
    req_mode = (nb) ? DPIP_NONBLOCK : 0;
    if ((dsh->mode & DPIP_NONBLOCK) != req_mode) {
       /* change mode temporarily... */
-      old_flags = fcntl(dsh->fd_in, F_GETFL);
-      fcntl(dsh->fd_in, F_SETFL,
+      old_flags = dFcntl(dsh->fd_in, F_GETFL);
+      dFcntl(dsh->fd_in, F_SETFL,
             (nb) ? O_NONBLOCK | old_flags : old_flags & ~O_NONBLOCK);
    }
 
@@ -416,7 +416,7 @@ static void Dpip_dsh_read(Dsh *dsh, int blocking)
 
    if ((dsh->mode & DPIP_NONBLOCK) != req_mode) {
       /* restore old mode */
-      fcntl(dsh->fd_out, F_SETFL, old_flags);
+      dFcntl(dsh->fd_out, F_SETFL, old_flags);
    }
 
    /* assert there's no more data in the wire...
@@ -488,11 +488,11 @@ void a_Dpip_dsh_close(Dsh *dsh)
    a_Dpip_dsh_write(dsh, 1, "", 0);
 
    /* close fds */
-   while((st = close(dsh->fd_in)) < 0 && errno == EINTR) ;
+   while((st = dClose(dsh->fd_in)) < 0 && errno == EINTR) ;
    if (st < 0)
       MSG_ERR("[a_Dpip_dsh_close] close: %s\n", dStrerror(errno));
    if (dsh->fd_out != dsh->fd_in) {
-      while((st = close(dsh->fd_out)) < 0 && errno == EINTR) ;
+      while((st = dClose(dsh->fd_out)) < 0 && errno == EINTR) ;
       if (st < 0)
          MSG_ERR("[a_Dpip_dsh_close] close: %s\n", dStrerror(errno));
    }

@@ -20,11 +20,7 @@
 #include <unistd.h>
 #include <errno.h>              /* for errno */
 #include <stdlib.h>
-#include <fcntl.h>
 #include <assert.h>
-#include <sys/socket.h>         /* for lots of socket stuff */
-#include <netinet/in.h>         /* for ntohl and stuff */
-#include <arpa/inet.h>          /* for inet_ntop */
 
 #include "IO.h"
 #include "Url.h"
@@ -38,6 +34,9 @@
 #include "../misc.h"
 
 #include "../uicmd.hh"
+
+#include "dlib/dsock.h"
+#include "dlib/dfcntl.h"
 
 /* Used to send a message to the bw's status bar */
 #define MSG_BW(web, root, ...)                                        \
@@ -215,7 +214,7 @@ static void Http_socket_close(SocketData_t *S)
 {
    int st;
    do
-      st = close(S->SockFD);
+      st = dClose(S->SockFD);
    while (st < 0 && errno == EINTR);
 }
 
@@ -405,8 +404,8 @@ static int Http_connect_socket(ChainLink *Info)
          continue;
       }
       /* set NONBLOCKING and close on exec. */
-      fcntl(S->SockFD, F_SETFL, O_NONBLOCK | fcntl(S->SockFD, F_GETFL));
-      fcntl(S->SockFD, F_SETFD, FD_CLOEXEC | fcntl(S->SockFD, F_GETFD));
+      dFcntl(S->SockFD, F_SETFL, O_NONBLOCK | dFcntl(S->SockFD, F_GETFL));
+      dFcntl(S->SockFD, F_SETFD, FD_CLOEXEC | dFcntl(S->SockFD, F_GETFD));
 
       /* Some OSes require this...  */
       memset(&name, 0, sizeof(name));
@@ -442,7 +441,7 @@ static int Http_connect_socket(ChainLink *Info)
       }/*switch*/
 
       MSG_BW(S->web, 1, "Contacting host...");
-      status = connect(S->SockFD, (struct sockaddr *)&name, socket_len);
+      status = dConnect(S->SockFD, (struct sockaddr *)&name, socket_len);
       if (status == -1 && errno != EINPROGRESS) {
          S->Err = errno;
          Http_socket_close(S);
