@@ -64,6 +64,8 @@ dillo_SOURCES = \
 	timeout.hh \
 	dialog.cc \
 	dialog.hh \
+	icon.c \
+	icon.h \
 	\
 	\
 	web.cc \

@@ -34,6 +34,7 @@
 #include "menu.hh"
 #include "dialog.hh"
 #include "xembed.hh"
+#include "icon.h"
 #include "bookmark.h"
 #include "history.h"
 #include "msg.h"
@@ -482,6 +483,7 @@ BrowserWindow *a_UIcmd_browser_window_new(int ww, int wh,
       win = new Fl_Double_Window(ww, wh);
 
    win->box(FL_NO_BOX);
+   win->icon(a_Icon_load());
    CustTabs *DilloTabs = new CustTabs(ww, wh, 16);
    win->end();
 
