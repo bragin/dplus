@@ -470,7 +470,9 @@ static void Dns_timeout_client(void *data)
       }
       Dns_serve_channel(channel);
       Dns_assign_channels();
-      a_Timeout_remove(); /* Done! */
+      /* Explicitly removing this timeout causes all DNS lookups to stop.
+       * Just don't repeat it, and it will eventually stop on its own. */
+      /* a_Timeout_remove(Dns_timeout_client, NULL); */ /* Done! */
 
    } else {
       /* IP not already resolved, keep on trying... */

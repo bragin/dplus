@@ -298,7 +298,7 @@ static void Menu_popup_cb(void *data)
 
    if (m && m->callback())
       m->do_callback((Fl_Widget *)data);
-   a_Timeout_remove();
+   a_Timeout_remove(Menu_popup_cb, data);
 }
 
 /*

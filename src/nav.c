@@ -380,7 +380,7 @@ static void Nav_repush_callback(void *data)
 {
    _MSG(">>>> Nav_repush_callback <<<<\n");
    Nav_repush(data);
-   a_Timeout_remove();
+   a_Timeout_remove(Nav_repush_callback, data);
 }
 
 /*
@@ -414,7 +414,7 @@ static void Nav_redirection0_callback(void *data)
    a_Url_free(bw->meta_refresh_url);
    bw->meta_refresh_url = NULL;
    bw->meta_refresh_status = 0;
-   a_Timeout_remove();
+   a_Timeout_remove(Nav_redirection0_callback, data);
 }
 
 /*

@@ -991,7 +991,7 @@ static void Cache_auth_callback(void *vdata)
    a_Url_free(data->url);
    dFree(data);
    Cache_auth_entry(NULL, NULL);
-   a_Timeout_remove();
+   a_Timeout_remove(Cache_auth_callback, vdata);
 }
 
 /*
@@ -1265,7 +1265,7 @@ static void Cache_delayed_process_queue_callback()
       }
    }
    DelayedQueueIdleId = 0;
-   a_Timeout_remove();
+   a_Timeout_remove(Cache_delayed_process_queue_callback, NULL);
 }
 
 /*
