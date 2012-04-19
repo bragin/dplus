@@ -21,6 +21,7 @@ public:
    static void free(void);
    static char *getOldWorkingDir(void);
    static FILE *getPrefsFP(const char *rcFile);
+   static FILE *getWriteFP(const char *rcFile);
 };
 
 #endif /* __PATHS_HH__ */

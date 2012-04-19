@@ -99,3 +99,19 @@ FILE *Paths::getPrefsFP(const char *rcFile)
    return fp;
 }
 
+/*
+ * Return writable file pointer to user's dillorc.
+ */
+FILE *Paths::getWriteFP(const char *rcFile)
+{
+   FILE *fp;
+   char *path = dStrconcat(dGethomedir(), "/.dillo/", rcFile, NULL);
+
+   if (!(fp = fopen(path, "w"))) {
+      MSG("paths: Cannot open file '%s' for writing\n", path);
+   }
+
+   dFree(path);
+   return fp;
+}
+

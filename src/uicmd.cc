@@ -42,6 +42,7 @@
 #include "prefs.h"
 #include "misc.h"
 #include "bookgui.hh"
+#include "prefsgui.hh"
 
 #include "../dw/fltkviewport.hh"
 
@@ -1145,6 +1146,14 @@ int *a_UIcmd_get_history(BrowserWindow *bw, int direction)
 void a_UIcmd_nav_jump(BrowserWindow *bw, int offset, int new_bw)
 {
    a_Nav_jump(bw, offset, new_bw);
+}
+
+/*
+ * Show the preferences dialog.
+ */
+void a_UIcmd_preferences(void *vbw)
+{
+   a_Prefsgui_show();
 }
 
 // UI binding functions -------------------------------------------------------
