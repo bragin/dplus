@@ -27,6 +27,14 @@
 
 #include "dlib.h"
 
+#ifdef _WIN32
+#  define DLIB_ROOT "C:\\"
+#  define DLIB_TEMP "C:\\WINDOWS\\TEMP"
+#else /* _WIN32 */
+#  define DLIB_ROOT "/"
+#  define DLIB_TEMP "/tmp"
+#endif /* _WIN32 */
+
 static bool_t dLib_show_msg = TRUE;
 
 /* dlib msgs go to stderr to avoid problems with filter dpis */
@@ -851,15 +859,44 @@ char *dGethomedir ()
    if (!homedir) {
       if (getenv("HOME")) {
          homedir = dStrdup(getenv("HOME"));
-
+#ifdef _WIN32
+      } else if (getenv("USERPROFILE")) {
+         homedir = dStrdup(getenv("USERPROFILE"));
       } else if (getenv("HOMEDRIVE") && getenv("HOMEPATH")) {
          homedir = dStrconcat(getenv("HOMEDRIVE"), getenv("HOMEPATH"), NULL);
+      } else if (getenv("windir")) {
+         homedir = dStrdup(getenv("windir"));  /* last resort for Win9x */
+#endif /* _WIN32 */
       } else {
-         DLIB_MSG("dGethomedir: $HOME not set, using '/'.\n");
-         homedir = dStrdup("/");
+         DLIB_MSG("dGethomedir: $HOME not set, using '" DLIB_ROOT "'.\n");
+         homedir = dStrdup(DLIB_ROOT);
       }
    }
    return homedir;
+}
+
+/*
+ * Return the temporary directory in a static string (don't free)
+ */
+char *dGettempdir ()
+{
+   static char *tempdir = NULL;
+
+   if (!tempdir) {
+      if (getenv("TEMP")) {
+	 tempdir = dStrdup(getenv("TEMP"));
+      } else if (getenv("TMP")) {
+	 tempdir = dStrdup(getenv("TMP"));
+#ifdef _WIN32
+      } else if (getenv("windir")) {
+	 tempdir = dStrconcat(getenv("windir"), "\\TEMP", NULL);
+#endif /* _WIN32 */
+      } else {
+	 DLIB_MSG("dGettempdir: $TEMP not set, using '" DLIB_TEMP "'.\n");
+	 tempdir = dStrdup(DLIB_TEMP);
+      }
+   }
+   return tempdir;
 }
 
 /*
@@ -885,5 +922,18 @@ char *dGetline (FILE *stream)
    line = (dstr->len) ? dstr->str : NULL;
    dStr_free(dstr, (line) ? 0 : 1);
    return line;
+}
+
+/*
+ * Portability wrapper around mkdir().
+ * UNIX expects two arguments, Windows expects one.
+ */
+int dMkdir (const char *path, int mode)
+{
+#ifdef _WIN32
+   return mkdir(path);
+#else /* _WIN32 */
+   return mkdir(path, (mode_t)mode);
+#endif /* _WIN32 */
 }
 

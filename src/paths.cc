@@ -36,7 +36,7 @@ void Paths::init(void)
 
    dFree(oldWorkingDir);
    oldWorkingDir = dGetcwd();
-   rc = chdir("/tmp");
+   rc = chdir(dGettempdir());
    if (rc == -1) {
       MSG("paths: error changing directory to /tmp: %s\n",
           dStrerror(errno));
@@ -46,7 +46,7 @@ void Paths::init(void)
    if (stat(path, &st) == -1) {
       if (errno == ENOENT) {
          MSG("paths: creating directory %s.\n", path);
-         if (mkdir(path, 0700) < 0) {
+         if (dMkdir(path, 0700) < 0) {
             MSG("paths: error creating directory %s: %s\n",
                 path, dStrerror(errno));
          }
