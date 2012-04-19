@@ -283,23 +283,23 @@ static void Bookgui_open_cb(Fl_Widget*, void *r)
 {
    dReturn_if_fail(vbw_last != NULL);
 
-   int b = Fl::event_button();
+   int b = Fl::event_button(), s = Fl::event_state();
    BrowserWindow *bw = (BrowserWindow*)vbw_last;
    DilloUrl *url = a_Url_new(a_Bms_get_bm_url(r), NULL);
 
-   if (b == FL_LEFT_MOUSE)
-      a_UIcmd_open_url(bw, url);
-
-   else if (b == FL_MIDDLE_MOUSE) {
+   if (b == FL_MIDDLE_MOUSE ||
+       (b == FL_LEFT_MOUSE && s == FL_CTRL)) {
       if (prefs.middle_click_opens_new_tab) {
          int focus = prefs.focus_new_tab ? 1 : 0;
          a_UIcmd_open_url_nt(vbw_last, url, focus);
       } else
          a_UIcmd_open_url_nw(bw, url);
-   }
 
-   else if (b == FL_RIGHT_MOUSE)
+   } else if (b == FL_RIGHT_MOUSE)
       Bookgui_do_edit(r);
+
+   else
+      a_UIcmd_open_url(bw, url);
 
    a_Url_free(url);
 }
