@@ -2,6 +2,7 @@
  * Preferences
  *
  * Copyright (C) 2006-2009 Jorge Arellano Cid <jcid@dillo.org>
+ * Copyright (C) 2010 Benjamin Johnson <obeythepenguin@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -12,17 +13,34 @@
 #include "prefs.h"
 
 #define PREFS_START_PAGE      "about:splash"
-#define PREFS_HOME            "http://www.dillo.org/"
-#define PREFS_FONT_SERIF      "DejaVu Serif"
-#define PREFS_FONT_SANS_SERIF "DejaVu Sans"
-#define PREFS_FONT_CURSIVE    "URW Chancery L"
-#define PREFS_FONT_FANTASY    "DejaVu Sans" /* TODO: find good default */
-#define PREFS_FONT_MONOSPACE  "DejaVu Sans Mono"
+#define PREFS_HOME            "http://dillo-win32.sourceforge.net/"
 #define PREFS_SEARCH_URL      "http://duckduckgo.com/lite/?kp=-1&q=%s"
 #define PREFS_NO_PROXY        "localhost 127.0.0.1"
-#define PREFS_SAVE_DIR        "/tmp/"
 #define PREFS_HTTP_REFERER    "host"
-#define PREFS_HTTP_USER_AGENT "Dillo/" VERSION
+  
+#ifndef _WIN32
+#  define PREFS_FONT_SERIF      "DejaVu Serif"
+#  define PREFS_FONT_SANS_SERIF "DejaVu Sans"
+#  define PREFS_FONT_CURSIVE    "URW Chancery L"
+#  define PREFS_FONT_FANTASY    "DejaVu Sans" /* TODO: find good default */
+#  define PREFS_FONT_MONOSPACE  "DejaVu Sans Mono"
+#  define PREFS_SAVE_DIR        "/tmp/"
+#else /* _WIN32 */
+#  define PREFS_FONT_SERIF      "Times New Roman"
+#  define PREFS_FONT_SANS_SERIF "Arial"
+#  define PREFS_FONT_CURSIVE    "Comic Sans MS"
+#  define PREFS_FONT_FANTASY    "Comic Sans MS"
+#  define PREFS_FONT_MONOSPACE  "Courier New"
+#  define PREFS_SAVE_DIR        "C:\\" /* note: never actually used */
+#endif /* _WIN32 */
+
+/* Most sites don't recognize Dillo's user agent string, but many will
+ * recognize Mozilla/4.0 and generate simpler HTML code (e.g., Google). */
+#ifdef MOZILLA_USER_AGENT
+#  define PREFS_HTTP_USER_AGENT "Mozilla/4.0 (compatible; Dillo " VERSION ")"
+#else  /* use Dillo's default user agent */
+#  define PREFS_HTTP_USER_AGENT "Dillo/" VERSION
+#endif
 
 /*-----------------------------------------------------------------------------
  * Global Data
@@ -36,12 +54,17 @@ DilloPrefs prefs;
 void a_Prefs_init(void)
 {
    prefs.allow_white_bg = TRUE;
-   prefs.bg_color = 0xdcd1ba;
-   prefs.buffered_drawing = 1;
+   prefs.bg_color = 0xffffff;
+   prefs.buffered_drawing = 2;
    prefs.contrast_visited_color = TRUE;
    prefs.enterpress_forces_submit = FALSE;
-   prefs.filter_auto_requests = PREFS_FILTER_SAME_DOMAIN;
-   prefs.focus_new_tab = TRUE;
+
+   /* PREFS_FILTER_SAME_DOMAIN is the mainline default,
+    * but it makes the vast majority of sites unusable,
+    * including Wikipedia, Google, SourceForge, etc. */
+   prefs.filter_auto_requests = PREFS_FILTER_ALLOW_ALL;
+
+   prefs.focus_new_tab = FALSE;
    prefs.font_cursive = dStrdup(PREFS_FONT_CURSIVE);
    prefs.font_factor = 1.0;
    prefs.font_max_size = 100;
@@ -85,7 +108,7 @@ void a_Prefs_init(void)
    prefs.show_extra_warnings = FALSE;
    prefs.show_filemenu=TRUE;
    prefs.show_forw = TRUE;
-   prefs.show_help = TRUE;
+   prefs.show_help = FALSE;
    prefs.show_home = TRUE;
    prefs.show_msg = TRUE;
    prefs.show_progress_box = TRUE;
