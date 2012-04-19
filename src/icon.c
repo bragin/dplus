@@ -28,7 +28,8 @@ char *a_Icon_load()
 {
 #ifdef _WIN32
    HMODULE hModule = GetModuleHandle(NULL);  /* running process */
-   return (char*)LoadIcon(hModule, MAKEINTRESOURCE(IDI_MAIN_ICON));
+   return (char*)LoadImage(hModule, MAKEINTRESOURCE(IDI_MAIN_ICON),
+                           IMAGE_ICON, 16, 16, NULL);
 #else /* _WIN32 */
    return (char*)0;
 #endif /* _WIN32 */
