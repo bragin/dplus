@@ -565,12 +565,17 @@ int FltkPlatform::prevGlyph (const char *text, int idx)
    return fl_utf8back (&text[idx - 1], text, &text[strlen (text)]) - text;
 }
 
+/*
+ * Workaround: if Fl::screen_dpi returns zero, fall back on
+ * 96 dpi (Windows' default DPI setting in small fonts mode).
+ */
+
 float FltkPlatform::dpiX ()
 {
    float horizontal, vertical;
 
    Fl::screen_dpi(horizontal, vertical);
-   return horizontal;
+   return (horizontal > 0.0) ? horizontal : 96.0;
 }
 
 float FltkPlatform::dpiY ()
@@ -578,7 +583,7 @@ float FltkPlatform::dpiY ()
    float horizontal, vertical;
 
    Fl::screen_dpi(horizontal, vertical);
-   return vertical;
+   return (vertical > 0.0) ? vertical : 96.0;
 }
 
 void FltkPlatform::generalStaticIdle (void *data)
