@@ -48,41 +48,6 @@ static char *dname_str = NULL;
 
 //----------------------------------------------------------------------------
 /*
- * Used to enable CTRL+{a,e,d,k} in search dialog (for start,end,del,cut)
- * TODO: bind down arrow to a search engine selection list.
- */
-class CustInput3 : public Fl_Input {
-public:
-   CustInput3 (int x, int y, int w, int h, const char* l=0) :
-      Fl_Input(x,y,w,h,l) {};
-   int handle(int e);
-};
-
-int CustInput3::handle(int e)
-{
-   int k = Fl::event_key();
-
-   _MSG("CustInput3::handle event=%d\n", e);
-
-   // We're only interested in some flags
-   unsigned modifier = Fl::event_state() & (FL_SHIFT | FL_CTRL | FL_ALT);
-
-   if (e == FL_KEYBOARD && modifier == FL_CTRL) {
-      if (k == 'a' || k == 'e') {
-         position(k == 'a' ? 0 : size());
-         return 1;
-      } else if (k == 'k') {
-         cut(position(), size());
-         return 1;
-      } else if (k == 'd') {
-         cut(position(), position()+1);
-         return 1;
-      }
-   }
-   return Fl_Input::handle(e);
-}
-
-/*
  * Used to make the ENTER key activate the CustChoice
  */
 class CustChoice : public Fl_Choice {
@@ -155,7 +120,7 @@ const char *a_Dialog_input(const char *msg)
     box->labelsize(14);
     box->align(FL_ALIGN_LEFT|FL_ALIGN_INSIDE|FL_ALIGN_CLIP|FL_ALIGN_WRAP);
 
-    CustInput3 *c_inp = new CustInput3(ih+2*gap,gap+ih/2+gap,ww-(ih+3*gap),24);
+    Fl_Input *c_inp = new Fl_Input(ih+2*gap,gap+ih/2+gap,ww-(ih+3*gap),24);
     c_inp->labelsize(14);
     c_inp->textsize(14);
 

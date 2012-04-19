@@ -94,8 +94,7 @@ public:
 };
 
 /*
- * Disable keys: Up, Down, Page_Up, Page_Down, Tab and
- * CTRL+{o,r,Home,End}  SHIFT+{Left,Right}.
+ * Disable keys: Up, Down, Page_Up, Page_Down, Tab and CTRL+{o,r,Home,End}
  */
 int CustInput::handle(int e)
 {
@@ -114,22 +113,8 @@ int CustInput::handle(int e)
       if (k == FL_Escape && modifier == 0) {
          // Let the parent group handle this Esc key
          return 0;
-      } else if (modifier == FL_SHIFT) {
-         if (k == FL_Left || k == FL_Right) {
-            // Let these keys get to the UI
-            return 0;
-         }
       } else if (modifier == FL_CTRL) {
-         if (k == 'a' || k == 'e') {
-            position(k == 'a' ? 0 : size());
-            return 1;
-         } else if (k == 'k') {
-            cut(position(), size());
-            return 1;
-         } else if (k == 'd') {
-            cut(position(), position()+1);
-            return 1;
-         } else if (k == 'l') {
+         if (k == 'l') {
             // Make text selected when already focused.
             position(size(), 0);
             return 1;
