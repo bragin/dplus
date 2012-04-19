@@ -1,10 +1,10 @@
 /* config.h.in.  Generated from configure.in by autoheader.  */
 
+/* Enable support for downloads */
+#undef ENABLE_DOWNLOADS
+
 /* Enable GIF images */
 #undef ENABLE_GIF
-
-/* Enable internal downloads GUI */
-#undef ENABLE_INTERNAL_DLGUI
 
 /* Enable JPEG images */
 #undef ENABLE_JPEG
