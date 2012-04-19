@@ -112,11 +112,7 @@ int CustInput::handle(int e)
          // Let the parent group handle this Esc key
          return 0;
       } else if (modifier == FL_CTRL) {
-         if (k == 'l') {
-            // Make text selected when already focused.
-            position(size(), 0);
-            return 1;
-         } else if (k == 'h' || k == 'o' || k == 'r' ||
+         if (k == 'h' || k == 'o' || k == 'r' ||
                     k == FL_Home || k == FL_End) {
             // Let these keys get to the UI
             return 0;
