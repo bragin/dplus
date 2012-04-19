@@ -514,6 +514,16 @@ case $target in
 esac
 AM_CONDITIONAL(BUILD_DPI, [test x$enable_dpi = xyes])
 
+dnl ---------------------------
+dnl Link to libunicows on Win32
+dnl ---------------------------
+dnl
+case $target in
+   *-*-mingw*)
+      LIBS="$LIBS -lunicows"
+      ;;
+esac
+
 dnl --------------------
 dnl Command line options
 dnl --------------------

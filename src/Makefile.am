@@ -23,6 +23,8 @@ dillo_LDADD = \
 
 dillo_SOURCES = \
 	dillo.cc \
+	unicows.h \
+	unicows.c \
 	paths.cc \
 	paths.hh \
 	ui.cc \

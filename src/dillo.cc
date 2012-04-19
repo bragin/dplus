@@ -49,6 +49,7 @@
 #include "bookmark.h"
 #include "auth.h"
 #include "dlgui.hh"
+#include "unicows.h"
 
 #include "dw/fltkcore.hh"
 
@@ -288,6 +289,12 @@ int main(int argc, char **argv)
    // Some OSes exit dillo without this (not GNU/Linux).
    signal(SIGPIPE, SIG_IGN);
 #endif /* SIGPIPE */
+
+#ifdef _WIN32
+   // Make sure we have unicows.dll for Unicode support on Windows 95/98/Me.
+   // Note: This needs to be called before any other modules.
+   a_Unicows_check();
+#endif /* _WIN32 */
 
    /* Handle command line options */
    opt_argv = dNew0(char*, numOptions(Options) + 1);
