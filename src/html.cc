@@ -2166,8 +2166,15 @@ static void Html_tag_open_img(DilloHtml *html, const char *tag, int tagsize)
    if (URL_FLAGS(html->base_url) & URL_SpamSafe)
       return;
 
-   if (!(attrbuf = a_Html_get_attr(html, tag, tagsize, "src")) ||
-       !(url = a_Html_url_new(html, attrbuf, NULL, 0)))
+   /* Look for a longdesc attribute possibly containing
+    * an image URL. Many sites use this for 'lazy loading'. */
+   if ((attrbuf = a_Html_get_attr(html, tag, tagsize, "longdesc"))
+       && (url = a_Html_url_new(html, attrbuf, NULL, 0)))
+      MSG("Html_tag_open_img: lazy loading %s\n", attrbuf);
+
+   /* Good, it's a normal image not using that annoying trick. */
+   else if (!(attrbuf = a_Html_get_attr(html, tag, tagsize, "src")) ||
+            !(url = a_Html_url_new(html, attrbuf, NULL, 0)))
       return;
 
    usemap_url = NULL;
