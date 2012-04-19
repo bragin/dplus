@@ -1354,3 +1354,11 @@ void a_UIcmd_focus_location(void *vbw)
    BW2UI(bw)->focus_location();
 }
 
+/*
+ * Update the screen (useful during long calculations).
+ */
+void a_UIcmd_wait()
+{
+   Fl::wait(0.0);
+}
+

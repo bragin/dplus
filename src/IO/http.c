@@ -2,6 +2,7 @@
  * File: http.c
  *
  * Copyright (C) 2000-2007 Jorge Arellano Cid <jcid@dillo.org>
+ * Copyright (C) 2011 Benjamin Johnson <obeythepenguin@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -377,6 +378,103 @@ static void Http_send_query(ChainLink *Info, SocketData_t *S)
    dStr_free(query, 1);
 }
 
+#ifdef ENABLE_SSL
+/*
+ * Send a CONNECT request to tunnel HTTPS through a proxy.
+ * Return 1 if the connection succeeded, 0 if none needed, -1 otherwise.
+ */
+int Http_send_connect_request(SocketData_t *S)
+{
+   char *connect_str = a_Http_make_connect_str(S->web->url);
+   if (!connect_str)
+      return 0;	  /* we don't need to use a proxy */
+
+   int retval = 1;
+   ssize_t St;
+   char buf[200];
+
+   fd_set fds;
+   FD_ZERO(&fds);
+   /* If this is too large, the user interface may appear
+    * sluggish, but if it's too small the browser might crash. */
+   struct timeval timeout = {0, 50000};   /* 50 msec */
+
+   /* Wait until the proxy is ready for us to write.
+    * This is ugly, but it avoids locking up the user interface. */
+   while (1) {
+      FD_SET(S->SockFD, &fds);	 /* select resets fd set after testing */
+      retval = select(1, NULL, &fds, NULL, &timeout);   /* test writability */
+      a_UIcmd_wait();
+      if (retval == 1)
+	 break;  /* ready to read */
+      else if (retval < 0)
+	 return retval;  /* socket error */
+   }
+
+   _MSG("connect_str:\n%s\n", connect_str);
+   dWrite(S->SockFD, connect_str, strlen(connect_str));
+
+   /* Wait until the proxy is ready for us to read.
+    * This is ugly, but it avoids locking up the user interface. */
+   while (1) {
+      FD_SET(S->SockFD, &fds);	 /* select resets fd set after testing */
+      retval = select(1, &fds, NULL, NULL, &timeout);   /* test readability */
+      a_UIcmd_wait();
+      if (retval == 1)
+	 break;  /* ready to read */
+      else if (retval < 0)
+	 return retval;  /* socket error */
+   }
+
+   /* Check the response from the proxy. */
+   Dstr *reply = dStr_new("");
+   while (1) {
+      St = dRead(S->SockFD, buf, sizeof(buf));
+      if (St > 0) {
+         dStr_append_l(reply, buf, St);
+	 _MSG("reply->str:\n%s\n", reply->str);
+         if (strstr(reply->str, "\r\n\r\n")) {
+	    /* We have whole reply header */
+	    if (reply->len >= 12 && reply->str[9] == '2') {
+	       /* e.g. "HTTP/1.1 200 Connection established[...]" */
+	       MSG("CONNECT through proxy succeeded.\n");
+               retval = 1;
+	    } else {
+	       MSG("CONNECT through proxy failed.\n");
+	       retval = -1;
+	    }
+	    break;
+         }
+      } else if (St < 0) {
+	 retval = -1;
+	 break;
+      }
+   }
+
+   dStr_free(reply, 1);
+   return retval;
+}
+
+/*
+ * Prepare an HTTPS connection by requesting to tunnel it
+ * through a proxy if necessary, then perform the SSL handshake.
+ * Note: The SSL handshake will fail if we can't (or won't) verify
+ * the certificate, but it may still be possible to connect.
+ */
+int Http_connect_ssl(SocketData_t *S)
+{
+   if (Http_send_connect_request(S) < 0) {
+      MSG("HTTP CONNECT request failed!\n");
+      return -1;  /* definitely fatal */
+   }
+   if (a_Sock_ssl_handshake(S->SockFD) < 0) {
+      MSG("SSL handshake failed!\n");
+      return 0;   /* possibly nonfatal? */
+   }
+   return 1;
+}
+#endif /* ENABLE_SSL */
+
 /*
  * This function gets called after the DNS succeeds solving a hostname.
  * Task: Finish socket setup and start connecting the socket.
@@ -393,8 +491,18 @@ static int Http_connect_socket(ChainLink *Info)
    SocketData_t *S;
    DilloHost *dh;
    socklen_t socket_len = 0;
+   bool_t using_ssl = FALSE;
+   int default_port = DILLO_URL_HTTP_PORT;
 
    S = a_Klist_get_data(ValidSocks, VOIDP2INT(Info->LocalKey));
+
+#ifdef ENABLE_SSL
+   /* is this an HTTPS address? */
+   if (!strcmp(URL_SCHEME(S->web->url), "https")) {
+      using_ssl = TRUE;
+      default_port = DILLO_URL_HTTPS_PORT;
+   }
+#endif /* ENABLE_SSL */
 
    /* TODO: iterate this address list until success, or end-of-list */
    for (i = 0; (dh = dList_nth_data(S->addr_list, i)); ++i) {
@@ -416,7 +524,7 @@ static int Http_connect_socket(ChainLink *Info)
          struct sockaddr_in *sin = (struct sockaddr_in *)&name;
          socket_len = sizeof(struct sockaddr_in);
          sin->sin_family = dh->af;
-         sin->sin_port = S->port ? htons(S->port) : htons(DILLO_URL_HTTP_PORT);
+         sin->sin_port = S->port ? htons(S->port) : htons(default_port);
          memcpy(&sin->sin_addr, dh->data, (size_t)dh->alen);
          if (a_Web_valid(S->web) && (S->web->flags & WEB_RootUrl))
             MSG("Connecting to %s\n", inet_ntoa(sin->sin_addr));
@@ -430,7 +538,7 @@ static int Http_connect_socket(ChainLink *Info)
          socket_len = sizeof(struct sockaddr_in6);
          sin6->sin6_family = dh->af;
          sin6->sin6_port =
-            S->port ? htons(S->port) : htons(DILLO_URL_HTTP_PORT);
+            S->port ? htons(S->port) : htons(default_port);
          memcpy(&sin6->sin6_addr, dh->data, dh->alen);
          inet_ntop(dh->af, dh->data, buf, sizeof(buf));
          if (a_Web_valid(S->web) && (S->web->flags & WEB_RootUrl))
@@ -446,6 +554,12 @@ static int Http_connect_socket(ChainLink *Info)
          S->Err = errno;
          Http_socket_close(S);
          MSG("Http_connect_socket ERROR: %s\n", dStrerror(S->Err));
+#ifdef ENABLE_SSL
+      } else if (using_ssl && Http_connect_ssl(S) < 0) {
+	 S->Err = ECONNREFUSED;
+	 Http_socket_close(S);
+	 MSG("Http_connect_socket ERROR: SSL connection failed!\n");
+#endif /* ENABLE_SSL */
       } else {
          a_Chain_bcb(OpSend, Info, &S->SockFD, "FD");
          a_Chain_fcb(OpSend, Info, &S->SockFD, "FD");

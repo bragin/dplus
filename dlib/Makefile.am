@@ -9,4 +9,5 @@ libDlib_a_SOURCES = \
 	dfcntl.h \
 	dfcntl.c \
 	dsock.h \
-	dsock.c
+	dsock.c \
+	dsock_ssl.c

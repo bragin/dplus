@@ -511,6 +511,11 @@ fi
 if test "x$enable_mozilla_user_agent" = "xyes" ; then
   CFLAGS="$CFLAGS -DMOZILLA_USER_AGENT"
 fi
+if test "x$enable_ssl" = "xyes" ; then
+  CFLAGS="$CFLAGS -DENABLE_SSL"
+  CXXFLAGS="$CXXFLAGS -DENABLE_SSL"
+  LIBS="$LIBS -lcrypto -lssl"
+fi
 if test "x$enable_rtfl" = "xyes" ; then
   CXXFLAGS="$CXXFLAGS -DDBG_RTFL"
 fi

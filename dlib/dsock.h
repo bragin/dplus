@@ -89,6 +89,41 @@ int dClose(int fd);
 int dRead(int fd, void *buf, size_t len);
 int dWrite(int fd, void *buf, size_t len);
 
+/*
+ * The functions below provide transparent SSL support
+ */
+
+#ifdef ENABLE_SSL
+
+/* Use instead of dConnect() to create a new SSL connection */
+int dConnect_ssl(int s, const struct sockaddr *name, int namelen);
+
+/* Use to initiate a SSL connection manually after dConnect(),
+ * e.g. if you need to send plaintext data like HTTP CONNECT first */
+int a_Sock_ssl_handshake(int s);
+
+/*
+ * Use this to set an error handler for invalid
+ * SSL certificates and other connection problems.
+ */
+typedef int (*SslCertProblemCb_t)(void*);
+void a_Sock_ssl_error_handler(SslCertProblemCb_t handler);
+
+/*
+ * These are for internal use only.
+ * dSock will call them automatically if needed.
+ */
+void *Sock_ssl_connection(int fd);
+
+void Sock_ssl_init();
+void Sock_ssl_freeall();
+
+int Sock_ssl_close(void *conn);
+int Sock_ssl_read(void *conn, void *buf, size_t len);
+int Sock_ssl_write(void *conn, void *buf, size_t len);
+
+#endif /* ENABLE_SSL */
+
 #ifdef __cplusplus
 }
 #endif  /* __cplusplus */

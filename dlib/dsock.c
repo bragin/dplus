@@ -28,6 +28,10 @@ void a_Sock_init()
    if (iResult != NO_ERROR)
       exit(1);
 #endif  /* _WIN32 */
+
+#ifdef ENABLE_SSL
+   Sock_ssl_init();
+#endif
 }
 
 /*
@@ -35,6 +39,10 @@ void a_Sock_init()
  */
 void a_Sock_freeall()
 {
+#ifdef ENABLE_SSL
+   Sock_ssl_freeall();
+#endif
+
 #ifdef _WIN32
    WSACleanup();
 #endif  /* _WIN32 */
@@ -70,6 +78,12 @@ int dConnect(int s, const struct sockaddr *name, int namelen)
  */
 int dClose(int fd)
 {
+#ifdef ENABLE_SSL
+   void *conn = Sock_ssl_connection(fd);
+   if (conn)
+      Sock_ssl_close(conn);
+#endif
+
 #ifdef _WIN32
    int retval = closesocket(fd);
    if (NOT_A_SOCKET)
@@ -86,6 +100,12 @@ int dClose(int fd)
  */
 int dRead(int fd, void *buf, size_t len)
 {
+#ifdef ENABLE_SSL
+   void *conn = Sock_ssl_connection(fd);
+   if (conn)
+      return Sock_ssl_read(conn, buf, len);
+#endif
+
 #ifdef _WIN32
    int retval = recv(fd, buf, len, 0);
    if (NOT_A_SOCKET)
@@ -102,6 +122,12 @@ int dRead(int fd, void *buf, size_t len)
  */
 int dWrite(int fd, void *buf, size_t len)
 {
+#ifdef ENABLE_SSL
+   void *conn = Sock_ssl_connection(fd);
+   if (conn)
+      return Sock_ssl_write(conn, buf, len);
+#endif
+
 #ifdef _WIN32
    int retval = send(fd, buf, len, 0);
    if (NOT_A_SOCKET)
