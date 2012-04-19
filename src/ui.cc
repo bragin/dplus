@@ -19,6 +19,7 @@
 #include "msg.h"
 #include "timeout.hh"
 #include "utf8.hh"
+#include "misc.h"
 
 #include <FL/Fl.H>
 #include <FL/Fl_Pixmap.H>
@@ -142,13 +143,35 @@ public:
    int handle(int e);
 };
 
+/*
+ * Handle focus, unfocus, and right-click events in the search bar
+ */
 int SearchInput::handle(int e)
 {
    void *wid = (void*)this;
    int b = Fl::event_button(), s = Fl::event_state();
 
-   if (e == FL_RELEASE && (b == 3 || (b == 1 && s == FL_CTRL)))
+   if (e == FL_RELEASE && (b == 3 || (b == 1 && s == FL_CTRL))) {
+      /* display the list of search engines */
       a_UIcmd_search_popup(a_UIcmd_get_bw_by_widget(wid), wid);
+
+   } else if (e == FL_UNFOCUS && !strlen(value())) {
+      /* if empty, display the name of the selected search engine */
+      char *label, *url, *source;
+      source = (char *)dList_nth_data(prefs.search_urls,
+                                      prefs.search_url_idx);
+      a_Misc_parse_search_url(source, &label, &url);
+
+      value(label);
+      textcolor(FL_INACTIVE_COLOR);
+
+   } else if (e == FL_FOCUS) {
+      /* clear the name of the selected search engine */
+      if (textcolor() == FL_INACTIVE_COLOR) {
+         value(NULL);
+         textcolor(FL_FOREGROUND_COLOR);
+      }
+   }
 
    return CustInput::handle(e);
 }
@@ -422,16 +445,17 @@ void UI::make_location(int ww)
     b->tooltip("Clear the URL box.\nMiddle-click to paste a URL.");
     p_xpos += b->w();
 
-    Fl_Input *i = Location = new CustInput(p_xpos,0,ww-p_xpos-192,lh,0);
+    Fl_Input *i = Location = new CustInput(p_xpos,0,ww-p_xpos-196,lh,0);
     i->when(FL_WHEN_ENTER_KEY);
     i->callback(location_cb, this);
     i->tooltip("Location");
     p_xpos += i->w();
 
-    i = Search = new SearchInput(p_xpos,0,144,lh,0);
+    i = Search = new SearchInput(p_xpos,0,180,lh,0);
     i->when(FL_WHEN_ENTER_KEY);
     i->callback(search_cb, this);
     i->tooltip("Search");
+    i->handle(FL_UNFOCUS);
     p_xpos += i->w();
 
     Help = b = new CustLightButton(p_xpos,0,16,lh,0);
