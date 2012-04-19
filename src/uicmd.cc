@@ -45,8 +45,7 @@
 
 #include "nav.h"
 
-//#define DEFAULT_TAB_LABEL "-.untitled.-"
-#define DEFAULT_TAB_LABEL "-.new.-"
+#define DEFAULT_TAB_LABEL "New tab"
 
 // Handy macro
 #define BW2UI(bw) ((UI*)((bw)->ui))
@@ -107,7 +106,7 @@ public:
    CustTabs (int ww, int wh, int th, const char *lbl=0) :
       Fl_Group(0,0,ww,th,lbl) {
       Pack = NULL;
-      tab_w = 50, tab_h = th, ctab_h = 1, btn_w = 20, ctl_w = 1*btn_w+2;
+      tab_w = 50, tab_h = th+4, ctab_h = 1, btn_w = 20, ctl_w = 1*btn_w+2;
       tabcolor_active = FL_DARK_CYAN; tabcolor_inactive = 206;
       resize(0,0,ww,ctab_h);
       /* tab buttons go inside a pack within a scroll */
@@ -124,7 +123,7 @@ public:
       /* control buttons go inside a group */
       Control = new Fl_Group(ww-ctl_w,0,ctl_w,ctab_h);
        CloseBtn = new CustLightButton(ww-ctl_w+2,0,btn_w,ctab_h, "X");
-       CloseBtn->box(FL_PLASTIC_ROUND_UP_BOX);
+       CloseBtn->box(FL_NO_BOX);
        CloseBtn->labelcolor(0x00641000);
        CloseBtn->hl_color(FL_WHITE);
        CloseBtn->clear_visible_focus();
@@ -234,7 +233,7 @@ UI *CustTabs::add_new_tab(UI *old_ui, int focus)
       resize(0,0,window()->w(),ctab_h);    // tabbar
       CloseBtn->show();
       {int w = 0, h; Pack->child(0)->measure_label(w, h);
-       Pack->child(0)->size(w+14,ctab_h);}
+       Pack->child(0)->size(w+16,ctab_h);}
       Pack->child(0)->show(); // first tab button
       window()->init_sizes();
    }
@@ -253,11 +252,15 @@ UI *CustTabs::add_new_tab(UI *old_ui, int focus)
    btn->labelsize(btn->labelsize()-2);
    btn->copy_label(DEFAULT_TAB_LABEL);
    btn->clear_visible_focus();
-   btn->box(FL_PLASTIC_ROUND_UP_BOX);
+   btn->box(FL_THIN_UP_BOX);
    btn->color(focus ? tabcolor_active : tabcolor_inactive);
    btn->ui(new_ui);
    btn->callback(tab_btn_cb, this);
    Pack->add(btn); // append
+
+   int w = 0, h;
+   btn->measure_label(w, h);
+   btn->size(w+16, ctab_h);
 
    if (focus) {
       switch_tab(btn);
@@ -408,7 +411,7 @@ void CustTabs::set_tab_label(UI *ui, const char *label)
 
    if (idx != -1) {
       // Make a label for this tab
-      size_t tab_chars = 15, label_len = strlen(label);
+      size_t tab_chars = 18, label_len = strlen(label);
 
       if (label_len > tab_chars)
          tab_chars = a_Utf8_end_of_char(label, tab_chars - 1) + 1;
@@ -421,7 +424,7 @@ void CustTabs::set_tab_label(UI *ui, const char *label)
          int w = 0, h;
          Pack->child(idx)->copy_label(title);
          Pack->child(idx)->measure_label(w, h);
-         Pack->child(idx)->size(w+14,ctab_h);
+         Pack->child(idx)->size(w+16,ctab_h);
          update_pack_offset();
       }
    }
