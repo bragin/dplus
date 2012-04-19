@@ -23,6 +23,7 @@
 #include "ui.hh" // for (UI *)
 #include "keys.hh"
 #include "timeout.hh"
+#include "misc.h" // for a_Misc_parse_search_url()
 
 /*
  * Local data
@@ -69,6 +70,14 @@ static void filemenu_cb(Fl_Widget*, void *data)
    } else if (strcmp((char*)data, "ed") == 0) {
       a_Timeout_add(0.0, a_UIcmd_close_all_bw, NULL);
    }
+}
+
+/*
+ * Static function for Search menu callbacks.
+ */
+static void searchmenu_cb(Fl_Widget*, void *data)
+{
+   prefs.search_url_idx = (int)data;
 }
 
 
@@ -525,6 +534,39 @@ void a_Menu_file_popup(BrowserWindow *bw, void *v_wid)
    popup_url = NULL;
 
    //pm->label(wid->visible() ? NULL : "File");
+   a_Timeout_add(0.0, Menu_popup_cb, (void*)pm);
+}
+
+/*
+ * Search popup menu (construction & popup)
+ */
+void a_Menu_search_popup(BrowserWindow *bw, void *v_wid)
+{
+   Fl_Widget *wid = (Fl_Widget*)v_wid;
+   static Fl_Menu_Item *pm = 0;
+   int i, n = dList_length(prefs.search_urls);
+
+   popup_bw = bw;
+   popup_x = Fl::event_x();
+   popup_y = Fl::event_y();
+
+   if (pm)
+      delete [] pm;
+
+   pm = new Fl_Menu_Item[n + 1];
+   memset(pm, '\0', sizeof(Fl_Menu_Item[n + 1]));
+
+   for (i = 0; i < n; i++) {
+      char *label, *url, *source;
+      source = (char *)dList_nth_data(prefs.search_urls, i);
+      if (!source || a_Misc_parse_search_url(source, &label, &url) < 0)
+         continue;
+      if (i == prefs.search_url_idx)
+         pm[i].set();
+      pm[i].flags |= FL_MENU_RADIO;
+      pm[i].label(FL_NORMAL_LABEL, strdup(label));
+      pm[i].callback(searchmenu_cb, (void*)i);
+   }
    a_Timeout_add(0.0, Menu_popup_cb, (void*)pm);
 }
 

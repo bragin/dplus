@@ -72,6 +72,7 @@ static char *save_dir = NULL;
 /*
  * Forward declarations
  */
+static char *UIcmd_make_search_str(const char *str);
 static BrowserWindow *UIcmd_tab_new(CustTabs *tabs, UI *old_ui, int focus);
 static void close_tab_btn_cb (Fl_Widget *w, void *cb_data);
 
@@ -640,6 +641,16 @@ void a_UIcmd_open_urlstr(void *vbw, const char *urlstr)
 }
 
 /*
+ * Open search results in the given browser window.
+ */
+void a_UIcmd_open_search(void *vbw, const char *query)
+{
+   char *url_str = UIcmd_make_search_str(query);
+   a_UIcmd_open_urlstr(vbw, url_str);
+   dFree(url_str);
+}
+
+/*
  * Open a new URL in the given browser window
  */
 void a_UIcmd_open_url(BrowserWindow *bw, const DilloUrl *url)
@@ -1065,6 +1076,14 @@ void a_UIcmd_form_popup(void *vbw, const DilloUrl *url, void *vform,
 void a_UIcmd_file_popup(void *vbw, void *v_wid)
 {
    a_Menu_file_popup((BrowserWindow*)vbw, v_wid);
+}
+
+/*
+ * Pop up the list of search engines
+ */
+void a_UIcmd_search_popup(void *vbw, void *v_wid)
+{
+   a_Menu_search_popup((BrowserWindow*)vbw, v_wid);
 }
 
 /*

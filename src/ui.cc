@@ -139,6 +139,29 @@ int CustInput::handle(int e)
 //----------------------------------------------------------------------------
 
 /*
+ * (Used to display the right-click menu in the search bar)
+ */
+class SearchInput : public CustInput {
+public:
+   SearchInput (int x, int y, int w, int h, const char* l=0) :
+      CustInput(x,y,w,h,l) {};
+   int handle(int e);
+};
+
+int SearchInput::handle(int e)
+{
+   void *wid = (void*)this;
+   int b = Fl::event_button(), s = Fl::event_state();
+
+   if (e == FL_RELEASE && (b == 3 || (b == 1 && s == FL_CTRL)))
+      a_UIcmd_search_popup(a_UIcmd_get_bw_by_widget(wid), wid);
+
+   return CustInput::handle(e);
+}
+
+//----------------------------------------------------------------------------
+
+/*
  * Used to handle "paste" within the toolbar's Clear button.
  */
 class CustPasteButton : public CustLightButton {
@@ -198,7 +221,7 @@ public:
 /*
  * Callback for the search button.
  */
-static void search_cb(Fl_Widget *wid, void *data)
+static void searchb_cb(Fl_Widget *wid, void *data)
 {
    int b = Fl::event_button();
 
@@ -253,6 +276,21 @@ static void location_cb(Fl_Widget *wid, void *data)
 
    _MSG("location_cb()\n");
    a_UIcmd_open_urlstr(a_UIcmd_get_bw_by_widget(i), i->value());
+
+   if (ui->temporaryPanels())
+      ui->panels_toggle();
+}
+
+/*
+ * Perform a web search.
+ */
+static void search_cb(Fl_Widget *wid, void *data)
+{
+   Fl_Input *i = (Fl_Input*)wid;
+   UI *ui = (UI*)data;
+
+   _MSG("search_cb()\n");
+   a_UIcmd_open_search(a_UIcmd_get_bw_by_widget(i), i->value());
 
    if (ui->temporaryPanels())
       ui->panels_toggle();
@@ -402,15 +440,23 @@ void UI::make_location(int ww)
     b->tooltip("Clear the URL box.\nMiddle-click to paste a URL.");
     p_xpos += b->w();
 
-    Fl_Input *i = Location = new CustInput(p_xpos,0,ww-p_xpos-32,lh,0);
+    Fl_Input *i = Location = new CustInput(p_xpos,0,ww-p_xpos-192,lh,0);
     i->when(FL_WHEN_ENTER_KEY);
     i->callback(location_cb, this);
     i->tooltip("Location");
     p_xpos += i->w();
 
-    Search = b = new CustLightButton(p_xpos,0,16,lh,0);
+    i = Search = new SearchInput(p_xpos,0,160,lh,0);
+    i->when(FL_WHEN_ENTER_KEY);
+    i->callback(search_cb, this);
+    i->tooltip("Search");
+    i->image(icons->ImgSearch);
+    i->align(FL_ALIGN_INSIDE | FL_ALIGN_RIGHT);
+    p_xpos += i->w();
+
+    SearchB = b = new CustLightButton(p_xpos,0,16,lh,0);
     b->image(icons->ImgSearch);
-    b->callback(search_cb, this);
+    b->callback(searchb_cb, this);
     b->clear_visible_focus();
     b->box(FL_THIN_UP_BOX);
     b->tooltip("Search the Web");

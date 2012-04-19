@@ -13,6 +13,7 @@ BrowserWindow *a_UIcmd_browser_window_new(int ww, int wh,
 BrowserWindow *a_UIcmd_get_bw_by_widget(void *v_wid);
 void a_UIcmd_send_event_to_tabs_by_wid(int e, void *v_wid);
 void a_UIcmd_open_urlstr(void *vbw, const char *urlstr);
+void a_UIcmd_open_search(void *vbw, const char *query);
 void a_UIcmd_open_url(BrowserWindow *bw, const DilloUrl *url);
 void a_UIcmd_open_url_nw(BrowserWindow *bw, const DilloUrl *url);
 void a_UIcmd_open_url_nt(void *vbw, const DilloUrl *url, int focus);
@@ -54,6 +55,7 @@ void a_UIcmd_image_popup(void *vbw, const DilloUrl *url, bool_t loaded_img,
 void a_UIcmd_form_popup(void *vbw, const DilloUrl *url, void *vform,
                         bool_t showing_hiddens);
 void a_UIcmd_file_popup(void *vbw, void *v_wid);
+void a_UIcmd_search_popup(void *vbw, void *v_wid);
 void a_UIcmd_copy_urlstr(BrowserWindow *bw, const char *urlstr);
 void a_UIcmd_view_page_source(BrowserWindow *bw, const DilloUrl *url);
 void a_UIcmd_view_page_bugs(void *vbw);
