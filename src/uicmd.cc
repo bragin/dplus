@@ -40,7 +40,7 @@
 #include "prefs.h"
 #include "misc.h"
 
-#include "dw/fltkviewport.hh"
+#include "../dw/fltkviewport.hh"
 
 #include "nav.h"
 

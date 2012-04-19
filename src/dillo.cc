@@ -50,7 +50,7 @@
 
 #include "dw/fltkcore.hh"
 
-#include "dlib/dsock.h"
+#include "../dlib/dsock.h"
 
 /*
  * Command line options structure

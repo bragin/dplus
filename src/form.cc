@@ -15,9 +15,9 @@
 #include <errno.h>
 #include <iconv.h>
 
-#include "lout/misc.hh"
-#include "dw/core.hh"
-#include "dw/textblock.hh"
+#include "../lout/misc.hh"
+#include "../dw/core.hh"
+#include "../dw/textblock.hh"
 
 #include "misc.h"
 #include "msg.h"

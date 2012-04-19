@@ -17,7 +17,7 @@
 #include "IO/IO.h"
 #include "IO/mime.h"
 
-#include "dw/core.hh"
+#include "../dw/core.hh"
 #include "styleengine.hh"
 #include "web.hh"
 

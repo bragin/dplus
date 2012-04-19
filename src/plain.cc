@@ -23,8 +23,8 @@
 
 #include "uicmd.hh"
 
-#include "dw/core.hh"
-#include "dw/textblock.hh"
+#include "../dw/core.hh"
+#include "../dw/textblock.hh"
 
 // Dw to Textblock
 #define DW2TB(dw)  ((Textblock*)dw)

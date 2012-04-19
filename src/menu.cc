@@ -14,7 +14,7 @@
 #include <FL/Fl.H>
 #include <FL/Fl_Menu_Item.H>
 
-#include "lout/misc.hh"    /* SimpleVector */
+#include "../lout/misc.hh"    /* SimpleVector */
 #include "msg.h"
 #include "menu.hh"
 #include "uicmd.hh"

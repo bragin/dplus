@@ -34,7 +34,7 @@
 #include "Url.h"
 #include "../../dpip/dpip.h"
 
-#include "dlib/dsock.h"
+#include "../../dlib/dsock.h"
 
 /* Note: DJGPP defines __unix__, so we can't use that
  * to reliably determine if we have sys/un.h or not. */

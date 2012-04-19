@@ -35,8 +35,8 @@
 
 #include "../uicmd.hh"
 
-#include "dlib/dsock.h"
-#include "dlib/dfcntl.h"
+#include "../../dlib/dsock.h"
+#include "../../dlib/dfcntl.h"
 
 /* Used to send a message to the bw's status bar */
 #define MSG_BW(web, root, ...)                                        \

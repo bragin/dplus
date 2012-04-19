@@ -18,8 +18,8 @@
 #include "msg.h"
 
 #include "image.hh"
-#include "dw/core.hh"
-#include "dw/image.hh"
+#include "../dw/core.hh"
+#include "../dw/image.hh"
 
 using namespace dw::core;
 

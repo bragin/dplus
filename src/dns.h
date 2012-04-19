@@ -1,7 +1,7 @@
 #ifndef __DNS_H__
 #define __DNS_H__
 
-#include "dlib/dsock.h"
+#include "../dlib/dsock.h"
 
 #ifdef __cplusplus
 extern "C" {

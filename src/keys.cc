@@ -15,7 +15,7 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "dlib/dlib.h"
+#include "../dlib/dlib.h"
 #include "keys.hh"
 #include "utf8.hh"
 #include "msg.h"

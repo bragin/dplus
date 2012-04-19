@@ -39,11 +39,11 @@
 #include "form.hh"
 #include "table.hh"
 
-#include "dw/textblock.hh"
-#include "dw/bullet.hh"
-#include "dw/listitem.hh"
-#include "dw/image.hh"
-#include "dw/ruler.hh"
+#include "../dw/textblock.hh"
+#include "../dw/bullet.hh"
+#include "../dw/listitem.hh"
+#include "../dw/image.hh"
+#include "../dw/ruler.hh"
 
 /*-----------------------------------------------------------------------------
  * Defines

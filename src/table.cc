@@ -12,9 +12,9 @@
 #include "table.hh"
 #include "html_common.hh"
 
-#include "dw/style.hh"
-#include "dw/textblock.hh"
-#include "dw/table.hh"
+#include "../dw/style.hh"
+#include "../dw/textblock.hh"
+#include "../dw/table.hh"
 
 #include "prefs.h"
 #include "msg.h"
