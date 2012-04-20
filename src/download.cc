@@ -58,44 +58,44 @@ const double CLEANUP_TIMEOUT = 0.5;
 
 class DlGui : public Fl_Window
 {
-   public:
-      DlGui(char *url, char *filename);
-      ~DlGui();
+public:
+   DlGui(char *url, char *filename);
+   ~DlGui();
 
-      void start();
-      void progress(double dlnow, double dltotal);
+   void start();
+   void progress(double dlnow, double dltotal);
 
-      int pCounter;
+   int pCounter;
 
-   private:
-      Fl_Box *urlLabel;
-      Fl_Output *urlDisplay;
-      Fl_Box *fnLabel;
-      Fl_Output *fnDisplay;
-      Fl_Progress *progressBar;
-      Fl_Box *dlNow;    // downloaded data size
-      Fl_Box *dlTotal;  // total data size
-      Fl_Box *dlSpeed;  // current download speed
-      Fl_Check_Button *checkClose;
-      Fl_Button *buttonClose;
+private:
+   Fl_Box *urlLabel;
+   Fl_Output *urlDisplay;
+   Fl_Box *fnLabel;
+   Fl_Output *fnDisplay;
+   Fl_Progress *progressBar;
+   Fl_Box *dlNow;    // downloaded data size
+   Fl_Box *dlTotal;  // total data size
+   Fl_Box *dlSpeed;  // current download speed
+   Fl_Check_Button *checkClose;
+   Fl_Button *buttonClose;
 
-      CURLM *dl_multi;
-      CURL *dl_handle;
-      char dl_error[CURL_ERROR_SIZE];
+   CURLM *dl_multi;
+   CURL *dl_handle;
+   char dl_error[CURL_ERROR_SIZE];
 
-      FILE *outputFile;
-      long resumeOffset;
-      int running_handles;
+   FILE *outputFile;
+   long resumeOffset;
+   int running_handles;
 
-      char *szBasename;
-      char *szTitle;
-      int szTitleLength;
+   char *szBasename;
+   char *szTitle;
+   int szTitleLength;
 
-      void mainloop();
-      void complete();
-      void setDlHandleOptions(char *url);
+   void mainloop();
+   void complete();
+   void setDlHandleOptions(char *url);
 
-      static void downloadCallback(void *cbdata);
+   static void downloadCallback(void *cbdata);
 };
 
 void Download_cleanup_window(void *cbdata);

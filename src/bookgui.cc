@@ -53,24 +53,24 @@ void Bookgui_do_sec_edit(void *r);
 
 class Bookgui_edit : public Fl_Window
 {
-   public:
-      Bookgui_edit(int k, const char *u = 0, const char *t = 0, int s = 0);
-      ~Bookgui_edit();
+public:
+   Bookgui_edit(int k, const char *u = 0, const char *t = 0, int s = 0);
+   ~Bookgui_edit();
 
-   private:
-      int key;  // -1 to add, otherwise modifies
-      const char *url;
+private:
+   int key;  // -1 to add, otherwise modifies
+   const char *url;
 
-      Fl_Input *title_input;
-      Fl_Choice *section; 
+   Fl_Input *title_input;
+   Fl_Choice *section; 
 
-      Fl_Return_Button *button_ok;
-      Fl_Button *button_cancel;
-      Fl_Button *button_delete;
+   Fl_Return_Button *button_ok;
+   Fl_Button *button_cancel;
+   Fl_Button *button_delete;
 
-      static void save_cb(Fl_Widget*, void *cbdata);
-      static void cancel_cb(Fl_Widget*, void *cbdata);
-      static void delete_cb(Fl_Widget*, void *cbdata);
+   static void save_cb(Fl_Widget*, void *cbdata);
+   static void cancel_cb(Fl_Widget*, void *cbdata);
+   static void delete_cb(Fl_Widget*, void *cbdata);
 };
 
 Bookgui_edit::Bookgui_edit(int k, const char *u, const char *t, int s)
@@ -168,22 +168,22 @@ void Bookgui_edit::delete_cb(Fl_Widget*, void *cbdata)
 
 class Bookgui_sec_edit : public Fl_Window
 {
-   public:
-      Bookgui_sec_edit(int k, const char *t = 0);
-      ~Bookgui_sec_edit();
+public:
+   Bookgui_sec_edit(int k, const char *t = 0);
+   ~Bookgui_sec_edit();
 
-   private:
-      int key;  // -1 to add, otherwise modifies
+private:
+   int key;  // -1 to add, otherwise modifies
 
-      Fl_Input *title_input;
+   Fl_Input *title_input;
 
-      Fl_Return_Button *button_ok;
-      Fl_Button *button_cancel;
-      Fl_Button *button_delete;
+   Fl_Return_Button *button_ok;
+   Fl_Button *button_cancel;
+   Fl_Button *button_delete;
 
-      static void save_cb(Fl_Widget*, void *cbdata);
-      static void cancel_cb(Fl_Widget*, void *cbdata);
-      static void delete_cb(Fl_Widget*, void *cbdata);
+   static void save_cb(Fl_Widget*, void *cbdata);
+   static void cancel_cb(Fl_Widget*, void *cbdata);
+   static void delete_cb(Fl_Widget*, void *cbdata);
 };
 
 Bookgui_sec_edit::Bookgui_sec_edit(int k, const char *t)

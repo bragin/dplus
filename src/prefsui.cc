@@ -57,69 +57,69 @@ const int32_t PREFSGUI_SHADE = 0xdcd1ba;  /* prefs.allow_white_bg == 0 */
 
 class PrefsGui : public Fl_Window
 {
-   public:
-      PrefsGui();
-      ~PrefsGui();
+public:
+   PrefsGui();
+   ~PrefsGui();
 
-      void apply();
-      void write();
+   void apply();
+   void write();
 
-      inline bool applied() const { return applied_; }
+   inline bool applied() const { return applied_; }
 
-   private:
-      Fl_Tabs *tabs;
-      Fl_Return_Button *buttonOK;
-      Fl_Button *buttonCancel;
+private:
+   Fl_Tabs *tabs;
+   Fl_Return_Button *buttonOK;
+   Fl_Button *buttonCancel;
 
-      Fl_Group *general;
-      Fl_Input *home;
-      Fl_Input *start_page;
-      Fl_Choice *panel_size;
-      Fl_Check_Button *small_icons;
-      Fl_Check_Button *fullwindow_start;
-      Fl_Box *colors;
-      Fl_Check_Button *allow_white_bg;  // negate
-      Fl_Check_Button *contrast_visited_color;
+   Fl_Group *general;
+   Fl_Input *home;
+   Fl_Input *start_page;
+   Fl_Choice *panel_size;
+   Fl_Check_Button *small_icons;
+   Fl_Check_Button *fullwindow_start;
+   Fl_Box *colors;
+   Fl_Check_Button *allow_white_bg;  // negate
+   Fl_Check_Button *contrast_visited_color;
 
-      Fl_Group *browsing;
-      Fl_Box *content;
-      Fl_Check_Button *load_images;
-      Fl_Check_Button *load_stylesheets;
-      Fl_Check_Button *parse_embedded_css;
-      Fl_Box *tabopts;
-      Fl_Check_Button *middle_click_opens_new_tab;
-      Fl_Check_Button *focus_new_tab;
-      Fl_Check_Button *right_click_closes_tab;
+   Fl_Group *browsing;
+   Fl_Box *content;
+   Fl_Check_Button *load_images;
+   Fl_Check_Button *load_stylesheets;
+   Fl_Check_Button *parse_embedded_css;
+   Fl_Box *tabopts;
+   Fl_Check_Button *middle_click_opens_new_tab;
+   Fl_Check_Button *focus_new_tab;
+   Fl_Check_Button *right_click_closes_tab;
 
-      Fl_Group *fonts;
-      Fl_Input_Choice *font_serif;
-      Fl_Input_Choice *font_sans_serif;
-      Fl_Input_Choice *font_cursive;
-      Fl_Input_Choice *font_fantasy;
-      Fl_Input_Choice *font_monospace;
-      Fl_Value_Input *font_factor;
-      Fl_Value_Input *font_min_size;
+   Fl_Group *fonts;
+   Fl_Input_Choice *font_serif;
+   Fl_Input_Choice *font_sans_serif;
+   Fl_Input_Choice *font_cursive;
+   Fl_Input_Choice *font_fantasy;
+   Fl_Input_Choice *font_monospace;
+   Fl_Value_Input *font_factor;
+   Fl_Value_Input *font_min_size;
 
-      Fl_Group *search;
-      Fl_Box *search_label;
-      Fl_Select_Browser *search_list;
-      Fl_Button *search_add;
-      Fl_Button *search_edit;
-      Fl_Button *search_delete;
-      Fl_Box *search_label_move;
-      Fl_Button *search_move_up;
-      Fl_Button *search_move_dn;
+   Fl_Group *search;
+   Fl_Box *search_label;
+   Fl_Select_Browser *search_list;
+   Fl_Button *search_add;
+   Fl_Button *search_edit;
+   Fl_Button *search_delete;
+   Fl_Box *search_label_move;
+   Fl_Button *search_move_up;
+   Fl_Button *search_move_dn;
 
-      Fl_Group *network;
-      Fl_Input *http_user_agent;
-      Fl_Input *http_language;
-      Fl_Input *http_proxy;
-      Fl_Input *no_proxy;
-      Fl_Choice *http_referer;
-      Fl_Choice *filter_auto_requests;
+   Fl_Group *network;
+   Fl_Input *http_user_agent;
+   Fl_Input *http_language;
+   Fl_Input *http_proxy;
+   Fl_Input *no_proxy;
+   Fl_Choice *http_referer;
+   Fl_Choice *filter_auto_requests;
 
-      bool applied_;
-      void list_fonts(Fl_Input_Choice *input);
+   bool applied_;
+   void list_fonts(Fl_Input_Choice *input);
 };
 
 void PrefsUI_return_cb(Fl_Widget *widget, void *d = 0);
