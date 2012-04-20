@@ -15,7 +15,6 @@ class Findbar : public Fl_Group {
    Fl_Button *clrb;
    Fl_Button *next_btn, *prev_btn;
    Fl_Check_Button *check_btn;
-   Fl_Pixmap *hideImg;
    Fl_Input *i;
 
    static void search_cb (Fl_Widget *, void *);

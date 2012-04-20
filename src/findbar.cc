@@ -170,7 +170,6 @@ Findbar::Findbar(int width, int height) :
 
 Findbar::~Findbar()
 {
-   delete hideImg;
 }
 
 /*
