@@ -165,12 +165,12 @@ int SearchInput::handle(int e)
 
    if ((e == FL_RELEASE && b == 3) ||
        (e == FL_KEYBOARD && k == FL_Down)) {
-      /* display the list of search engines */
+      // Display the list of search engines
       a_UIcmd_search_popup(a_UIcmd_get_bw_by_widget(wid), wid);
       return 1;
 
    } else if (e == FL_UNFOCUS && !strlen(value())) {
-      /* if empty, display the name of the selected search engine */
+      // If empty, display the name of the selected search engine
       char *label, *url, *source;
       source = (char *)dList_nth_data(prefs.search_urls,
                                       prefs.search_url_idx);
@@ -180,7 +180,7 @@ int SearchInput::handle(int e)
       textcolor(FL_INACTIVE_COLOR);
 
    } else if (e == FL_FOCUS && textcolor() == FL_INACTIVE_COLOR) {
-      /* clear the name of the selected search engine */
+      // Clear the name of the selected search engine (see above)
       value(NULL);
       textcolor(FL_FOREGROUND_COLOR);
    }
