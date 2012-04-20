@@ -10,7 +10,7 @@ General:
 [X] Merge patches from Dillo-Win32
 [X] Rebrand the browser as D+ (DPlus?)
 [ ] Use config.h rather than -DENABLE_* in CPPFLAGS
-[ ] DON'T CHANGE THE WORKING DIRECTORY ON PROGRAM STARTUP!
+[X] DON'T CHANGE THE WORKING DIRECTORY ON PROGRAM STARTUP!
 
 Documentation:
 [X] README
