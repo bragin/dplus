@@ -128,7 +128,10 @@ int CustInput::handle(int e)
             return 0;
          }
       } else if (modifier == 0) {
-         if (k == FL_Down || k == FL_Up ||
+         if (k == FL_Down) {
+            // Display the bookmarks menu (a handy shortcut!)
+            a_UIcmd_book(a_UIcmd_get_bw_by_widget(this), this);
+         } else if (k == FL_Up ||
              k == FL_Page_Down || k == FL_Page_Up || k == FL_Tab) {
             // Give up focus and honor the key
             a_UIcmd_focus_main_area(a_UIcmd_get_bw_by_widget(this));
