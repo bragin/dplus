@@ -21,6 +21,7 @@ class Findbar : public Fl_Group {
    static void search_cb (Fl_Widget *, void *);
    static void searchBackwards_cb (Fl_Widget *, void *);
    static void hide_cb (Fl_Widget *, void *);
+   void set_color (int retval);
 
 public:
    Findbar(int width, int height);

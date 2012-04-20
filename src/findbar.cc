@@ -55,10 +55,18 @@ void Findbar::search_cb(Fl_Widget *, void *vfb)
    Findbar *fb = (Findbar *)vfb;
    const char *key = fb->i->value();
    bool case_sens = fb->check_btn->value();
+   int retval;
 
-   if (key[0] != '\0')
+   if (key[0] != '\0') {
       a_UIcmd_findtext_search(a_UIcmd_get_bw_by_widget(fb),
-                              key, case_sens, false);
+                              key, case_sens, false, &retval);
+      fb->set_color(retval);
+   } else {
+      // Reset the findbar color when the search key is empty.
+      // Note: We call this here, but not in searchBackwards_cb
+      // because only this function is used for find-as-you-type.
+      fb->set_color(0);
+   }
 }
 
 /*
@@ -69,10 +77,12 @@ void Findbar::searchBackwards_cb(Fl_Widget *, void *vfb)
    Findbar *fb = (Findbar *)vfb;
    const char *key = fb->i->value();
    bool case_sens = fb->check_btn->value();
+   int retval;
 
    if (key[0] != '\0') {
       a_UIcmd_findtext_search(a_UIcmd_get_bw_by_widget(fb),
-                              key, case_sens, true);
+                              key, case_sens, true, &retval);
+      fb->set_color(retval);
    }
 }
 
@@ -82,6 +92,32 @@ void Findbar::searchBackwards_cb(Fl_Widget *, void *vfb)
 void Findbar::hide_cb(Fl_Widget *, void *vfb)
 {
    a_UIcmd_findbar_toggle(a_UIcmd_get_bw_by_widget(vfb), 0);
+}
+
+/*
+ * Change the color of the input box to provide visual feedback.
+ */
+void Findbar::set_color(int retval)
+{
+   switch (retval) {
+   case -1:   // match not found
+      i->textcolor(FL_BLACK);
+      i->color(fl_color_average(FL_RED, FL_WHITE, 0.375));
+      break;
+   case 1:    // match found
+      i->textcolor(FL_BLACK);
+      i->color(fl_color_average(FL_GREEN, FL_WHITE, 0.375));
+      break;
+   case 2:    // restart from the top/bottom
+      i->textcolor(FL_BLACK);
+      i->color(fl_color_average(FL_YELLOW, FL_WHITE, 0.375));
+      break;
+   case 0:
+   default:
+      i->textcolor(FL_FOREGROUND_COLOR);
+      i->color(FL_BACKGROUND2_COLOR);
+   }
+   i->redraw();
 }
 
 /*
@@ -174,6 +210,9 @@ void Findbar::show()
 
    // It takes more than just calling show() to do the trick
    Fl_Group::show();
+
+   // Reset the input box color
+   set_color(0);
 
    /* select text even if already focused */
    i->take_focus();

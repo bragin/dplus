@@ -1372,19 +1372,23 @@ void a_UIcmd_panels_toggle(BrowserWindow *bw)
  * Search for next/previous occurrence of key.
  */
 void a_UIcmd_findtext_search(BrowserWindow *bw, const char *key,
-                             int case_sens, int backward)
+                             int case_sens, int backward, int *retval)
 {
    Layout *l = (Layout *)bw->render_layout;
 
+   *retval = 0;
    switch (l->search(key, case_sens, backward)) {
    case FindtextState::RESTART:
       a_UIcmd_set_msg(bw, backward?"Top reached; restarting from the bottom."
                                   :"Bottom reached; restarting from the top.");
+      *retval = 2;
       break;
    case FindtextState::NOT_FOUND:
       a_UIcmd_set_msg(bw, "\"%s\" not found.", key);
+      *retval = -1;
       break;
    case FindtextState::SUCCESS:
+      *retval = 1;
    default:
       a_UIcmd_set_msg(bw, "");
    }
