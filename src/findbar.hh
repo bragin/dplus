@@ -13,14 +13,13 @@
  */
 class Findbar : public Fl_Group {
    Fl_Button *clrb;
-   Fl_Button *hide_btn, *next_btn, *prev_btn;
+   Fl_Button *next_btn, *prev_btn;
    Fl_Check_Button *check_btn;
    Fl_Pixmap *hideImg;
    Fl_Input *i;
 
    static void search_cb (Fl_Widget *, void *);
    static void searchBackwards_cb (Fl_Widget *, void *);
-   static void hide_cb (Fl_Widget *, void *);
    void set_color (int retval);
 
 public:

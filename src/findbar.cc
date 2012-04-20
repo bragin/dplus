@@ -91,14 +91,6 @@ void Findbar::searchBackwards_cb(Fl_Widget *, void *vfb)
 }
 
 /*
- * Hide the search bar
- */
-void Findbar::hide_cb(Fl_Widget *, void *vfb)
-{
-   a_UIcmd_findbar_toggle(a_UIcmd_get_bw_by_widget(vfb), 0);
-}
-
-/*
  * Change the color of the input box to provide visual feedback.
  */
 void Findbar::set_color(int retval)
@@ -142,17 +134,10 @@ Findbar::Findbar(int width, int height) :
 
    box(FL_THIN_UP_BOX);
 
-    hide_btn = new Fl_Button(x, border, 16, height, 0);
-    hideImg = new Fl_Pixmap(new_s_xpm);
-    hide_btn->image(hideImg);
-    x += 16 + gap;
-    hide_btn->callback(hide_cb, this);
-    hide_btn->clear_visible_focus();
-    hide_btn->box(FL_THIN_UP_BOX);
-    hide_btn->tooltip("Hide");
-   add(hide_btn);
+    x += 72;    // leave room for the "Find text:" label
+    input_width -= x;
 
-    i = new MyInput(x, border, input_width, height);
+    i = new MyInput(x, border, input_width, height, "Find text:");
     x += input_width + gap;
     resizable(i);
     i->callback(search_cb, this);
