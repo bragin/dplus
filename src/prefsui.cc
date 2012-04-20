@@ -510,14 +510,19 @@ void PrefsGui::apply()
    //
    // Search tab
    //
-   for (int i = 0; i < dList_length(prefs.search_urls); i++)
-      dFree(dList_nth_data(prefs.search_urls, i));
-   dList_free(prefs.search_urls);
+   for (int i = dList_length(prefs.search_urls); i >= 0; --i) {
+      void *data = dList_nth_data(prefs.search_urls, i);
+      dList_remove(prefs.search_urls, data);
+      dList_remove(prefs.search_urls, NULL);
+      dFree(data);
+   }
 
-   prefs.search_urls = dList_new(search_list->size() + 1);
    for (int i = 1; i <= search_list->size(); i++)
       dList_append(prefs.search_urls, (void*)dStrdup(search_list->text(i)));
-   dList_append(prefs.search_urls, NULL);
+
+   // If we've deleted the selected search engine, fall back on the default
+   if (prefs.search_url_idx >= dList_length(prefs.search_urls))
+      prefs.search_url_idx = 0;
 
    //
    // Network tab
