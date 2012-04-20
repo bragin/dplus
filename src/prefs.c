@@ -103,7 +103,6 @@ void a_Prefs_init(void)
    prefs.search_url_idx = 0;
    prefs.show_back = TRUE;
    prefs.show_bookmarks = TRUE;
-   prefs.show_clear_url = TRUE;
    prefs.show_extra_warnings = FALSE;
    prefs.show_filemenu=TRUE;
    prefs.show_forw = TRUE;

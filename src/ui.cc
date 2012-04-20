@@ -34,8 +34,8 @@
 struct iconset {
    Fl_Image *ImgMeterOK, *ImgMeterBug,
             *ImgHome, *ImgReload, *ImgSave, *ImgBook, *ImgTools,
-            *ImgClear, *ImgHelp, *ImgLeft, *ImgLeftIn,
-            *ImgRight, *ImgRightIn, *ImgStop, *ImgStopIn;
+            *ImgHelp, *ImgLeft, *ImgLeftIn, *ImgRight, *ImgRightIn,
+            *ImgStop, *ImgStopIn;
 };
 
 static struct iconset standard_icons = {
@@ -46,7 +46,6 @@ static struct iconset standard_icons = {
    new Fl_Pixmap(save_xpm),
    new Fl_Pixmap(bm_xpm),
    new Fl_Pixmap(tools_xpm),
-   new Fl_Pixmap(new_s_xpm),
    new Fl_Pixmap(help_xpm),
    new Fl_Pixmap(left_xpm),
    new Fl_Pixmap(left_i_xpm),
@@ -64,7 +63,6 @@ static struct iconset small_icons = {
    new Fl_Pixmap(save_s_xpm),
    new Fl_Pixmap(bm_s_xpm),
    new Fl_Pixmap(tools_s_xpm),
-   new Fl_Pixmap(new_s_xpm),
    standard_icons.ImgHelp,
    new Fl_Pixmap(left_s_xpm),
    new Fl_Pixmap(left_si_xpm),
@@ -190,31 +188,6 @@ int SearchInput::handle(int e)
 //----------------------------------------------------------------------------
 
 /*
- * Used to handle "paste" within the toolbar's Clear button.
- */
-class CustPasteButton : public CustLightButton {
-public:
-   CustPasteButton(int x, int y, int w, int h, const char *l=0) :
-      CustLightButton(x,y,w,h,l) {};
-   int handle(int e);
-};
-
-int CustPasteButton::handle(int e)
-{
-   if (e == FL_PASTE) {
-      const char* t = Fl::event_text();
-      if (t && *t) {
-         a_UIcmd_set_location_text(a_UIcmd_get_bw_by_widget(this), t);
-         a_UIcmd_open_urlstr(a_UIcmd_get_bw_by_widget(this), t);
-         return 1;
-      }
-   }
-   return CustLightButton::handle(e);
-}
-
-//----------------------------------------------------------------------------
-
-/*
  * Used to resize the progress boxes automatically.
  */
 class CustProgressBox : public Fl_Box {
@@ -263,22 +236,6 @@ static void filemenu_cb(Fl_Widget *wid, void *)
    int b = Fl::event_button();
    if (b == FL_LEFT_MOUSE || b == FL_RIGHT_MOUSE) {
       a_UIcmd_file_popup(a_UIcmd_get_bw_by_widget(wid), wid);
-   }
-}
-
-/*
- * Callback for the location's clear-button.
- */
-static void clear_cb(Fl_Widget *w, void *data)
-{
-   UI *ui = (UI*)data;
-
-   int b = Fl::event_button();
-   if (b == FL_LEFT_MOUSE) {
-      ui->set_location("");
-      ui->focus_location();
-   } if (b == FL_MIDDLE_MOUSE) {
-      ui->paste_url();
    }
 }
 
@@ -441,19 +398,11 @@ void UI::make_toolbar(int tw, int th)
 }
 
 /*
- * Create the location box (Clear/Input/Search)
+ * Create the location box (Input/Search)
  */
 void UI::make_location(int ww)
 {
    Fl_Button *b;
-
-    Clear = b = new CustPasteButton(p_xpos,0,16,lh,0);
-    b->image(icons->ImgClear);
-    b->callback(clear_cb, this);
-    b->clear_visible_focus();
-    b->box(FL_THIN_UP_BOX);
-    b->tooltip("Clear the URL box.\nMiddle-click to paste a URL.");
-    p_xpos += b->w();
 
     Fl_Input *i = Location = new CustInput(p_xpos,0,ww-p_xpos-196,lh,0);
     i->when(FL_WHEN_ENTER_KEY);
@@ -794,13 +743,6 @@ int UI::handle(int event)
          a_UIcmd_help(a_UIcmd_get_bw_by_widget(this));
          ret = 1;
       }
-   } else if (event == FL_RELEASE) {
-      if (Fl::event_button() == FL_MIDDLE_MOUSE &&
-          prefs.middle_click_drags_page == 0) {
-         /* nobody claimed the event; try paste */
-         paste_url();
-         ret = 1;
-      }
    }
 
    if (!ret) {
@@ -965,8 +907,6 @@ void UI::customize(int flags)
       Bookmarks->hide();
    if ( !prefs.show_tools )
       Tools->hide();
-   if ( !prefs.show_clear_url )
-      Clear->hide();
    if ( !prefs.show_url )
       Location->hide();
    if ( !prefs.show_search )
@@ -1043,14 +983,6 @@ void UI::button_set_sens(UIButton btn, int sens)
    default:
       break;
    }
-}
-
-/*
- * Paste a middle-click-selection into "Clear" button as URL
- */
-void UI::paste_url()
-{
-   Fl::paste(*Clear, false);
 }
 
 /*

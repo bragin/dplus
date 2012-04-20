@@ -178,7 +178,7 @@ class UI : public CustGroupVertical {
 
    CustGroupVertical *TopGroup;
    Fl_Button *Back, *Forw, *Home, *Reload, *Save, *Stop, *Bookmarks, *Tools,
-          *Clear, *Help, *BugMeter, *FileButton;
+          *Help, *BugMeter, *FileButton;
    CustGroupHorizontal *LocBar, *NavBar, *StatusBar;
    Fl_Input  *Location, *Search;
    CustProgressBox *PProg, *IProg;
@@ -223,7 +223,6 @@ public:
    void set_render_layout(Fl_Group *nw);
    void customize(int flags);
    void button_set_sens(UIButton btn, int sens);
-   void paste_url();
    int get_panelsize() { return PanelSize; }
    int get_smallicons() { return Small_Icons; }
    void change_panel(int new_size, int small_icons);

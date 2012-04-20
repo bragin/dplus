@@ -91,7 +91,6 @@ int PrefsParser::parseOption(char *name, char *value)
       { "search_url", &prefs.search_urls, PREFS_STRINGS },
       { "show_back", &prefs.show_back, PREFS_BOOL },
       { "show_bookmarks", &prefs.show_bookmarks, PREFS_BOOL },
-      { "show_clear_url", &prefs.show_clear_url, PREFS_BOOL },
       { "show_extra_warnings", &prefs.show_extra_warnings, PREFS_BOOL },
       { "show_filemenu", &prefs.show_filemenu, PREFS_BOOL },
       { "show_forw", &prefs.show_forw, PREFS_BOOL },
