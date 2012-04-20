@@ -89,8 +89,10 @@ static struct iconset *icons = &standard_icons;
 class CustInput : public Fl_Input {
 public:
    CustInput (int x, int y, int w, int h, const char* l=0) :
-      Fl_Input(x,y,w,h,l) {};
+      Fl_Input(x,y,w,h,l) { got_focus = false; };
    int handle(int e);
+private:
+   bool got_focus;
 };
 
 /*
@@ -110,10 +112,13 @@ int CustInput::handle(int e)
        (k == FL_Up || k == FL_Down || k == FL_Left || k == FL_Right)) {
       return 0;
    } else if (e == FL_RELEASE) {
-      if (b == 1) {
-         // Highlight the current text
+      if (b == 1 && !got_focus) {
+         // Highlight the current text the first time this is clicked
          position(size(), 0);
+         got_focus = true;
       }
+   } else if (e == FL_UNFOCUS) {
+      got_focus = false;
    } else if (e == FL_KEYBOARD) {
       if (k == FL_Escape && modifier == 0) {
          // Let the parent group handle this Esc key
