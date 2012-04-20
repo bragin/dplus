@@ -118,12 +118,9 @@ int CustInput::handle(int e)
    } else if (e == FL_UNFOCUS) {
       got_focus = false;
    } else if (e == FL_KEYBOARD) {
-      if (k == FL_Escape && modifier == 0) {
-         // Let the parent group handle this Esc key
-         return 0;
-      } else if (modifier == FL_CTRL) {
+      if (modifier == FL_CTRL) {
          if (k == 'h' || k == 'o' || k == 'r' ||
-                    k == FL_Home || k == FL_End) {
+                    k == 'l' || k == FL_Home || k == FL_End) {
             // Let these keys get to the UI
             return 0;
          }
