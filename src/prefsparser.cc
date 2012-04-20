@@ -137,14 +137,18 @@ int PrefsParser::parseOption(char *name, char *value)
       break;
    case PREFS_STRINGS:
    {
+      static Dlist *last_lp;
       Dlist *lp = *(Dlist **)node->pref;
-      if (dList_length(lp) == 2 && !dList_nth_data(lp, 1)) {
+      if (last_lp != lp) {
          /* override the default */
-         void *data = dList_nth_data(lp, 0);
-         dList_remove(lp, data);
-         dList_remove(lp, NULL);
-         dFree(data);
+         for (int i = dList_length(lp); i >= 0; --i) {
+            void *data = dList_nth_data(lp, i);
+            dList_remove(lp, data);
+            dList_remove(lp, NULL);
+            dFree(data);
+         }
       }
+      last_lp = lp;
       dList_append(lp, dStrdup(value));
       break;
    }
