@@ -37,7 +37,8 @@ User interface:
 [ ] Use the arrow cursor over the status bar
 [ ] Add zoom controls in the status bar
 [ ] Add a "new tab" button to the tab bar
-[ ] Show the tab bar when only one tab is open
+[X] Show the tab bar when only one tab is open
+[ ] Remove middle-click opens new window
 [X] Fix keyboard navigation in the bookmarks menu
 [ ] Allow changing the stored URL for bookmarks
 [ ] Switch to a more conventional menu/toolbar layout
