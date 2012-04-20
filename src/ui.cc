@@ -98,7 +98,7 @@ public:
  */
 int CustInput::handle(int e)
 {
-   int k = Fl::event_key();
+   int b = Fl::event_button(), k = Fl::event_key();
 
    _MSG("CustInput::handle event=%d\n", e);
 
@@ -109,6 +109,11 @@ int CustInput::handle(int e)
    if (e == FL_FOCUS &&
        (k == FL_Up || k == FL_Down || k == FL_Left || k == FL_Right)) {
       return 0;
+   } else if (e == FL_RELEASE) {
+      if (b == 1) {
+         // Highlight the current text
+         position(size(), 0);
+      }
    } else if (e == FL_KEYBOARD) {
       if (k == FL_Escape && modifier == 0) {
          // Let the parent group handle this Esc key
