@@ -163,7 +163,11 @@ int SearchInput::handle(int e)
    void *wid = (void*)this;
    int b = Fl::event_button(), k = Fl::event_key();
 
-   if ((e == FL_RELEASE && b == 3) ||
+   if (e == FL_FOCUS && k == FL_Tab) {
+      // Let this event go to the UI
+      return 0;
+
+   } else if ((e == FL_RELEASE && b == 3) ||
        (e == FL_KEYBOARD && k == FL_Down)) {
       // Display the list of search engines
       a_UIcmd_search_popup(a_UIcmd_get_bw_by_widget(wid), wid);
