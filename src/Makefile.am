@@ -48,8 +48,8 @@ dplus_SOURCES = \
 	prefs.h \
 	prefsparser.cc \
 	prefsparser.hh \
-	prefsgui.cc \
-	prefsgui.hh \
+	prefsui.cc \
+	prefsui.hh \
 	keys.cc \
 	keys.hh \
 	msg.h \

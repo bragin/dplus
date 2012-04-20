@@ -43,7 +43,7 @@
 #include "prefs.h"
 #include "misc.h"
 #include "bookgui.hh"
-#include "prefsgui.hh"
+#include "prefsui.hh"
 #include "pixmaps.h"
 
 #include "../dw/fltkviewport.hh"
@@ -1140,7 +1140,7 @@ void a_UIcmd_nav_jump(BrowserWindow *bw, int offset, int new_bw)
 void a_UIcmd_preferences(void *vbw)
 {
    BrowserWindow *bw = (BrowserWindow*)vbw;
-   if (a_Prefsgui_show()) {
+   if (a_PrefsUI_show()) {
       BW2UI(bw)->change_panel(prefs.panel_size, prefs.small_icons);
    }
 }

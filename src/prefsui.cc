@@ -1,7 +1,7 @@
 /*
- * File: prefsgui.cc
+ * File: prefsui.cc
  *
- * Copyright (C) 2011 Benjamin Johnson <obeythepenguin@users.sourceforge.net>
+ * Copyright 2011-2012 Benjamin Johnson <obeythepenguin@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@
 #include <stdio.h>
 
 #include "prefs.h"
-#include "prefsgui.hh"
+#include "prefsui.hh"
 
 #include "url.h"
 #include "paths.hh"
@@ -122,20 +122,20 @@ class PrefsGui : public Fl_Window
       void list_fonts(Fl_Input_Choice *input);
 };
 
-void Prefsgui_return_cb(Fl_Widget *widget, void *d = 0);
-void Prefsgui_cancel_cb(Fl_Widget *widget, void *d = 0);
-void Prefsgui_search_add_cb(Fl_Widget *widget, void *l = 0);
-void Prefsgui_search_edit_cb(Fl_Widget *widget, void *l = 0);
-void Prefsgui_search_delete_cb(Fl_Widget *widget, void *l = 0);
-void Prefsgui_search_move_up_cb(Fl_Widget *widget, void *l = 0);
-void Prefsgui_search_move_dn_cb(Fl_Widget *widget, void *l = 0);
+void PrefsUI_return_cb(Fl_Widget *widget, void *d = 0);
+void PrefsUI_cancel_cb(Fl_Widget *widget, void *d = 0);
+void PrefsUI_search_add_cb(Fl_Widget *widget, void *l = 0);
+void PrefsUI_search_edit_cb(Fl_Widget *widget, void *l = 0);
+void PrefsUI_search_delete_cb(Fl_Widget *widget, void *l = 0);
+void PrefsUI_search_move_up_cb(Fl_Widget *widget, void *l = 0);
+void PrefsUI_search_move_dn_cb(Fl_Widget *widget, void *l = 0);
 
 const char *dillorc_bool(int v);
 const char *dillorc_panel_size(int v);
 const char *dillorc_http_referer(int v);
 const char *dillorc_filter_auto_requests(int v);
 
-bool Prefsgui_known_user_agent(const char *ua);
+bool PrefsUI_known_user_agent(const char *ua);
 
 
 /*
@@ -325,24 +325,24 @@ PrefsGui::PrefsGui()
    top += 128;
 
    search_add = new Fl_Button(rx+8, top, 64, 24, "Add...");
-   search_add->callback(Prefsgui_search_add_cb, (void*)search_list);
+   search_add->callback(PrefsUI_search_add_cb, (void*)search_list);
 
    search_edit = new Fl_Button(rx+76, top, 64, 24, "Edit...");
-   search_edit->callback(Prefsgui_search_edit_cb, (void*)search_list);
+   search_edit->callback(PrefsUI_search_edit_cb, (void*)search_list);
 
    search_delete = new Fl_Button(rx+144, top, 64, 24, "Delete");
-   search_delete->callback(Prefsgui_search_delete_cb, (void*)search_list);
+   search_delete->callback(PrefsUI_search_delete_cb, (void*)search_list);
 
    search_label_move = new Fl_Box(rw-100, top, 48, 24, "Order:");
    search_label_move->align(FL_ALIGN_INSIDE | FL_ALIGN_RIGHT);
 
    search_move_up = new Fl_Button(rw-52, top, 24, 24, "@2<-");
    search_move_up->labeltype(FL_ENGRAVED_LABEL);
-   search_move_up->callback(Prefsgui_search_move_up_cb, (void*)search_list);
+   search_move_up->callback(PrefsUI_search_move_up_cb, (void*)search_list);
 
    search_move_dn = new Fl_Button(rw-24, top, 24, 24, "@2->");
    search_move_dn->labeltype(FL_ENGRAVED_LABEL);
-   search_move_dn->callback(Prefsgui_search_move_dn_cb, (void*)search_list);
+   search_move_dn->callback(PrefsUI_search_move_dn_cb, (void*)search_list);
 
    search->end();
 
@@ -393,10 +393,10 @@ PrefsGui::PrefsGui()
    tabs->end();
 
    buttonOK = new Fl_Return_Button(w()-176, h()-32, 80, 24, "OK");
-   buttonOK->callback(Prefsgui_return_cb, this);
+   buttonOK->callback(PrefsUI_return_cb, this);
 
    buttonCancel = new Fl_Button(w()-88, h()-32, 80, 24, "Cancel");
-   buttonCancel->callback(Prefsgui_cancel_cb, this);
+   buttonCancel->callback(PrefsUI_cancel_cb, this);
 
    end();
    applied_ = false;
@@ -615,7 +615,7 @@ void PrefsGui::write()
 	      "%sno_proxy=%s\n"
               "http_referer=%s\n"
               "filter_auto_requests=%s\n",
-              (Prefsgui_known_user_agent(http_user_agent->value()) ? "#" : ""),
+              (PrefsUI_known_user_agent(http_user_agent->value()) ? "#" : ""),
               http_user_agent->value(),
               http_language->value(),
               // disable proxy server if none specified
@@ -654,7 +654,7 @@ void PrefsGui::list_fonts(Fl_Input_Choice *input)
 /*
  * OK button callback.
  */
-void Prefsgui_return_cb(Fl_Widget *widget, void *d)
+void PrefsUI_return_cb(Fl_Widget *widget, void *d)
 {
    (void)widget;
    PrefsGui *dialog = (PrefsGui*)d;
@@ -668,7 +668,7 @@ void Prefsgui_return_cb(Fl_Widget *widget, void *d)
 /*
  * Cancel button callback.
  */
-void Prefsgui_cancel_cb(Fl_Widget *widget, void *d)
+void PrefsUI_cancel_cb(Fl_Widget *widget, void *d)
 {
    (void)widget;
    PrefsGui *dialog = (PrefsGui*)d;
@@ -679,7 +679,7 @@ void Prefsgui_cancel_cb(Fl_Widget *widget, void *d)
 /*
  * Add Search callback.
  */
-void Prefsgui_search_add_cb(Fl_Widget *widget, void *l)
+void PrefsUI_search_add_cb(Fl_Widget *widget, void *l)
 {
    Fl_Select_Browser *sl = (Fl_Select_Browser*)l;
 
@@ -691,7 +691,7 @@ void Prefsgui_search_add_cb(Fl_Widget *widget, void *l)
 /*
  * Edit Search callback.
  */
-void Prefsgui_search_edit_cb(Fl_Widget *widget, void *l)
+void PrefsUI_search_edit_cb(Fl_Widget *widget, void *l)
 {
    Fl_Select_Browser *sl = (Fl_Select_Browser*)l;
    int line = sl->value();
@@ -704,7 +704,7 @@ void Prefsgui_search_edit_cb(Fl_Widget *widget, void *l)
 /*
  * Delete Search callback.
  */
-void Prefsgui_search_delete_cb(Fl_Widget *widget, void *l)
+void PrefsUI_search_delete_cb(Fl_Widget *widget, void *l)
 {
    Fl_Select_Browser *sl = (Fl_Select_Browser*)l;
    int line = sl->value();
@@ -716,7 +716,7 @@ void Prefsgui_search_delete_cb(Fl_Widget *widget, void *l)
 /*
  * Move Search Up callback.
  */
-void Prefsgui_search_move_up_cb(Fl_Widget *widget, void *l)
+void PrefsUI_search_move_up_cb(Fl_Widget *widget, void *l)
 {
    Fl_Select_Browser *sl = (Fl_Select_Browser*)l;
    int line = sl->value();
@@ -728,7 +728,7 @@ void Prefsgui_search_move_up_cb(Fl_Widget *widget, void *l)
 /*
  * Move Search Down callback.
  */
-void Prefsgui_search_move_dn_cb(Fl_Widget *widget, void *l)
+void PrefsUI_search_move_dn_cb(Fl_Widget *widget, void *l)
 {
    Fl_Select_Browser *sl = (Fl_Select_Browser*)l;
    int line = sl->value();
@@ -796,7 +796,7 @@ const char *dillorc_filter_auto_requests(int v)
  * This prevents us from saving a UA string containing a Dillo version number,
  * which would hard-code the version in the configuration file.
  */
-bool Prefsgui_known_user_agent(const char *ua)
+bool PrefsUI_known_user_agent(const char *ua)
 {
    // default user agent
    if (!strcmp(ua, "Dillo/" VERSION))
@@ -814,7 +814,7 @@ bool Prefsgui_known_user_agent(const char *ua)
 /*
  * Show the preferences dialog.
  */
-int a_Prefsgui_show()
+int a_PrefsUI_show()
 {
    int retval;
    PrefsGui *dialog = new PrefsGui;
