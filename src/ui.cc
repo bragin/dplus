@@ -326,7 +326,9 @@ static void b1_cb(Fl_Widget *wid, void *cb_data)
       }
       break;
    case UI_TOOLS:
-      if (b == FL_LEFT_MOUSE || b == FL_RIGHT_MOUSE) {
+      if (b == FL_LEFT_MOUSE) {
+         a_UIcmd_preferences(a_UIcmd_get_bw_by_widget(wid));
+      } else if (b == FL_RIGHT_MOUSE) {
          a_UIcmd_tools(a_UIcmd_get_bw_by_widget(wid), wid);
       }
       break;
@@ -389,7 +391,7 @@ void UI::make_toolbar(int tw, int th)
    Save = make_button("Save", icons->ImgSave, NULL, UI_SAVE);
    Stop = make_button("Stop", icons->ImgStop, icons->ImgStopIn, UI_STOP);
    Bookmarks = make_button("Book", icons->ImgBook, NULL, UI_BOOK);
-   Tools = make_button("Tools", icons->ImgTools, NULL, UI_TOOLS);
+   Tools = make_button("Prefs", icons->ImgTools, NULL, UI_TOOLS);
 
    Back->tooltip("Back");
    Forw->tooltip("Forward");
@@ -398,7 +400,7 @@ void UI::make_toolbar(int tw, int th)
    Save->tooltip("Save");
    Stop->tooltip("Stop");
    Bookmarks->tooltip("Bookmarks");
-   Tools->tooltip("Tools");
+   Tools->tooltip("Preferences");
 }
 
 /*

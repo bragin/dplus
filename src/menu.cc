@@ -630,14 +630,6 @@ void a_Menu_history_popup(BrowserWindow *bw, int direction)
 }
 
 /*
- * Display the Preferences dialog
- */
-static void Menu_preferences_cb(Fl_Widget *wid, void*)
-{
-   a_Timeout_add(0.0, a_UIcmd_preferences, NULL);
-}
-
-/*
  * Toggle use of remote stylesheets
  */
 static void Menu_remote_css_cb(Fl_Widget *wid, void*)
@@ -700,7 +692,6 @@ void a_Menu_tools_popup(BrowserWindow *bw, void *v_wid)
    UI *ui = (UI*)bw->ui;
 
    static Fl_Menu_Item pm[] = {
-      {"Preferences...", 0, Menu_preferences_cb, 0, FL_MENU_DIVIDER,0,0,0,0},
       {"Use remote CSS", 0, Menu_remote_css_cb, 0, FL_MENU_TOGGLE,0,0,0,0},
       {"Use embedded CSS", 0, Menu_embedded_css_cb, 0,
        FL_MENU_TOGGLE|FL_MENU_DIVIDER,0,0,0,0},
@@ -722,13 +713,13 @@ void a_Menu_tools_popup(BrowserWindow *bw, void *v_wid)
    int cur_smallicons = ui->get_smallicons();
 
    if (prefs.load_stylesheets)
-      pm[1].set();
+      pm[0].set();
    if (prefs.parse_embedded_css)
-      pm[2].set();
+      pm[1].set();
    if (prefs.load_images)
-      pm[3].set();
-   pm[5+cur_panelsize].setonly();
-   cur_smallicons ? pm[8].set() : pm[8].clear();
+      pm[2].set();
+   pm[4+cur_panelsize].setonly();
+   cur_smallicons ? pm[7].set() : pm[7].clear();
 
    item = pm->popup(wid->x(), wid->y() + wid->h());
    if (item) {
