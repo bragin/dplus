@@ -41,6 +41,9 @@ int MyInput::handle(int e)
          a_UIcmd_findbar_toggle(a_UIcmd_get_bw_by_widget(this), 0);
          return 1;
       }
+   } else if (e == FL_UNFOCUS) {
+      // Hide the findbar when it loses focus.
+      a_UIcmd_findbar_toggle(a_UIcmd_get_bw_by_widget(this), 0);
    }
 
    if (ret)
