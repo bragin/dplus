@@ -44,6 +44,7 @@
 #include "misc.h"
 #include "bookgui.hh"
 #include "prefsgui.hh"
+#include "pixmaps.h"
 
 #include "../dw/fltkviewport.hh"
 
@@ -103,6 +104,7 @@ class CustTabs : public Fl_Group {
    Fl_Scroll *Scroll;
    Fl_Pack *Pack;
    Fl_Group *Control;
+   Fl_Pixmap *CloseImg;
    CustLightButton *CloseBtn;
    int tabcolor_inactive, tabcolor_active;
 
@@ -132,8 +134,10 @@ public:
 
       /* control buttons go inside a group */
       Control = new Fl_Group(ww-ctl_w,0,ctl_w,ctab_h);
-       CloseBtn = new FlatLightButton(ww-ctl_w+2,0,btn_w,ctab_h, "X");
+       CloseImg = new Fl_Pixmap(new_s_xpm);
+       CloseBtn = new FlatLightButton(ww-ctl_w+2,0,btn_w,ctab_h);
        CloseBtn->clear_visible_focus();
+       CloseBtn->image(CloseImg);
        CloseBtn->tooltip("Close");
        CloseBtn->callback(close_tab_btn_cb, this);
        CloseBtn->hide();
