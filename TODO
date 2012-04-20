@@ -33,6 +33,7 @@ Preferences:
 User interface:
 [X] Normalize keyboard shortcuts
 [ ] Find a better UI font
+[ ] Fix the default downloads directory
 [ ] Right-click menu for input boxes
 [X] Switch to a Firefox-style search bar
 [ ] Use the arrow cursor over the status bar
