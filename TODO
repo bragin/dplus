@@ -8,7 +8,7 @@ if I hadn't wasted so much time trying to cooperate with mainline.
 
 General:
 [X] Merge patches from Dillo-Win32
-[ ] Rebrand the browser as D+ (DPlus?)
+[X] Rebrand the browser as D+ (DPlus?)
 [ ] Use config.h rather than -DENABLE_* in CPPFLAGS
 [ ] DON'T CHANGE THE WORKING DIRECTORY ON PROGRAM STARTUP!
 
