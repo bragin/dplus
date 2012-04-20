@@ -436,7 +436,10 @@ void CustTabs::set_tab_label(UI *ui, const char *label)
          update_pack_offset();
 
          // Set the tooltip to the full page title
-         Pack->child(idx)->copy_tooltip(label);
+         if (label_len > tab_chars)
+            Pack->child(idx)->copy_tooltip(label);
+         else
+            Pack->child(idx)->copy_tooltip(NULL);
       }
    }
 }
