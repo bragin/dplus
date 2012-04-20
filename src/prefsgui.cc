@@ -676,40 +676,10 @@ void Prefsgui_cancel_cb(Fl_Widget *widget, void *d)
 void Prefsgui_search_add_cb(Fl_Widget *widget, void *l)
 {
    Fl_Select_Browser *sl = (Fl_Select_Browser*)l;
-   int b = Fl::event_button();
 
-   // Shortcut: right-clicking the "Add..." button loads in a whole
-   // bunch of searches I personally find very useful (about half the
-   // ones I have set up in my Opera browser).
-   if (b == FL_RIGHT_MOUSE) {
-      sl->clear();
-      sl->add("Google "
-              "http://www.google.com/search?q=%s");
-      sl->add("Google Images "
-              "http://images.google.com/images?q=%s");
-      sl->add("Wikipedia "
-              "http://en.wikipedia.org/wiki/Special:Search?search=%s");
-      sl->add("Free Dictionary "
-              "http://www.thefreedictionary.com/%s");
-      sl->add("Softpedia "
-              "http://www.softpedia.com/dyn-search.php?search_term=%s");
-      sl->add("SourceForge.net "
-              "https://sourceforge.net/search/?type_of_search=soft&words=%s");
-      sl->add("The Pirate Bay "
-              "http://thepiratebay.org/s/?q=%s");
-      sl->add("Musician's Friend "
-              "http://www.musiciansfriend.com/navigation?q=%s");
-      sl->add("MSDN Search "
-              "http://social.msdn.microsoft.com/Search/en-us?query=%s");
-      sl->add("OpenBSD Man Pages "
-              "http://www.openbsd.org/cgi-bin/man.cgi?query=%s");
-      sl->add("Wayback Machine "
-              "http://wayback.archive.org/form-submit.jsp?url=%s");
-   } else {
-      const char *u = fl_input("Enter search URL:");
-      if (u != NULL)
-         sl->add(u);
-   }
+   const char *u = fl_input("Enter search name and URL:");
+   if (u != NULL)
+      sl->add(u);
 }
 
 /*
@@ -720,7 +690,7 @@ void Prefsgui_search_edit_cb(Fl_Widget *widget, void *l)
    Fl_Select_Browser *sl = (Fl_Select_Browser*)l;
    int line = sl->value();
 
-   const char *u = fl_input("Enter search URL:", sl->text(line));
+   const char *u = fl_input("Enter search name and URL:", sl->text(line));
    if (u != NULL)
       sl->text(line, u);
 }

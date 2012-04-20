@@ -14,7 +14,6 @@
 
 #define PREFS_START_PAGE      "about:splash"
 #define PREFS_HOME            "http://dillo-win32.sourceforge.net/"
-#define PREFS_SEARCH_URL      "http://www.google.com/search?q=%s"
 #define PREFS_NO_PROXY        "localhost 127.0.0.1"
 #define PREFS_HTTP_REFERER    "host"
 #define PREFS_DATE_FORMAT     "%m/%d/%Y %I:%M%p"
@@ -100,8 +99,6 @@ void a_Prefs_init(void)
    prefs.parse_embedded_css=TRUE;
    prefs.save_dir = dStrdup(PREFS_SAVE_DIR);
    prefs.search_urls = dList_new(16);
-   dList_append(prefs.search_urls, dStrdup(PREFS_SEARCH_URL));
-   dList_append(prefs.search_urls, NULL); /* flags a default search URL */
    prefs.search_url_idx = 0;
    prefs.show_back = TRUE;
    prefs.show_bookmarks = TRUE;
@@ -124,6 +121,23 @@ void a_Prefs_init(void)
    prefs.start_page = a_Url_new(PREFS_START_PAGE, NULL);
    prefs.w3c_plus_heuristics = TRUE;
    prefs.date_format = dStrdup(PREFS_DATE_FORMAT);
+
+   /* Initialize the list of default search engines */
+   dList_append(prefs.search_urls, "Google "
+                "http://www.google.com/search?q=%s");
+   dList_append(prefs.search_urls, "Google Images "
+                "http://images.google.com/images?q=%s");
+   dList_append(prefs.search_urls, "Wikipedia "
+                "http://en.wikipedia.org/wiki/Special:Search?search=%s");
+   dList_append(prefs.search_urls, "Free Dictionary "
+                "http://www.thefreedictionary.com/%s");
+   dList_append(prefs.search_urls, "SourceForge.net "
+                "http://sourceforge.net/search/?type_of_search=soft&words=%s");
+   dList_append(prefs.search_urls, "OpenBSD Manual "
+                "http://www.openbsd.org/cgi-bin/man.cgi?query=%s");
+   dList_append(prefs.search_urls, "DuckDuckGo "
+                "http://duckduckgo.com/lite/?kp=-1&q=%s");
+   dList_append(prefs.search_urls, NULL);
 }
 
 /*
