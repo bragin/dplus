@@ -1,5 +1,5 @@
 /*
- * File: dlgui.cc
+ * File: download.cc
  *
  * Copyright (C) 2011 Benjamin Johnson <obeythepenguin@users.sourceforge.net>
  *
@@ -28,7 +28,7 @@
 #endif
 #include <curl/curl.h>
 
-#include "dlgui.hh"
+#include "download.hh"
 #include "prefs.h"
 #include "../dlib/dlib.h"
 
@@ -98,15 +98,15 @@ class DlGui : public Fl_Window
       static void downloadCallback(void *cbdata);
 };
 
-void Dlgui_cleanup_window(void *cbdata);
-void Dlgui_close_window(Fl_Widget *widget, void *cbdata);
+void Download_cleanup_window(void *cbdata);
+void Download_close_window(Fl_Widget *widget, void *cbdata);
 
-void Dlgui_set_basic_options(CURL *dl_handle, const char *url);
+void Download_set_basic_options(CURL *dl_handle, const char *url);
 
-size_t Dlgui_write_callback(void *ptr, size_t size, size_t nmemb,
-                            void *userdata);
-int Dlgui_progress_callback(void *clientp, double dltotal, double dlnow,
-                            double ultotal, double ulnow);
+size_t Download_write_callback(void *ptr, size_t size, size_t nmemb,
+                               void *userdata);
+int Download_progress_callback(void *clientp, double dltotal, double dlnow,
+                               double ultotal, double ulnow);
 
 
 /*
@@ -159,10 +159,10 @@ DlGui::DlGui(char *url, char *filename)
    checkClose->value(true);
 
    buttonClose = new Fl_Button(w()-88, h()-32, 80, 24, "Cancel");
-   buttonClose->callback(Dlgui_close_window, (void*)this);
+   buttonClose->callback(Download_close_window, (void*)this);
 
    end();
-   pCounter = 0;  // see Dlgui_progress_callback
+   pCounter = 0;  // see Download_progress_callback
 
    // to display progress in the window title
    char *szFilename = dStrdup(filename);
@@ -259,7 +259,7 @@ void DlGui::complete()
  */
 void DlGui::setDlHandleOptions(char *url)
 {
-   Dlgui_set_basic_options(dl_handle, url);
+   Download_set_basic_options(dl_handle, url);
 
    curl_easy_setopt(dl_handle, CURLOPT_ERRORBUFFER, dl_error);
    curl_easy_setopt(dl_handle, CURLOPT_HEADER, 0);
@@ -267,12 +267,12 @@ void DlGui::setDlHandleOptions(char *url)
 
    // Set up our write data callback
    curl_easy_setopt(dl_handle, CURLOPT_WRITEDATA, outputFile);
-   curl_easy_setopt(dl_handle, CURLOPT_WRITEFUNCTION, &Dlgui_write_callback);
+   curl_easy_setopt(dl_handle, CURLOPT_WRITEFUNCTION, &Download_write_callback);
 
    // Enable our progress callback function
    curl_easy_setopt(dl_handle, CURLOPT_NOPROGRESS, 0L);
    curl_easy_setopt(dl_handle, CURLOPT_PROGRESSFUNCTION,
-                    &Dlgui_progress_callback);
+                    &Download_progress_callback);
    curl_easy_setopt(dl_handle, CURLOPT_PROGRESSDATA, this);
 }
 
@@ -371,14 +371,14 @@ void DlGui::start()
    a_Timeout_add(DL_TIMEOUT, DlGui::downloadCallback, (void*)this);
 
    // delete the download window after it's been closed
-   a_Timeout_add(CLEANUP_TIMEOUT, Dlgui_cleanup_window, (void*)this);
+   a_Timeout_add(CLEANUP_TIMEOUT, Download_cleanup_window, (void*)this);
 }
 
 
 /*
  * Initialize libcurl.
  */
-void a_Dlgui_init()
+void a_Download_init()
 {
    curl_global_init(CURL_GLOBAL_ALL);
 }
@@ -386,7 +386,7 @@ void a_Dlgui_init()
 /*
  * Clean up libcurl.
  */
-void a_Dlgui_freeall()
+void a_Download_freeall()
 {
    curl_global_cleanup();
 }
@@ -394,15 +394,15 @@ void a_Dlgui_freeall()
 /*
  * Download the specified URL.
  */
-void a_Dlgui_download(char *url, char *fn)
+void a_Download_start(char *url, char *fn)
 {
-   _MSG("a_Dlgui_download:\n  url = %s\n  fn = %s\n", url, fn);
+   _MSG("a_Download_start:\n  url = %s\n  fn = %s\n", url, fn);
 
    // Test to make sure we can open the output file before we start the
    // download; otherwise, it will crash if passed an invalid filename.
    FILE *outputFile = fopen(fn, "ab");
    if (outputFile == NULL) {
-      fl_alert("Could not open %s", fn);
+      fl_alert("Could not open %s for writing.", fn);
       return;
    } else
       fclose(outputFile);
@@ -415,20 +415,20 @@ void a_Dlgui_download(char *url, char *fn)
 /*
  * Delete the specified download window.
  */
-void Dlgui_cleanup_window(void *cbdata)
+void Download_cleanup_window(void *cbdata)
 {
    DlGui *dlgui = (DlGui*)cbdata;
    if (!dlgui->shown()) {
       Fl::delete_widget(dlgui);  // preferred way to delete a widget in a cb.
-      a_Timeout_remove(Dlgui_cleanup_window, cbdata);
+      a_Timeout_remove(Download_cleanup_window, cbdata);
    } else
-      a_Timeout_repeat(CLEANUP_TIMEOUT, Dlgui_cleanup_window, cbdata);
+      a_Timeout_repeat(CLEANUP_TIMEOUT, Download_cleanup_window, cbdata);
 }
 
 /*
  * Close the specified download window.
  */
-void Dlgui_close_window(Fl_Widget *widget, void *cbdata)
+void Download_close_window(Fl_Widget *widget, void *cbdata)
 {
    DlGui *dlgui = (DlGui*)(cbdata);
    dlgui->hide();
@@ -439,7 +439,7 @@ void Dlgui_close_window(Fl_Widget *widget, void *cbdata)
  * Note: We need to check LIBCURL_VERSION_NUM before using certain options,
  * since many Linux distributions don't ship an up-to-date curl library.
  */
-void Dlgui_set_basic_options(CURL *dl_handle, const char *url)
+void Download_set_basic_options(CURL *dl_handle, const char *url)
 {
    DilloUrl *d_url;
    const char *auth;
@@ -515,8 +515,8 @@ void Dlgui_set_basic_options(CURL *dl_handle, const char *url)
  * Write function callback.
  * This is called periodically from libcurl while the download is running.
  */
-size_t Dlgui_write_callback(void *ptr, size_t size, size_t nmemb,
-                            void *userdata)
+size_t Download_write_callback(void *ptr, size_t size, size_t nmemb,
+                               void *userdata)
 {
    return fwrite(ptr, size, nmemb, (FILE*)userdata);
 }
@@ -525,8 +525,8 @@ size_t Dlgui_write_callback(void *ptr, size_t size, size_t nmemb,
  * Download progress callback.
  * This is called periodically from libcurl while the download is running.
  */
-int Dlgui_progress_callback(void *clientp, double dltotal, double dlnow,
-                            double ultotal, double ulnow)
+int Download_progress_callback(void *clientp, double dltotal, double dlnow,
+                               double ultotal, double ulnow)
 {
    DlGui *dlgui = (DlGui*)clientp;
    (void)ultotal;
@@ -547,20 +547,20 @@ int Dlgui_progress_callback(void *clientp, double dltotal, double dlnow,
 #else /* ENABLE_DOWNLOADS */
 
 
-#include "dlgui.hh"
+#include "download.hh"
 
 
 /*
  * Dummy function for dillo.cc
  */
-void a_Dlgui_init()
+void a_Download_init()
 {
 }
 
 /*
  * Dummy function for dillo.cc
  */
-void a_Dlgui_freeall()
+void a_Download_freeall()
 {
 }
 

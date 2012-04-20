@@ -48,7 +48,7 @@
 #include "cookies.h"
 #include "bookmark.h"
 #include "auth.h"
-#include "dlgui.hh"
+#include "download.hh"
 #include "unicows.h"
 #include "file.h"
 
@@ -371,7 +371,7 @@ int main(int argc, char **argv)
    a_Cookies_init();
    a_Bookmarks_init();
    a_Auth_init();
-   a_Dlgui_init();
+   a_Download_init();
 
    /* command line options override preferences */
    if (options_got & DILLO_CLI_FULLWINDOW)
@@ -461,7 +461,7 @@ int main(int argc, char **argv)
     * (This can be left to the OS, but we'll do it, with a view to test
     *  and fix our memory management)
     */
-   a_Dlgui_freeall();
+   a_Download_freeall();
    a_Cookies_freeall();
    a_Bookmarks_freeall();
    a_Cache_freeall();

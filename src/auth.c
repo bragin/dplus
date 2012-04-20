@@ -31,7 +31,7 @@ typedef struct {
 typedef struct {
    char *name;
    Dlist *paths; /* stripped of any trailing '/', so the root path is "" */
-   char *user_password; /* username and password, needed by dlgui.cc */
+   char *user_password; /* username and password, needed by download.cc */
    char *authorization; /* the authorization request header */
 } AuthRealm_t;
 
@@ -392,7 +392,7 @@ const char *a_Auth_get_auth_str(const DilloUrl *url)
 
 /*
  * Return the user:password pair for an HTTP query.
- * Used by dlgui.cc to set authorization for downloads.
+ * Used by download.cc to set authorization for downloads.
  */
 const char *a_Auth_get_user_password(const DilloUrl *url)
 {

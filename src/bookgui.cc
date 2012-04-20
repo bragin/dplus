@@ -288,7 +288,7 @@ static void Bookgui_open_cb(Fl_Widget*, void *r)
    DilloUrl *url = a_Url_new(a_Bms_get_bm_url(r), NULL);
 
    if (b == FL_MIDDLE_MOUSE ||
-       (b == FL_LEFT_MOUSE && s == FL_CTRL)) {
+       (b == FL_LEFT_MOUSE && s & FL_CTRL)) {
       if (prefs.middle_click_opens_new_tab) {
          int focus = prefs.focus_new_tab ? 1 : 0;
          a_UIcmd_open_url_nt(vbw_last, url, focus);

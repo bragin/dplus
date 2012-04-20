@@ -126,8 +126,8 @@ dillo_SOURCES = \
 	pixmaps.h \
 	findbar.cc \
 	findbar.hh \
-	dlgui.cc \
-	dlgui.hh \
+	download.cc \
+	download.hh \
 	print.cc \
 	print.hh \
 	xembed.cc \

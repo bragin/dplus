@@ -29,7 +29,7 @@
 #include "../dpip/dpip.h"
 
 #ifdef ENABLE_DOWNLOADS
-#  include "dlgui.hh"
+#  include "download.hh"
 #endif /* ENABLE_DOWNLOADS */
 
 /* for testing dpi chat */
@@ -391,7 +391,7 @@ int a_Capi_open_url(DilloWeb *web, CA_Callback_t Call, void *CbData)
         }
      } else if (a_Cache_download_enabled(web->url)) {
 #ifdef ENABLE_DOWNLOADS
-        a_Dlgui_download(URL_STR(web->url), web->filename);
+        a_Download_start(URL_STR(web->url), web->filename);
 #endif /* ENABLE_DOWNLOADS */
      }
 
