@@ -331,6 +331,15 @@ dnl  Test for support for CyaSSL
 dnl -----------------------------
 dnl
 if test "x$enable_cyassl" = "xyes"; then
+  dnl CyaSSL usually installs to a separate dir to avoid conflict w/OpenSSL.
+  dnl This is ugly, but it makes it easier to find the CyaSSL includes/libs:
+  case $target in
+    *-*-mingw*)
+      LDFLAGS="$LDFLAGS -L/mingw/cyassl/lib"
+      CPPFLAGS="$CPPFLAGS -I/mingw/cyassl/include"
+      ;;
+  esac
+
   AC_CHECK_HEADER(openssl/ssl.h, cyassl_ok=yes, cyassl_ok=no)
 
   if test "x$cyassl_ok" = "xyes"; then
