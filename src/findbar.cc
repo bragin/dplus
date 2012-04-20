@@ -115,7 +115,8 @@ Findbar::Findbar(int width, int height) :
     i = new MyInput(x, border, input_width, height);
     x += input_width + gap;
     resizable(i);
-    i->when(FL_WHEN_NEVER);
+    i->callback(search_cb, this);
+    i->when(FL_WHEN_CHANGED);
    add(i);
 
     next_btn = new Fl_Button(x, border, button_width, height, "Next");
