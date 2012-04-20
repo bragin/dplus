@@ -415,7 +415,6 @@ void UI::make_location(int ww)
     i = Search = new SearchInput(p_xpos,0,180,lh,0);
     i->when(FL_WHEN_ENTER_KEY);
     i->callback(search_cb, this);
-    i->handle(FL_UNFOCUS);
     p_xpos += i->w();
 
     Help = b = new CustLightButton(p_xpos,0,16,lh,0);
@@ -425,6 +424,10 @@ void UI::make_location(int ww)
     b->box(FL_THIN_UP_BOX);
     b->tooltip("Help");
     p_xpos += b->w();
+
+    // Reset this to its unfocused state
+    // (displaying the name of the default search engine)
+    Search->handle(FL_UNFOCUS);
 
 }
 
