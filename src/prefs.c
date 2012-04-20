@@ -24,14 +24,12 @@
 #  define PREFS_FONT_CURSIVE    "URW Chancery L"
 #  define PREFS_FONT_FANTASY    "DejaVu Sans" /* TODO: find good default */
 #  define PREFS_FONT_MONOSPACE  "DejaVu Sans Mono"
-#  define PREFS_SAVE_DIR        "/tmp/"
 #else /* _WIN32 */
 #  define PREFS_FONT_SERIF      "Times New Roman"
 #  define PREFS_FONT_SANS_SERIF "Arial"
 #  define PREFS_FONT_CURSIVE    "Comic Sans MS"
 #  define PREFS_FONT_FANTASY    "Comic Sans MS"
 #  define PREFS_FONT_MONOSPACE  "Courier New"
-#  define PREFS_SAVE_DIR        "C:\\" /* note: never actually used */
 #endif /* _WIN32 */
 
 /* Most sites don't recognize Dillo's user agent string, but many will
@@ -98,7 +96,6 @@ void a_Prefs_init(void)
    prefs.no_proxy = dStrdup(PREFS_NO_PROXY);
    prefs.panel_size = P_medium;
    prefs.parse_embedded_css=TRUE;
-   prefs.save_dir = dStrdup(PREFS_SAVE_DIR);
    prefs.search_urls = dList_new(16);
    prefs.search_url_idx = 0;
    prefs.show_back = TRUE;
@@ -160,7 +157,6 @@ void a_Prefs_freeall(void)
    dFree(prefs.http_referer);
    dFree(prefs.http_user_agent);
    dFree(prefs.no_proxy);
-   dFree(prefs.save_dir);
    for (i = 0; i < dList_length(prefs.search_urls); ++i)
       dFree(dList_nth_data(prefs.search_urls, i));
    dList_free(prefs.search_urls);

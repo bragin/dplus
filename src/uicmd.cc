@@ -66,11 +66,6 @@ using namespace dw::fltk;
 
 
 /*
- * Local data
- */
-static char *save_dir = NULL;
-
-/*
  * Forward declarations
  */
 static char *UIcmd_make_search_str(const char *str);
@@ -800,49 +795,25 @@ void a_UIcmd_redirection0(void *vbw, const DilloUrl *url)
 static char *UIcmd_make_save_filename(const char *pathstr)
 {
    size_t MaxLen = 64;
-   char *FileName, *newname, *o, *n;
-   const char *name, *dir = a_UIcmd_get_save_dir();
+   char *FileName, *o, *n;
+   const char *name;
 
    if ((name = strrchr(pathstr, '/'))) {
       if (strlen(++name) > MaxLen) {
          name = name + strlen(name) - MaxLen;
       }
       /* Replace %20 and ' ' with '_' in Filename */
-      o = n = newname = dStrdup(name);
+      o = n = FileName = dStrdup(name);
       for (int i = 0; o[i]; i++) {
          *n++ = (o[i] == ' ') ? '_' :
                 (o[i] == '%' && o[i+1] == '2' && o[i+2] == '0') ?
                 i+=2, '_' : o[i];
       }
       *n = 0;
-      FileName = dStrconcat(dir ? dir : "", newname, NULL);
-      dFree(newname);
    } else {
-      FileName = dStrconcat(dir ? dir : "", pathstr, NULL);
+      FileName = dStrdup(pathstr);
    }
    return FileName;
-}
-
-/*
- * Get the default directory for saving files.
- */
-const char *a_UIcmd_get_save_dir()
-{
-   return save_dir;
-}
-
-/*
- * Set the default directory for saving files.
- */
-void a_UIcmd_set_save_dir(const char *dir)
-{
-   const char *p;
-
-   if (dir && (p = strrchr(dir, '/'))) {
-      dFree(save_dir);
-      // assert a trailing '/'
-      save_dir = dStrconcat(dir, (p[1] != 0) ? "/" : "", NULL);
-   }
 }
 
 /*
@@ -856,7 +827,6 @@ void a_UIcmd_save(void *vbw)
    const DilloUrl *url = a_History_get_url(NAV_TOP_UIDX(bw));
 
    if (url) {
-      a_UIcmd_set_save_dir(prefs.save_dir);
       SuggestedName = UIcmd_make_save_filename(URL_PATH(url));
       name = a_Dialog_save_file("Save Page as File", NULL, SuggestedName);
       MSG("a_UIcmd_save: %s\n", name);
@@ -985,8 +955,6 @@ void a_UIcmd_save_link(BrowserWindow *bw, const DilloUrl *url)
 {
    const char *name;
    char *SuggestedName;
-
-   a_UIcmd_set_save_dir(prefs.save_dir);
 
    SuggestedName = UIcmd_make_save_filename(URL_STR(url));
    if ((name = a_Dialog_save_file("Save Link as File", NULL, SuggestedName))) {

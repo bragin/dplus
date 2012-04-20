@@ -66,9 +66,6 @@ void a_UIcmd_preferences(void *vbw);
 void a_UIcmd_close_bw(void *vbw);
 void a_UIcmd_close_all_bw(void *p);
 
-const char *a_UIcmd_get_save_dir();
-void a_UIcmd_set_save_dir(const char *dir);
-
 void a_UIcmd_wait();
 
 

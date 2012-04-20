@@ -87,7 +87,6 @@ int PrefsParser::parseOption(char *name, char *value)
       { "no_proxy", &prefs.no_proxy, PREFS_STRING },
       { "panel_size", &prefs.panel_size, PREFS_PANEL_SIZE },
       { "parse_embedded_css", &prefs.parse_embedded_css, PREFS_BOOL },
-      { "save_dir", &prefs.save_dir, PREFS_STRING },
       { "search_url", &prefs.search_urls, PREFS_STRINGS },
       { "show_back", &prefs.show_back, PREFS_BOOL },
       { "show_bookmarks", &prefs.show_bookmarks, PREFS_BOOL },
