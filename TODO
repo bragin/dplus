@@ -30,7 +30,7 @@ Preferences:
 [ ] Initialize default search list in prefs.c
 
 User interface:
-[ ] Normalize keyboard shortcuts
+[X] Normalize keyboard shortcuts
 [ ] Find a better UI font
 [ ] Right-click menu for input boxes
 [X] Switch to a Firefox-style search bar
@@ -38,7 +38,7 @@ User interface:
 [ ] Add zoom controls in the status bar
 [ ] Add a "new tab" button to the tab bar
 [ ] Show the tab bar when only one tab is open
-[ ] Fix keyboard navigation in the bookmarks menu
+[X] Fix keyboard navigation in the bookmarks menu
 [ ] Allow changing the stored URL for bookmarks
 [ ] Switch to a more conventional menu/toolbar layout
 
