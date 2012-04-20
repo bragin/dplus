@@ -1139,7 +1139,10 @@ void a_UIcmd_nav_jump(BrowserWindow *bw, int offset, int new_bw)
  */
 void a_UIcmd_preferences(void *vbw)
 {
-   a_Prefsgui_show();
+   BrowserWindow *bw = (BrowserWindow*)vbw;
+   if (a_Prefsgui_show()) {
+      BW2UI(bw)->change_panel(prefs.panel_size, prefs.small_icons);
+   }
 }
 
 // UI binding functions -------------------------------------------------------

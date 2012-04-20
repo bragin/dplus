@@ -949,6 +949,9 @@ void UI::change_panel(int new_size, int small_icons)
    PanelSize = new_size;
    Small_Icons = small_icons;
 
+   prefs.panel_size = PanelSize;
+   prefs.small_icons = Small_Icons;
+
    // make a new panel
    make_panel(TopGroup->w());
    customize(0);

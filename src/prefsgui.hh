@@ -6,7 +6,7 @@ extern "C" {
 #endif /* __cplusplus */
 
 
-void a_Prefsgui_show();
+int a_Prefsgui_show();
 
 
 #ifdef __cplusplus

@@ -64,6 +64,8 @@ class PrefsGui : public Fl_Window
       void apply();
       void write();
 
+      inline bool applied() const { return applied_; }
+
    private:
       Fl_Tabs *tabs;
       Fl_Return_Button *buttonOK;
@@ -116,6 +118,7 @@ class PrefsGui : public Fl_Window
       Fl_Choice *http_referer;
       Fl_Choice *filter_auto_requests;
 
+      bool applied_;
       void list_fonts(Fl_Input_Choice *input);
 };
 
@@ -396,6 +399,7 @@ PrefsGui::PrefsGui()
    buttonCancel->callback(Prefsgui_cancel_cb, this);
 
    end();
+   applied_ = false;
 }
 
 /*
@@ -531,6 +535,8 @@ void PrefsGui::apply()
    prefs.no_proxy = dStrdup(no_proxy->value());
    prefs.http_referer = dStrdup(dillorc_http_referer(http_referer->value()));
    prefs.filter_auto_requests = filter_auto_requests->value();
+
+   applied_ = true;
 }
 
 /*
@@ -808,13 +814,16 @@ bool Prefsgui_known_user_agent(const char *ua)
 /*
  * Show the preferences dialog.
  */
-void a_Prefsgui_show()
+int a_Prefsgui_show()
 {
+   int retval;
    PrefsGui *dialog = new PrefsGui;
    dialog->show();
 
    while (dialog->shown())
       Fl::wait();
 
+   retval = dialog->applied() ? 1 : 0;
    delete dialog;
+   return retval;
 }
