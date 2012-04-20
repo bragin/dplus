@@ -617,7 +617,7 @@ void a_UIcmd_open_urlstr(void *vbw, const char *urlstr)
          /* file URI */
          ch = new_urlstr[5];
          if (!ch || ch == '.') {
-            url = a_Url_new(Paths::getOldWorkingDir(), "file:");
+            url = a_Url_new(dGetcwd(), "file:");
          } else if (ch == '~') {
             url = a_Url_new(dGethomedir(), "file:");
          } else {

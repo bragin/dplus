@@ -21,9 +21,6 @@
  * Local data
  */
 
-// Dillo works from an unmounted directory (/tmp)
-static char* oldWorkingDir = NULL;
-
 /*
  * Changes current working directory to /tmp and creates ~/.dillo
  * if not exists.
@@ -32,15 +29,6 @@ void Paths::init(void)
 {
    char *path;
    struct stat st;
-   int rc = 0;
-
-   dFree(oldWorkingDir);
-   oldWorkingDir = dGetcwd();
-   rc = chdir(dGettempdir());
-   if (rc == -1) {
-      MSG("paths: error changing directory to /tmp: %s\n",
-          dStrerror(errno));
-   }
 
    path = dStrdup(dGetprofdir());
    if (stat(path, &st) == -1) {
@@ -59,20 +47,10 @@ void Paths::init(void)
 }
 
 /*
- * Return the initial current working directory in a string.
- */
-char *Paths::getOldWorkingDir(void)
-{
-   return oldWorkingDir;
-}
-
-/*
  * Free memory
  */
 void Paths::free(void)
 {
-   chdir(oldWorkingDir);
-   dFree(oldWorkingDir);
 }
 
 /*

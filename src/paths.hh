@@ -19,7 +19,6 @@ class Paths {
 public:
    static void init(void);
    static void free(void);
-   static char *getOldWorkingDir(void);
    static FILE *getPrefsFP(const char *rcFile);
    static FILE *getWriteFP(const char *rcFile);
 };

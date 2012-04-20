@@ -252,7 +252,7 @@ static DilloUrl *makeStartUrl(char *str, bool local)
 
    /* Relative path to a local file? */
    p = (*str == '/') ? dStrdup(str) :
-                       dStrconcat(Paths::getOldWorkingDir(), "/", str, NULL);
+                       dStrconcat(dGetcwd(), "/", str, NULL);
 
    if (access(p, F_OK) == 0) {
       /* absolute path may have non-URL characters */
