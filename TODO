@@ -30,6 +30,7 @@ Preferences:
 [ ] Add portable application support on Windows (save prefs to current dir)
 [ ] Save preferences in prefs.c, not PrefsGui
 [X] Initialize default search list in prefs.c
+[ ] Import preferences and bookmarks from Dillo
 
 User interface:
 [X] Normalize keyboard shortcuts
