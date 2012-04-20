@@ -1,0 +1,37 @@
+----------------------
+ D+ Browser ChangeLog
+----------------------
+
+This ChangeLog provides a broad overview of changes between releases.
+Please see the Mercurial commit log for more specific details.
+
+
+Version 1.0 (not released yet)
+------------------------------
+
+General:
+- Initial release (forked from Dillo-3.0).
+- Add support for Microsoft Windows and MS-DOS systems.
+- Remove legacy DPI (Dillo plugins) code.
+
+Network and Input/Output:
+- Build cookies support into the browser.
+- Build HTTPS support into the browser.
+- Build file protocol support into the browser.
+- Minor bugfixes.
+
+User Interface:
+- Build bookmarks support into the browser.
+- Add a graphical interface for setting program preferences.
+- Add preliminary printing support.
+- Use native file dialogs when they're available.
+- Use system colors rather than a hard-coded color scheme.
+- Improve clipboard support.
+- Don't use Unix key bindings in text input boxes.
+- Improve the toolbar's appearance and usability.
+- Replace the search dialog with a Firefox-style search bar.
+- Implement find-as-you-type and provide visual feedback in the find bar.
+- Treat Ctrl-clicking a hyperlink the same as middle-clicking it.
+- Use standard keyboard shortcuts to match other browsers.
+- Always show the tab bar by default.
+- Minor bugfixes.
