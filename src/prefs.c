@@ -96,7 +96,6 @@ void a_Prefs_init(void)
    prefs.no_proxy = dStrdup(PREFS_NO_PROXY);
    prefs.panel_size = P_small;
    prefs.parse_embedded_css=TRUE;
-   prefs.search_urls = dList_new(16);
    prefs.search_url_idx = 0;
    prefs.show_back = TRUE;
    prefs.show_bookmarks = TRUE;
@@ -120,6 +119,7 @@ void a_Prefs_init(void)
    prefs.date_format = dStrdup(PREFS_DATE_FORMAT);
 
    /* Initialize the list of default search engines */
+   prefs.search_urls = dList_new(7);
    dList_append(prefs.search_urls, "Google "
                 "http://www.google.com/search?q=%s");
    dList_append(prefs.search_urls, "Google Images "
@@ -134,7 +134,6 @@ void a_Prefs_init(void)
                 "http://www.openbsd.org/cgi-bin/man.cgi?query=%s");
    dList_append(prefs.search_urls, "DuckDuckGo "
                 "http://duckduckgo.com/lite/?kp=-1&q=%s");
-   dList_append(prefs.search_urls, NULL);
 }
 
 /*
