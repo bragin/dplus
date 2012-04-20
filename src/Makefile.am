@@ -8,9 +8,9 @@ AM_CXXFLAGS = @LIBPNG_CFLAGS@ @CURL_CFLAGS@ @LIBFLTK_CXXFLAGS@
 
 SUBDIRS = IO
 
-bin_PROGRAMS = dillo
+bin_PROGRAMS = dplus
 
-dillo_LDADD = \
+dplus_LDADD = \
 	$(top_builddir)/dlib/libDlib.a \
 	$(top_builddir)/dpip/libDpip.a \
 	IO/libDiof.a \
@@ -21,8 +21,8 @@ dillo_LDADD = \
 	@LIBJPEG_LIBS@ @LIBPNG_LIBS@ @LIBFLTK_LIBS@ @LIBZ_LIBS@ \
 	@LIBICONV_LIBS@ @LIBPTHREAD_LIBS@ @CURL_LIBS@
 
-dillo_SOURCES = \
-	dillo.cc \
+dplus_SOURCES = \
+	dplus.cc \
 	unicows.h \
 	unicows.c \
 	paths.cc \
@@ -134,7 +134,7 @@ dillo_SOURCES = \
 	xembed.hh
 
 if HAVE_WIN32RES
-dillo_LDADD += dplus.res
+dplus_LDADD += dplus.res
 endif
 
 if HAVE_WIN32RES
