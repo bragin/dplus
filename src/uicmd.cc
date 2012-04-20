@@ -134,9 +134,7 @@ public:
       Control = new Fl_Group(ww-ctl_w,0,ctl_w,ctab_h);
        CloseBtn = new FlatLightButton(ww-ctl_w+2,0,btn_w,ctab_h, "X");
        CloseBtn->clear_visible_focus();
-       CloseBtn->tooltip(prefs.right_click_closes_tab ?
-          "Close current tab.\nor Right-click tab label to close." :
-          "Close current tab.\nor Middle-click tab label to close.");
+       CloseBtn->tooltip("Close");
        CloseBtn->callback(close_tab_btn_cb, this);
        CloseBtn->hide();
       Control->end();

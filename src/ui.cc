@@ -430,15 +430,14 @@ void UI::make_toolbar(int tw, int th)
    Bookmarks = make_button("Book", icons->ImgBook, NULL, UI_BOOK);
    Tools = make_button("Tools", icons->ImgTools, NULL, UI_TOOLS);
 
-   Back->tooltip("Previous page");
-   Forw->tooltip("Next page");
-   Home->tooltip("Go to the Home page");
+   Back->tooltip("Back");
+   Forw->tooltip("Forward");
+   Home->tooltip("Home");
    Reload->tooltip("Reload");
-   Save->tooltip("Save this page");
-   Stop->tooltip("Stop loading");
-   Bookmarks->tooltip("Open the bookmarks menu\n"
-                      "(right-click a bookmark or section to edit)");
-   Tools->tooltip("Settings");
+   Save->tooltip("Save");
+   Stop->tooltip("Stop");
+   Bookmarks->tooltip("Bookmarks");
+   Tools->tooltip("Tools");
 }
 
 /*
@@ -459,13 +458,11 @@ void UI::make_location(int ww)
     Fl_Input *i = Location = new CustInput(p_xpos,0,ww-p_xpos-196,lh,0);
     i->when(FL_WHEN_ENTER_KEY);
     i->callback(location_cb, this);
-    i->tooltip("Location");
     p_xpos += i->w();
 
     i = Search = new SearchInput(p_xpos,0,180,lh,0);
     i->when(FL_WHEN_ENTER_KEY);
     i->callback(search_cb, this);
-    i->tooltip("Search");
     i->handle(FL_UNFOCUS);
     p_xpos += i->w();
 
@@ -518,7 +515,6 @@ Fl_Widget *UI::make_filemenu_button()
    _MSG("UI::make_filemenu_button w=%d h=%d padding=%d\n", w, h, padding);
    btn->box(FL_THIN_UP_BOX);
    btn->callback(filemenu_cb, this);
-   btn->tooltip("File menu");
    btn->clear_visible_focus();
    if (!prefs.show_filemenu)
       btn->hide();
