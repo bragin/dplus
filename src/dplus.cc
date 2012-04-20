@@ -1,7 +1,10 @@
 /*
- * Dillo web browser
+ * ------------
+ *  D+ Browser
+ * ------------
  *
  * Copyright 1999-2007 Jorge Arellano Cid <jcid@dillo.org>
+ * Copyright 2012 Benjamin Johnson <obeythepenguin@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
