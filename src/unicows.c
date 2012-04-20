@@ -48,8 +48,9 @@ const char *UNICOWS_URL =
 void Unicows_exit_error(void)
 {
    MessageBox(NULL,
-              "Failed to download unicows.dll!",
-              "Dillo",
+              "Unicows.dll was not found on your system, and we were\n"
+              "unable to connect to the Internet to download a copy.",
+              "Error",
               MB_OK | MB_ICONERROR);
    exit(1);
 }
@@ -78,12 +79,6 @@ void a_Unicows_check(void)
     * Unicode support -- it's only needed on the Windows 9x family. */
    if (vi.dwPlatformId != VER_PLATFORM_WIN32_NT) {
       if ((hinstUnicows = LoadLibrary("unicows.dll")) == NULL) {
-         MessageBox(NULL,
-                    "Dillo needs to download the Microsoft Layer for "
-                    "Unicode,\nunicows.dll, before continuing. Please wait.",
-                    "Dillo",
-                    MB_OK | MB_ICONINFORMATION);
-
          FILE *output_file;
          if (!(output_file = fopen("unicows.dll", "wb")))
             Unicows_exit_error();
@@ -111,7 +106,7 @@ void a_Unicows_check(void)
             Unicows_exit_error();
 
          /* Note: This function is called before a_Dsock_init() and
-          * a_Dlgui_init(), which assume the network/libcurl have not
+          * a_Download_init(), which assume the network/libcurl have not
           * already been initialized. */
          curl_global_cleanup();
       } else
