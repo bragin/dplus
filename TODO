@@ -22,6 +22,7 @@ Network:
 [ ] Remove all remaining DPI code
 [X] Make DlGui a standard feature
 [ ] Clean up the HTTPS code
+[ ] Fix EMFILE errors on MS-DOS
 [ ] Move bookmarks user interface into dialog.cc and menu.cc
 [ ] Move directory list generation from file.c into a separate module
 
