@@ -23,7 +23,6 @@ class Findbar : public Fl_Group {
 
 public:
    Findbar(int width, int height);
-   ~Findbar();
    int handle(int event);
    void show();
 };

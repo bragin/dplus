@@ -168,10 +168,6 @@ Findbar::Findbar(int width, int height) :
 
 }
 
-Findbar::~Findbar()
-{
-}
-
 /*
  * Handle events. Used to catch FL_Escape events.
  */
