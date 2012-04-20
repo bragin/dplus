@@ -53,6 +53,7 @@ struct _DilloPrefs {
    bool_t small_icons;
    bool_t limit_text_width;
    bool_t w3c_plus_heuristics;
+   bool_t always_show_tabs;
    bool_t focus_new_tab;
    double font_factor;
    int32_t font_max_size;

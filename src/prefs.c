@@ -64,6 +64,7 @@ void a_Prefs_init(void)
     * including Wikipedia, Google, SourceForge, etc. */
    prefs.filter_auto_requests = PREFS_FILTER_ALLOW_ALL;
 
+   prefs.always_show_tabs = TRUE;
    prefs.focus_new_tab = FALSE;
    prefs.font_cursive = dStrdup(PREFS_FONT_CURSIVE);
    prefs.font_factor = 1.0;

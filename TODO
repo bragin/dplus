@@ -27,7 +27,7 @@ Network:
 Preferences:
 [ ] Add portable application support on Windows (save prefs to current dir)
 [ ] Save preferences in prefs.c, not PrefsGui
-[ ] Initialize default search list in prefs.c
+[X] Initialize default search list in prefs.c
 
 User interface:
 [X] Normalize keyboard shortcuts

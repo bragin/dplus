@@ -233,18 +233,6 @@ int CustTabs::handle(int e)
  */
 UI *CustTabs::add_new_tab(UI *old_ui, int focus)
 {
-   if (num_tabs() == 1) {
-      // Show tabbar
-      ctab_h = tab_h;
-      Wizard->resize(0,ctab_h,Wizard->w(),window()->h()-ctab_h);
-      resize(0,0,window()->w(),ctab_h);    // tabbar
-      CloseBtn->show();
-      {int w = 0, h; Pack->child(0)->measure_label(w, h);
-       Pack->child(0)->size(w+16,ctab_h);}
-      Pack->child(0)->show(); // first tab button
-      window()->init_sizes();
-   }
-
    /* The UI is constructed in a comfortable fitting size, and then resized
     * so FLTK doesn't get confused later with even smaller dimensions! */
    current(0);
@@ -271,13 +259,25 @@ UI *CustTabs::add_new_tab(UI *old_ui, int focus)
    btn->measure_label(w, h);
    btn->size(w+16, ctab_h);
 
+   if (prefs.always_show_tabs || num_tabs() == 2) {
+      // Show tabbar
+      ctab_h = tab_h;
+      Wizard->resize(0,ctab_h,Wizard->w(),window()->h()-ctab_h);
+      resize(0,0,window()->w(),ctab_h);    // tabbar
+      CloseBtn->show();
+      {int w = 0, h; Pack->child(0)->measure_label(w, h);
+       Pack->child(0)->size(w+16,ctab_h);}
+      Pack->child(0)->show(); // first tab button
+      window()->init_sizes();
+   }
+
    if (focus) {
       switch_tab(btn);
    } else if (num_tabs() == 2) {
       // no focus and tabbar added: redraw current page
       Wizard->redraw();
    }
-   if (num_tabs() == 1)
+   if (!prefs.always_show_tabs && num_tabs() == 1)
       btn->hide();
    update_pack_offset();
 
@@ -308,7 +308,7 @@ void CustTabs::remove_tab(UI *ui)
    Wizard->remove(ui);
    delete(ui);
 
-   if (num_tabs() == 1) {
+   if (!prefs.always_show_tabs && num_tabs() == 1) {
       // hide tabbar
       ctab_h = 1;
       CloseBtn->hide();

@@ -57,6 +57,7 @@ int PrefsParser::parseOption(char *name, char *value)
       { "enterpress_forces_submit", &prefs.enterpress_forces_submit,
         PREFS_BOOL },
       { "filter_auto_requests", &prefs.filter_auto_requests, PREFS_FILTER },
+      { "always_show_tabs", &prefs.always_show_tabs, PREFS_BOOL },
       { "focus_new_tab", &prefs.focus_new_tab, PREFS_BOOL },
       { "font_cursive", &prefs.font_cursive, PREFS_STRING },
       { "font_factor", &prefs.font_factor, PREFS_DOUBLE },
