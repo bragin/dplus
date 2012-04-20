@@ -537,19 +537,19 @@ void UI::make_panel(int ww)
    p_xpos = p_ypos = 0;
    if (PanelSize == P_tiny) {
       if (Small_Icons)
-         bw = 22, bh = 22, mh = 0, lh = 22, lbl = 0;
+         bw = 22, bh = 22, mh = 0, lh = 24, lbl = 0;
       else
-         bw = 28, bh = 28, mh = 0, lh = 28, lbl = 0;
+         bw = 28, bh = 28, mh = 0, lh = 24, lbl = 0;
    } else if (PanelSize == P_small) {
       if (Small_Icons)
-         bw = 20, bh = 20, mh = 0, lh = 20, lbl = 0;
+         bw = 20, bh = 20, mh = 0, lh = 24, lbl = 0;
       else
-         bw = 28, bh = 28, mh = 0, lh = 28, lbl = 0;
+         bw = 28, bh = 28, mh = 0, lh = 24, lbl = 0;
    } else if (PanelSize == P_medium) {
       if (Small_Icons)
-         bw = 42, bh = 36, mh = 0, lh = 22, lbl = 1;
+         bw = 42, bh = 36, mh = 0, lh = 24, lbl = 1;
       else
-         bw = 45, bh = 45, mh = 0, lh = 28, lbl = 1;
+         bw = 45, bh = 45, mh = 0, lh = 24, lbl = 1;
    }
    nh = bh, fh = 28; sh = 20;
 
