@@ -1624,7 +1624,7 @@ static const char *const left_i_xpm[] = {
 "22 22 3 1",
 "  c None",
 ". c #000000",
-"@ c gray70",
+"@ c #808080",
 "                      ",
 "                      ",
 "                      ",
@@ -1653,7 +1653,7 @@ static const char *const right_i_xpm[] = {
 "22 22 3 1",
 "  c None",
 ". c #000000",
-"@ c gray70",
+"@ c #808080",
 "                      ",
 "                      ",
 "                      ",
@@ -1682,7 +1682,7 @@ static const char *const stop_i_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "22 22 2 1",
 "       c None",
-"@      c gray70",
+"@      c #808080",
 /* pixels */
 "                      ",
 "                      ",
@@ -1712,7 +1712,7 @@ static const char *const stop_i_xpm[] = {
 static const char *const stop_si_xpm[] = {
 "16 16 2 1",
 "       c None",
-"@      c gray70",
+"@      c #808080",
 "    @@@@@@@@    ",
 "   @@@@@@@@@@   ",
 "  @@@@@@@@@@@@  ",
@@ -1734,7 +1734,7 @@ static const char *const stop_si_xpm[] = {
 static const char *const left_si_xpm[] = {
 "16 16 2 1",
 "       c None",
-"@      c gray70",
+"@      c #808080",
 "                ",
 "      @@        ",
 "     @@@        ",
@@ -1756,7 +1756,7 @@ static const char *const left_si_xpm[] = {
 static const char *const right_si_xpm[] = {
 "16 16 2 1",
 "       c None",
-"@      c gray70",
+"@      c #808080",
 "                ",
 "        @@      ",
 "        @@@     ",
