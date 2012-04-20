@@ -719,8 +719,7 @@ int UI::handle(int event)
          focus_location();
          ret = 1;
       } else if (cmd == KEYS_HIDE_PANELS) {
-         /* Hide findbar if present, hide panels if not */
-         (FindBar->visible()) ? findbar_toggle(0) : panels_toggle();
+         panels_toggle();
          temporaryPanels(false);
          ret = 1;
       } else if (cmd == KEYS_OPEN) {

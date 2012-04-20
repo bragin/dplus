@@ -38,7 +38,8 @@ int MyInput::handle(int e)
    if (e == FL_KEYBOARD) {
       if (k == FL_Escape && modifier == 0) {
          // Avoid clearing the text with Esc, just hide the findbar.
-         return 0;
+         a_UIcmd_findbar_toggle(a_UIcmd_get_bw_by_widget(this), 0);
+         return 1;
       }
    }
 
