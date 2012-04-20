@@ -238,7 +238,7 @@ UI *CustTabs::add_new_tab(UI *old_ui, int focus)
    /* The UI is constructed in a comfortable fitting size, and then resized
     * so FLTK doesn't get confused later with even smaller dimensions! */
    current(0);
-   UI *new_ui = new UI(0,0,UI_MIN_W,UI_MIN_H,"Dillo:",old_ui);
+   UI *new_ui = new UI(0,0,UI_MIN_W,UI_MIN_H,"",old_ui);
    new_ui->resize(0,ctab_h,Wizard->w(),Wizard->h());
    new_ui->tabs(this);
    Wizard->add(new_ui);
@@ -1309,7 +1309,7 @@ void a_UIcmd_set_page_title(BrowserWindow *bw, const char *label)
    const int size = 128;
    char title[size];
 
-   if (snprintf(title, size, "Dillo: %s", label ? label : "") >= size) {
+   if (snprintf(title, size, "%s", label ? label : "") >= size) {
       uint_t i = MIN(size - 4, 1 + a_Utf8_end_of_char(title, size - 8));
       snprintf(title + i, 4, "...");
    }
