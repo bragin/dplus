@@ -43,9 +43,7 @@
  * Local Data
  */
 static int choice5_answer;
-
 static char *fname_str = NULL;
-static char *dname_str = NULL;
 
 //----------------------------------------------------------------------------
 
@@ -98,11 +96,6 @@ const char *a_Dialog_save_file(const char *msg,
    fc.title(msg);
    fc.filter(pattern);
    fc.preset_file(fname);
-   fc.directory(dname_str);
-
-   /* Save the last used directory */
-   dFree(dname_str);
-   dname_str = dStrdup(fc.directory());
 
    dFree(fname_str);
    fname_str = fc.show() ? NULL : dStrdup(fc.filename());
@@ -140,11 +133,6 @@ char *a_Dialog_open_file(const char *msg,
    fc.title(msg);
    fc.filter(pattern);
    fc.preset_file(fname);
-   fc.directory(dname_str);
-
-   /* Save the last used directory */
-   dFree(dname_str);
-   dname_str = dStrdup(fc.directory());
 
    dFree(fname_str);
    fname_str = fc.show() ? NULL : dStrdup(fc.filename());
