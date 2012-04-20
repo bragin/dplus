@@ -432,13 +432,13 @@ void UI::make_progress_bars(int wide, int thin_up)
 {
     // Images
     IProg = new CustProgressBox(p_xpos,p_ypos,pw,bh);
-    IProg->labelsize(12);
+    IProg->labelsize(PanelSize == P_medium ? 12 : 10);
     IProg->box(thin_up ? FL_THIN_UP_BOX : FL_EMBOSSED_BOX);
     IProg->update_label(wide ? "Images\n0 of 0" : "0 of 0");
     p_xpos += pw;
     // Page
     PProg = new CustProgressBox(p_xpos,p_ypos,pw,bh);
-    PProg->labelsize(12);
+    PProg->labelsize(PanelSize == P_medium ? 12 : 10);
     PProg->box(thin_up ? FL_THIN_UP_BOX : FL_EMBOSSED_BOX);
     PProg->update_label(wide ? "Page\n0.0KB" : "0.0KB");
 }
@@ -540,7 +540,7 @@ void UI::make_panel(int ww)
         w->box(FL_FLAT_BOX);
         NavBar->resizable(w);
         p_xpos = ww - 2*pw;
-        if (PanelSize == P_small) {
+        if (PanelSize == P_tiny) {
            make_progress_bars(0,0);
         } else {
            make_progress_bars(1,0);
