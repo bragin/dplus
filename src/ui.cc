@@ -97,7 +97,7 @@ public:
  */
 int CustInput::handle(int e)
 {
-   int b = Fl::event_button(), k = Fl::event_key();
+   int k = Fl::event_key();
 
    _MSG("CustInput::handle event=%d\n", e);
 
