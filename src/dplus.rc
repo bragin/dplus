@@ -4,8 +4,8 @@ IDI_MAIN_ICON ICON "dplus.ico"
 1 RT_MANIFEST "dplus.exe.manifest"
 
 1 VERSIONINFO
-FILEVERSION     1,0,0,0
-PRODUCTVERSION  1,0,0,0
+FILEVERSION     0,5,0,0
+PRODUCTVERSION  0,5,0,0
 BEGIN
   BLOCK "StringFileInfo"
   BEGIN
@@ -13,12 +13,12 @@ BEGIN
     BEGIN
       VALUE "CompanyName", "Benjamin Johnson"
       VALUE "FileDescription", "D+ Browser"
-      VALUE "FileVersion", "1.0"
+      VALUE "FileVersion", "0.5"
       VALUE "InternalName", "DPlus"
       VALUE "LegalCopyright", "GNU GPL v3"
       VALUE "OriginalFilename", "dplus.exe"
       VALUE "ProductName", "D+ Browser"
-      VALUE "ProductVersion", "1.0"
+      VALUE "ProductVersion", "0.5"
     END
   END
 
