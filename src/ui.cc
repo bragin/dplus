@@ -211,9 +211,9 @@ public:
    CustRenderFrame(int x, int y, int w, int h, const char *l=0) :
       Fl_Group(x, y, w, h, l) { box(FL_DOWN_FRAME); };
    void resize(int x, int y, int w, int h) {
+      Fl_Group::resize(x, y, w, h);
       if (resizable())
          resizable()->resize(x+2, y+2, w-4, h-4);
-      Fl_Group::resize(x, y, w, h);
    }
 };
 
