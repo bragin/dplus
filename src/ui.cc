@@ -473,19 +473,23 @@ void UI::make_location(int ww)
 /*
  * Create the progress bars
  */
-void UI::make_progress_bars(int wide)
+void UI::make_progress_bars()
 {
     // Images
     IProg = new CustProgressBox(p_xpos,p_ypos,pw,bh);
-    IProg->labelsize(PanelSize == P_medium ? 12 : 10);
+    IProg->labelsize(12);
     IProg->box(FL_FLAT_BOX);
-    IProg->update_label(wide ? "Images\n0 of 0" : "0 of 0");
+    IProg->tooltip(PanelSize == P_medium ? "" : "Images");
+    IProg->update_label(PanelSize == P_medium ?
+                        "Images\n0 of 0" : "I: 0 of 0");
     p_xpos += pw;
     // Page
     PProg = new CustProgressBox(p_xpos,p_ypos,pw,bh);
-    PProg->labelsize(PanelSize == P_medium ? 12 : 10);
+    PProg->labelsize(12);
     PProg->box(FL_FLAT_BOX);
-    PProg->update_label(wide ? "Page\n0.0KB" : "0.0KB");
+    PProg->tooltip(PanelSize == P_medium ? "" : "Page");
+    PProg->update_label(PanelSize == P_medium ?
+                        "Page\n0.0 KB" : "P: 0.0 KB");
 }
 
 /*
@@ -555,7 +559,7 @@ void UI::make_panel(int ww)
        make_filemenu_button();
        make_location(ww);
        NavBar->resizable(Location);
-       make_progress_bars(0);
+       make_progress_bars();
       NavBar->end();
       NavBar->rearrange();
       TopGroup->insert(*NavBar,0);
@@ -582,11 +586,7 @@ void UI::make_panel(int ww)
         w->box(FL_FLAT_BOX);
         NavBar->resizable(w);
         p_xpos = ww - 2*pw;
-        if (PanelSize == P_tiny) {
-           make_progress_bars(0);
-        } else {
-           make_progress_bars(1);
-        }
+        make_progress_bars();
        NavBar->end();
        NavBar->rearrange();
        TopGroup->insert(*NavBar,1);
@@ -873,7 +873,7 @@ void UI::set_page_prog(size_t nbytes, int cmd)
       PProg->activate();
       if (cmd == 1) {
          snprintf(str, 32, "%s%.1f KB",
-                  (PanelSize == 0) ? "" : "Page\n", nbytes/1024.0);
+                  (PanelSize == P_medium) ? "Page\n" : "P: ", nbytes/1024.0);
       } else if (cmd == 2) {
          str[0] = '\0';
       }
@@ -895,7 +895,7 @@ void UI::set_img_prog(int n_img, int t_img, int cmd)
       IProg->activate();
       if (cmd == 1) {
          snprintf(str, 32, "%s%d of %d",
-                  (PanelSize == 0) ? "" : "Images\n", n_img, t_img);
+                  (PanelSize == P_medium) ? "Images\n" : "I: ", n_img, t_img);
       } else if (cmd == 2) {
          str[0] = '\0';
       }
