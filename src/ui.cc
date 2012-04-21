@@ -413,6 +413,7 @@ void UI::make_location(int ww)
    Fl_Button *b;
 
     Fl_Input *i = Location = new CustInput(p_xpos,0,ww-p_xpos-212,lh,0);
+    i->box(FL_THIN_DOWN_BOX);
     i->when(FL_WHEN_ENTER_KEY);
     i->callback(location_cb, this);
     p_xpos += i->w();
@@ -420,20 +421,21 @@ void UI::make_location(int ww)
     // This is essentially a custom version of Fl_Input_Choice.
     // (Using the real thing here would require considerably more work)
     SearchBar = new CustGroupHorizontal(p_xpos,0,196,lh);
-    SearchBar->box(FL_DOWN_FRAME);
+    SearchBar->box(FL_THIN_DOWN_FRAME);
     SearchBar->begin();
 
-     i = Search = new SearchInput(p_xpos+2,2,SearchBar->w()-lh,lh-4,0);
+     i = Search = new SearchInput(p_xpos+1,1,SearchBar->w()-lh,lh-2,0);
      i->box(FL_FLAT_BOX);
      i->when(FL_WHEN_ENTER_KEY);
      i->callback(search_cb, this);
      p_xpos += i->w();
  
-     SearchButton = b = new CustLightButton(p_xpos+2,2,lh-4,lh-4,0);
+     SearchButton = b = new CustLightButton(p_xpos+1,1,lh-2,lh-2,0);
      b->label("@-32>");
      b->labeltype(FL_EMBOSSED_LABEL);
      b->callback(searchmenu_cb, Search);
      b->clear_visible_focus();
+     b->box(FL_THIN_UP_BOX);
      p_xpos += b->w();
 
     SearchBar->end();
