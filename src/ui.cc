@@ -149,14 +149,13 @@ public:
 int SearchInput::handle(int e)
 {
    void *wid = (void*)this;
-   int b = Fl::event_button(), k = Fl::event_key();
+   int k = Fl::event_key();
 
    if (e == FL_FOCUS && k == FL_Tab) {
       // Let this event go to the UI
       return 0;
 
-   } else if ((e == FL_RELEASE && b == 3) ||
-       (e == FL_KEYBOARD && k == FL_Down)) {
+   } else if (e == FL_KEYBOARD && k == FL_Down) {
       // Display the list of search engines
       a_UIcmd_search_popup(a_UIcmd_get_bw_by_widget(wid), wid);
       return 1;
@@ -231,6 +230,18 @@ static void filemenu_cb(Fl_Widget *wid, void *)
    int b = Fl::event_button();
    if (b == FL_LEFT_MOUSE || b == FL_RIGHT_MOUSE) {
       a_UIcmd_file_popup(a_UIcmd_get_bw_by_widget(wid), wid);
+   }
+}
+
+/*
+ * Callback for the Search menu button.
+ */
+static void searchmenu_cb(Fl_Widget *, void *v_wid)
+{
+   int b = Fl::event_button();
+   Fl_Widget *wid = (Fl_Widget*)v_wid;
+   if (b == FL_LEFT_MOUSE || b == FL_RIGHT_MOUSE) {
+      a_UIcmd_search_popup(a_UIcmd_get_bw_by_widget(wid), wid);
    }
 }
 
@@ -401,15 +412,31 @@ void UI::make_location(int ww)
 {
    Fl_Button *b;
 
-    Fl_Input *i = Location = new CustInput(p_xpos,0,ww-p_xpos-196,lh,0);
+    Fl_Input *i = Location = new CustInput(p_xpos,0,ww-p_xpos-212,lh,0);
     i->when(FL_WHEN_ENTER_KEY);
     i->callback(location_cb, this);
     p_xpos += i->w();
 
-    i = Search = new SearchInput(p_xpos,0,180,lh,0);
-    i->when(FL_WHEN_ENTER_KEY);
-    i->callback(search_cb, this);
-    p_xpos += i->w();
+    // This is essentially a custom version of Fl_Input_Choice.
+    // (Using the real thing here would require considerably more work)
+    SearchBar = new CustGroupHorizontal(p_xpos,0,196,lh);
+    SearchBar->box(FL_DOWN_FRAME);
+    SearchBar->begin();
+
+     i = Search = new SearchInput(p_xpos+2,2,SearchBar->w()-lh,lh-4,0);
+     i->box(FL_FLAT_BOX);
+     i->when(FL_WHEN_ENTER_KEY);
+     i->callback(search_cb, this);
+     p_xpos += i->w();
+ 
+     SearchButton = b = new CustLightButton(p_xpos+2,2,lh-4,lh-4,0);
+     b->label("@-32>");
+     b->labeltype(FL_EMBOSSED_LABEL);
+     b->callback(searchmenu_cb, Search);
+     b->clear_visible_focus();
+     p_xpos += b->w();
+
+    SearchBar->end();
 
     Help = b = new CustLightButton(p_xpos,0,16,lh,0);
     b->image(icons->ImgHelp);
@@ -909,7 +936,7 @@ void UI::customize(int flags)
    if ( !prefs.show_url )
       Location->hide();
    if ( !prefs.show_search )
-      Search->hide();
+      SearchBar->hide();
    if ( !prefs.show_help )
       Help->hide();
    if ( !prefs.show_progress_box ) {
