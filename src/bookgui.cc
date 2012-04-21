@@ -24,6 +24,7 @@
 #include "history.h"
 #include "ui.hh"
 #include "uicmd.hh"
+#include "keys.hh"
 
 #include "bms.h"
 #include "bookgui.hh"
@@ -39,8 +40,8 @@ void *vbw_last = NULL;
 Fl_Menu_Item *menu = NULL;
 static int last_section = 0;
 
-const char *BOOKGUI_LABEL_ADD = "Bookmark this page";
-const char *BOOKGUI_LABEL_ADD_SEC = "Add bookmark section";
+const char *BOOKGUI_LABEL_ADD = "&Bookmark this page";
+const char *BOOKGUI_LABEL_ADD_SEC = "&Add bookmark section";
 
 /* forward declarations */
 void Bookgui_reload(void);
@@ -351,6 +352,7 @@ void Bookgui_generate_menu(void)
    // static item: add bookmark
    menu[k].label(FL_NORMAL_LABEL, BOOKGUI_LABEL_ADD);
    menu[k].callback(Bookgui_add_cb, NULL);
+   menu[k].shortcut(Keys::getShortcut(KEYS_ADD_BOOKMARK));
    k++;
 
    // static item: add section

@@ -326,16 +326,20 @@ void a_Menu_page_popup(BrowserWindow *bw, const DilloUrl *url,
 
    static Fl_Menu_Item *stylesheets = NULL;
    static Fl_Menu_Item pm[] = {
-      {"Copy selected text", 0, Menu_copy_selection_cb,0,0,0,0,0,0},
-      {"Copy current location", 0, Menu_copy_location_cb,0,FL_MENU_DIVIDER,
+      {"&Copy selection", Keys::getShortcut(KEYS_COPY),
+       Menu_copy_selection_cb,0,0,0,0,0,0},
+      {"Copy page UR&L", 0, Menu_copy_location_cb,0,FL_MENU_DIVIDER,
        0,0,0,0},
-      {"View page source", 0, Menu_view_page_source_cb,0,0,0,0,0,0},
-      {"View page bugs", 0, Menu_view_page_bugs_cb,0,0,0,0,0,0},
-      {"View stylesheets", 0, Menu_nop_cb,0,FL_SUBMENU_POINTER|FL_MENU_DIVIDER,
+      {"View page &source", 0, Menu_view_page_source_cb,0,0,0,0,0,0},
+      {"View page &bugs", 0, Menu_view_page_bugs_cb,0,0,0,0,0,0},
+      {"View s&tylesheets", 0, Menu_nop_cb,0,FL_SUBMENU_POINTER|FL_MENU_DIVIDER,
        0,0,0,0},
-      {"Bookmark this page", 0,Menu_add_bookmark_cb,0,FL_MENU_DIVIDER,0,0,0,0},
-      {"Find text", 0, Menu_find_text_cb,0,0,0,0,0,0},
-      {"Save page as...", 0, Menu_save_page_cb,0,0,0,0,0,0},
+      {"&Bookmark this page", Keys::getShortcut(KEYS_ADD_BOOKMARK),
+       Menu_add_bookmark_cb,0,FL_MENU_DIVIDER,0,0,0,0},
+      {"&Find text", Keys::getShortcut(KEYS_FIND),
+       Menu_find_text_cb,0,0,0,0,0,0},
+      {"&Save page as...", Keys::getShortcut(KEYS_SAVE),
+       Menu_save_page_cb,0,0,0,0,0,0},
       {0,0,0,0,0,0,0,0,0}
    };
 
@@ -405,12 +409,13 @@ void a_Menu_page_popup(BrowserWindow *bw, const DilloUrl *url,
 void a_Menu_link_popup(BrowserWindow *bw, const DilloUrl *url)
 {
    static Fl_Menu_Item pm[] = {
-      {"Open link in new tab", 0, Menu_open_url_nt_cb,0,0,0,0,0,0},
-      {"Open link in new window", 0, Menu_open_url_nw_cb,0,FL_MENU_DIVIDER,0,0,
-       0,0},
-      {"Bookmark this link", 0, Menu_add_bookmark_cb,0,0,0,0,0,0},
-      {"Copy link location", 0, Menu_copy_urlstr_cb,0,FL_MENU_DIVIDER,0,0,0,0},
-      {"Save link as...", 0, Menu_save_link_cb,0,0,0,0,0,0},
+      {"Open link in new &tab", 0, Menu_open_url_nt_cb,0,0,0,0,0,0},
+      {"Open link in new &window", 0, Menu_open_url_nw_cb,0,FL_MENU_DIVIDER,0,
+       0,0,0},
+      {"&Bookmark this link", 0, Menu_add_bookmark_cb,0,0,0,0,0,0},
+      {"&Copy link location", 0, Menu_copy_urlstr_cb,0,FL_MENU_DIVIDER,0,0,0,
+       0},
+      {"&Save link as...", 0, Menu_save_link_cb,0,0,0,0,0,0},
       {0,0,0,0,0,0,0,0,0}
    };
 
@@ -433,15 +438,16 @@ void a_Menu_image_popup(BrowserWindow *bw, const DilloUrl *url,
    static DilloUrl *popup_page_url = NULL;
    static DilloUrl *popup_link_url = NULL;
    static Fl_Menu_Item pm[] = {
-      {"Isolate image", 0, Menu_open_url_cb,0,0,0,0,0,0},
-      {"Open image in new tab", 0, Menu_open_url_nt_cb,0,0,0,0,0,0},
-      {"Open image in new window", 0, Menu_open_url_nw_cb, 0, FL_MENU_DIVIDER,
+      {"&Isolate image", 0, Menu_open_url_cb,0,0,0,0,0,0},
+      {"Open image in new &tab", 0, Menu_open_url_nt_cb,0,0,0,0,0,0},
+      {"Open image in new &window", 0, Menu_open_url_nw_cb, 0, FL_MENU_DIVIDER,
        0,0,0,0},
-      {"Load image", 0, Menu_load_images_cb,0,0,0,0,0,0},
-      {"Bookmark this image", 0, Menu_add_bookmark_cb,0,0,0,0,0,0},
-      {"Copy image location", 0,Menu_copy_urlstr_cb,0,FL_MENU_DIVIDER,0,0,0,0},
-      {"Save image as...", 0, Menu_save_link_cb, 0, FL_MENU_DIVIDER,0,0,0,0},
-      {"Link menu", 0, Menu_link_cb,0,0,0,0,0,0},
+      {"&Load image", 0, Menu_load_images_cb,0,0,0,0,0,0},
+      {"&Bookmark this image", 0, Menu_add_bookmark_cb,0,0,0,0,0,0},
+      {"&Copy image location", 0,Menu_copy_urlstr_cb,0,FL_MENU_DIVIDER,0,0,0,
+       0},
+      {"&Save image as...", 0, Menu_save_link_cb, 0, FL_MENU_DIVIDER,0,0,0,0},
+      {"Link &menu", 0, Menu_link_cb,0,0,0,0,0,0},
       {0,0,0,0,0,0,0,0,0}
    };
 
@@ -481,8 +487,8 @@ void a_Menu_form_popup(BrowserWindow *bw, const DilloUrl *page_url,
 {
    static bool hiddens_visible;
    static Fl_Menu_Item pm[] = {
-      {"Submit form", 0, Menu_form_submit_cb,0,0,0,0,0,0},
-      {"Reset form", 0, Menu_form_reset_cb,0,0,0,0,0,0},
+      {"&Submit form", 0, Menu_form_submit_cb,0,0,0,0,0,0},
+      {"&Reset form", 0, Menu_form_reset_cb,0,0,0,0,0,0},
       {0, 0, Menu_form_hiddens_cb, &hiddens_visible, 0,0,0,0,0},
       {0,0,0,0,0,0,0,0,0}
    };
@@ -495,7 +501,7 @@ void a_Menu_form_popup(BrowserWindow *bw, const DilloUrl *page_url,
    popup_form = formptr;
 
    hiddens_visible = hidvis;
-   pm[2].label(hiddens_visible ? "Hide hiddens": "Show hiddens");
+   pm[2].label(hiddens_visible ? "Hide &hiddens": "Show &hiddens");
 
    a_Timeout_add(0.0, Menu_popup_cb, (void*)pm);
 }
@@ -508,21 +514,21 @@ void a_Menu_file_popup(BrowserWindow *bw, void *v_wid)
    Fl_Widget *wid = (Fl_Widget*)v_wid;
 
    static Fl_Menu_Item pm[] = {
-      {"New tab", Keys::getShortcut(KEYS_NEW_TAB), filemenu_cb,
+      {"&New tab", Keys::getShortcut(KEYS_NEW_TAB), filemenu_cb,
        (void*)"nt",0,0,0,0,0},
-      {"New window", Keys::getShortcut(KEYS_NEW_WINDOW), filemenu_cb,
+      {"New &window", Keys::getShortcut(KEYS_NEW_WINDOW), filemenu_cb,
        (void*)"nw", FL_MENU_DIVIDER,0,0,0,0},
-      {"Open file...", Keys::getShortcut(KEYS_OPEN), filemenu_cb,
+      {"&Open file...", Keys::getShortcut(KEYS_OPEN), filemenu_cb,
        (void*)"of",0,0,0,0,0},
-      {"Open URL...", Keys::getShortcut(KEYS_GOTO), filemenu_cb,
+      {"Open UR&L...", Keys::getShortcut(KEYS_GOTO), filemenu_cb,
        (void*)"ou",0,0,0,0,0},
-      {"Close", Keys::getShortcut(KEYS_CLOSE_TAB), filemenu_cb,
+      {"&Close", Keys::getShortcut(KEYS_CLOSE_TAB), filemenu_cb,
        (void*)"cw", FL_MENU_DIVIDER,0,0,0,0},
 #ifdef ENABLE_PRINTER
-      {"Print...", Keys::getShortcut(KEYS_PRINT), filemenu_cb,
+      {"&Print...", Keys::getShortcut(KEYS_PRINT), filemenu_cb,
        (void*)"pr", FL_MENU_DIVIDER,0,0,0,0},
 #endif /* ENABLE_PRINTER */
-      {"Exit Dillo", Keys::getShortcut(KEYS_CLOSE_ALL), filemenu_cb,
+      {"E&xit", Keys::getShortcut(KEYS_CLOSE_ALL), filemenu_cb,
        (void*)"ed",0,0,0,0,0},
       {0,0,0,0,0,0,0,0,0}
    };
