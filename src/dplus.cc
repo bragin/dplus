@@ -212,17 +212,13 @@ static void custTabButtonUpBoxDraw(int x, int y, int w, int h, Fl_Color c)
    fl_rectf(x, y, w, h);
    w--, h--;
 
-   fl_color(FL_WHITE);
-   fl_line(x, y, x, y+h);
-   fl_line(x, y, x+w, y);
-
-   fl_color(FL_BLACK);
+   fl_color(FL_FOREGROUND_COLOR);
    fl_line(x+w, y, x+w, y+h);
 }
 
 static void custTabButtonDownBoxDraw(int x, int y, int w, int h, Fl_Color c)
 {
-   custTabButtonUpBoxDraw(x, y, w, h, FL_SELECTION_COLOR);
+   custTabButtonUpBoxDraw(x, y, w, h, (Fl_Color)51);
 }
 
 /*
@@ -399,8 +395,8 @@ int main(int argc, char **argv)
    Fl::set_labeltype(FL_FREE_LABELTYPE, custLabelDraw, custLabelMeasure);
 
    // Custom box type for CustTabButton (see uicmd.cc).
-   Fl::set_boxtype(FL_DIAMOND_UP_BOX, custTabButtonUpBoxDraw, 1, 1, 2, 1);
-   Fl::set_boxtype(FL_DIAMOND_DOWN_BOX, custTabButtonDownBoxDraw, 1, 1, 2, 1);
+   Fl::set_boxtype(FL_DIAMOND_UP_BOX, custTabButtonUpBoxDraw, 0, 0, 1, 0);
+   Fl::set_boxtype(FL_DIAMOND_DOWN_BOX, custTabButtonDownBoxDraw, 0, 0, 1, 0);
 
    checkPreferredFonts();
 
