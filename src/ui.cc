@@ -258,6 +258,7 @@ static void searchmenu_cb(Fl_Widget *, void *v_wid)
    int b = Fl::event_button();
    Fl_Widget *wid = (Fl_Widget*)v_wid;
    if (b == FL_LEFT_MOUSE || b == FL_RIGHT_MOUSE) {
+      wid->take_focus();
       a_UIcmd_search_popup(a_UIcmd_get_bw_by_widget(wid), wid);
    }
 }
