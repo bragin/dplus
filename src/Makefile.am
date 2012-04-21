@@ -31,6 +31,8 @@ dplus_SOURCES = \
 	ui.hh \
 	uicmd.cc \
 	uicmd.hh \
+	widgets.cc \
+	widgets.hh \
 	bw.h \
 	bw.c \
 	cookies.c \

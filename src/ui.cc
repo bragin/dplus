@@ -21,6 +21,7 @@
 #include "timeout.hh"
 #include "utf8.hh"
 #include "misc.h"
+#include "widgets.hh"
 
 #include <FL/Fl.H>
 #include <FL/Fl_Pixmap.H>
@@ -84,10 +85,10 @@ static struct iconset *icons = &standard_icons;
 /*
  * (Used to avoid certain shortcuts in the location bar)
  */
-class CustInput : public Fl_Input {
+class CustInput : public D_Input {
 public:
    CustInput (int x, int y, int w, int h, const char* l=0) :
-      Fl_Input(x,y,w,h,l) {};
+      D_Input(x,y,w,h,l) {};
    int handle(int e);
 };
 
@@ -127,7 +128,7 @@ int CustInput::handle(int e)
       }
    }
 
-   return Fl_Input::handle(e);
+   return D_Input::handle(e);
 }
 
 //----------------------------------------------------------------------------
