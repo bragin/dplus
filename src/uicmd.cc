@@ -113,7 +113,7 @@ public:
       Fl_Group(0,0,ww,th,lbl) {
       Pack = NULL;
       tab_w = 50, tab_h = th+4, ctab_h = 1, btn_w = 20, ctl_w = 1*btn_w+2;
-      tabcolor_active = FL_SELECTION_COLOR;
+      tabcolor_active = 51;  // same as a highlighted CustLightButton
       tabcolor_inactive = FL_BACKGROUND_COLOR;
       resize(0,0,ww,ctab_h);
       /* tab buttons go inside a pack within a scroll */
