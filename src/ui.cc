@@ -200,6 +200,23 @@ public:
    }
 };
 
+//----------------------------------------------------------------------------
+
+/*
+ * Used to draw a frame around the render area widget.
+ */
+class CustRenderFrame : public Fl_Group
+{
+public:
+   CustRenderFrame(int x, int y, int w, int h, const char *l=0) :
+      Fl_Group(x, y, w, h, l) { box(FL_DOWN_FRAME); };
+   void resize(int x, int y, int w, int h) {
+      if (resizable())
+         resizable()->resize(x+2, y+2, w-4, h-4);
+      Fl_Group::resize(x, y, w, h);
+   }
+};
+
 //
 // Toolbar buttons -----------------------------------------------------------
 //
@@ -986,13 +1003,17 @@ void UI::change_panel(int new_size, int small_icons)
  */
 void UI::set_render_layout(Fl_Group *nw)
 {
-   // Resize layout widget to current height
-   nw->resize(0,Main->y(),Main->w(),Main->h());
+   CustRenderFrame *f = new CustRenderFrame(0,Main->y(),Main->w(),Main->h());
+   f->add(nw);
+   f->resizable(nw);
 
-   TopGroup->insert(*nw, Main);
+   // Resize layout widget to current height
+   f->resize(0,Main->y(),Main->w(),Main->h());
+
+   TopGroup->insert(*f, Main);
    remove(Main);
    delete(Main);
-   Main = nw;
+   Main = f;
    TopGroup->resizable(Main);
 }
 
