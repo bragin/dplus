@@ -429,7 +429,7 @@ void UI::make_location(int ww)
 {
    Fl_Button *b;
 
-    Fl_Input *i = Location = new CustInput(p_xpos,0,ww-p_xpos-212,lh,0);
+    Fl_Input *i = Location = new CustInput(p_xpos,0,ww-p_xpos-176,lh,0);
     i->box(FL_THIN_DOWN_BOX);
     i->when(FL_WHEN_ENTER_KEY);
     i->callback(location_cb, this);
@@ -437,7 +437,7 @@ void UI::make_location(int ww)
 
     // This is essentially a custom version of Fl_Input_Choice.
     // (Using the real thing here would require considerably more work)
-    SearchBar = new CustGroupHorizontal(p_xpos,0,196,lh);
+    SearchBar = new CustGroupHorizontal(p_xpos,0,160,lh);
     SearchBar->box(FL_THIN_DOWN_FRAME);
     SearchBar->begin();
 
