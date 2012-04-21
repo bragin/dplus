@@ -132,7 +132,7 @@ Findbar::Findbar(int width, int height) :
 
    height -= 2 * border;
 
-   box(FL_THIN_UP_BOX);
+   box(FL_FLAT_BOX);
 
     x += 72;    // leave room for the "Find text:" label
     input_width -= x;
