@@ -67,6 +67,8 @@ void a_UIcmd_close_all_bw(void *p);
 
 void a_UIcmd_wait();
 
+void a_UIcmd_init();
+
 
 // UI binding functions -------------------------------------------------------
 

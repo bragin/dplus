@@ -244,7 +244,7 @@ UI *CustTabs::add_new_tab(UI *old_ui, int focus)
    btn->labelsize(btn->labelsize()-2);
    btn->copy_label(DEFAULT_TAB_LABEL);
    btn->clear_visible_focus();
-   btn->box(FL_THIN_UP_BOX);
+   btn->box(FL_DIAMOND_UP_BOX);  // overridden with a custom type in dplus.cc
    btn->color(focus ? tabcolor_active : tabcolor_inactive);
    btn->labelcolor(fl_contrast(FL_FOREGROUND_COLOR,
                    focus ? tabcolor_active : tabcolor_inactive));

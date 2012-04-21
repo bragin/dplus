@@ -225,6 +225,28 @@ static void custMenuLabelMeasure(const Fl_Label* o, int& W, int& H)
 }
 
 /*
+ * Replace FL_DIAMOND_BOX with a special box type for CustTabButton.
+ */
+static void custTabButtonUpBoxDraw(int x, int y, int w, int h, Fl_Color c)
+{
+   fl_color(c);
+   fl_rectf(x, y, w, h);
+   w--, h--;
+
+   fl_color(FL_WHITE);
+   fl_line(x, y, x, y+h);
+   fl_line(x, y, x+w, y);
+
+   fl_color(FL_BLACK);
+   fl_line(x+w, y, x+w, y+h);
+}
+
+static void custTabButtonDownBoxDraw(int x, int y, int w, int h, Fl_Color c)
+{
+   custTabButtonUpBoxDraw(x, y, w, h, FL_SELECTION_COLOR);
+}
+
+/*
  * Tell the user if default/pref fonts can't be found.
  */
 static void checkFont(const char *name, const char *type)
@@ -399,6 +421,10 @@ int main(int argc, char **argv)
 
    // Use to permit '&' interpretation.
    Fl::set_labeltype(FL_FREE_LABELTYPE,custMenuLabelDraw,custMenuLabelMeasure);
+
+   // Custom box type for CustTabButton (see uicmd.cc).
+   Fl::set_boxtype(FL_DIAMOND_UP_BOX, custTabButtonUpBoxDraw, 1, 1, 2, 1);
+   Fl::set_boxtype(FL_DIAMOND_DOWN_BOX, custTabButtonDownBoxDraw, 1, 1, 2, 1);
 
    checkPreferredFonts();
 
