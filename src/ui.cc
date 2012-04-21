@@ -449,7 +449,6 @@ void UI::make_location(int ww)
  
      SearchButton = b = new CustLightButton(p_xpos+1,1,lh-2,lh-2,0);
      b->label("@-32>");
-     b->labeltype(FL_EMBOSSED_LABEL);
      b->callback(searchmenu_cb, Search);
      b->clear_visible_focus();
      b->box(FL_THIN_UP_BOX);
@@ -499,7 +498,6 @@ Fl_Widget *UI::make_filemenu_button()
    int w = 0, h = 0, padding;
 
    FileButton = btn = new FlatLightButton(p_xpos,0,bw,bh,"W");
-   btn->labeltype(FL_FREE_LABELTYPE);
    btn->measure_label(w, h);
    padding = w;
    btn->copy_label(PanelSize == P_tiny ? "&F" : "&File");

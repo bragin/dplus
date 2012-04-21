@@ -386,7 +386,7 @@ void a_Menu_page_popup(BrowserWindow *bw, const DilloUrl *url,
             label = dStrconcat(action, url_str, NULL);
          }
 
-         stylesheets[j].label(FL_NORMAL_LABEL, label);
+         stylesheets[j].label(FL_FREE_LABELTYPE, label);
          stylesheets[j].callback(Menu_stylesheet_cb, a_Url_dup(url));
       }
 
@@ -564,7 +564,7 @@ void a_Menu_search_popup(BrowserWindow *bw, void *v_wid)
       if (i == prefs.search_url_idx)
          pm[i].set();
       pm[i].flags |= FL_MENU_RADIO;
-      pm[i].label(FL_NORMAL_LABEL, strdup(label));
+      pm[i].label(FL_FREE_LABELTYPE, strdup(label));
       pm[i].callback(searchmenu_cb, (void*)i);
    }
    a_Timeout_add(0.0, Menu_popup_cb, (void*)pm);
@@ -623,7 +623,7 @@ void a_Menu_history_popup(BrowserWindow *bw, int direction)
    memset(pm, '\0', sizeof(Fl_Menu_Item[n + 1]));
 
    for (i = 0; i < n; i++) {
-      pm[i].label(FL_NORMAL_LABEL, a_History_get_title(history_list[i], 1));
+      pm[i].label(FL_FREE_LABELTYPE, a_History_get_title(history_list[i], 1));
       pm[i].callback(Menu_history_cb, INT2VOIDP(i+1));
    }
    a_Timeout_add(0.0, Menu_popup_cb, (void*)pm);

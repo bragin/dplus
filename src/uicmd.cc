@@ -240,6 +240,7 @@ UI *CustTabs::add_new_tab(UI *old_ui, int focus)
    new_ui->show();
 
    CustTabButton *btn = new CustTabButton(num_tabs()*tab_w,0,tab_w,ctab_h);
+   btn->labeltype(FL_FREE_LABELTYPE);
    btn->align(FL_ALIGN_INSIDE);
    btn->labelsize(btn->labelsize()-2);
    btn->copy_label(DEFAULT_TAB_LABEL);

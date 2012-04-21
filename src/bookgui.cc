@@ -361,7 +361,7 @@ void Bookgui_generate_menu(void)
 
    // add sections >= 1 first so submenus are at the top
    for (int i = 1; (r = a_Bms_get_sec(i)); i++) {
-      menu[k].label(FL_NORMAL_LABEL,
+      menu[k].label(FL_FREE_LABELTYPE,
                     a_Bms_get_sec_title(r));
       menu[k].callback(Bookgui_section_cb, r);
       menu[k].flags |= FL_SUBMENU;  // create a submenu
@@ -370,7 +370,7 @@ void Bookgui_generate_menu(void)
       // add bookmarks to the menu
       for (int j = 0; (r = a_Bms_get(j)); j++) {
          if (a_Bms_get_bm_section(r) == i) {
-            menu[k].label(FL_NORMAL_LABEL,
+            menu[k].label(FL_FREE_LABELTYPE,
                           a_Bms_get_bm_title(r));
             menu[k].callback(Bookgui_open_cb, r);
             k++;
@@ -384,7 +384,7 @@ void Bookgui_generate_menu(void)
    // now come back to the first section (Unclassified)
    for (int j = 0; (r = a_Bms_get(j)); j++) {
       if (a_Bms_get_bm_section(r) == 0) {
-         menu[k].label(FL_NORMAL_LABEL,
+         menu[k].label(FL_FREE_LABELTYPE,
                        a_Bms_get_bm_title(r));
          menu[k].callback(Bookgui_open_cb, r);
          k++;

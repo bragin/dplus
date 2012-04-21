@@ -181,8 +181,7 @@ static OptID getCmdOption(const CLI_options *options, int argc, char **argv,
 }
 
 /*
- * Set FL_NORMAL_LABEL to interpret neither symbols (@) nor shortcuts (&),
- * and FL_FREE_LABELTYPE to interpret shortcuts.
+ * Set FL_FREE_LABELTYPE to interpret neither symbols (@) nor shortcuts (&).
  */
 static void custLabelDraw(const Fl_Label* o, int X, int Y, int W, int H,
                           Fl_Align align)
@@ -200,26 +199,6 @@ static void custLabelMeasure(const Fl_Label* o, int& W, int& H)
    const int interpret_symbols = 0;
 
    fl_draw_shortcut = 0;
-   fl_font(o->font, o->size);
-   fl_measure(o->value, W, H, interpret_symbols);
-}
-
-static void custMenuLabelDraw(const Fl_Label* o, int X, int Y, int W, int H,
-                              Fl_Align align)
-{
-   const int interpret_symbols = 0;
-
-   fl_draw_shortcut = 1;
-   fl_font(o->font, o->size);
-   fl_color((Fl_Color)o->color);
-   fl_draw(o->value, X, Y, W, H, align, o->image, interpret_symbols);
-}
-
-static void custMenuLabelMeasure(const Fl_Label* o, int& W, int& H)
-{
-   const int interpret_symbols = 0;
-
-   fl_draw_shortcut = 1;
    fl_font(o->font, o->size);
    fl_measure(o->value, W, H, interpret_symbols);
 }
@@ -416,11 +395,8 @@ int main(int argc, char **argv)
       Fl::option(Fl::OPTION_SHOW_TOOLTIPS, false);
    }
 
-   // Disable '@' and '&' interpretation in normal labels.
-   Fl::set_labeltype(FL_NORMAL_LABEL, custLabelDraw, custLabelMeasure);
-
-   // Use to permit '&' interpretation.
-   Fl::set_labeltype(FL_FREE_LABELTYPE,custMenuLabelDraw,custMenuLabelMeasure);
+   // Disable '@' and '&' interpretation in FL_FREE_LABELTYPE.
+   Fl::set_labeltype(FL_FREE_LABELTYPE, custLabelDraw, custLabelMeasure);
 
    // Custom box type for CustTabButton (see uicmd.cc).
    Fl::set_boxtype(FL_DIAMOND_UP_BOX, custTabButtonUpBoxDraw, 1, 1, 2, 1);

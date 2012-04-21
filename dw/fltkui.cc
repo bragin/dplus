@@ -246,6 +246,7 @@ Fl_Widget *FltkLabelButtonResource::createNewWidget (core::Allocation
    Fl_Button *button =
         new Fl_Button (allocation->x, allocation->y, allocation->width,
                        allocation->ascent + allocation->descent, label);
+   button->labeltype (FL_FREE_LABELTYPE);
    button->callback (widgetCallback, this);
    button->when (FL_WHEN_RELEASE);
    return button;
@@ -757,6 +758,7 @@ Fl_Button *FltkCheckButtonResource::createNewButton (core::Allocation
    Fl_Check_Button *cb =
       new Fl_Check_Button (allocation->x, allocation->y, allocation->width,
                            allocation->ascent + allocation->descent);
+   cb->labeltype (FL_FREE_LABELTYPE);
    return cb;
 }
 
@@ -868,6 +870,7 @@ Fl_Button *FltkRadioButtonResource::createNewButton (core::Allocation
    Fl_Button *button =
       new Fl_Round_Button (allocation->x, allocation->y, allocation->width,
                            allocation->ascent + allocation->descent);
+   button->labeltype (FL_FREE_LABELTYPE);
    button->when (FL_WHEN_CHANGED);
    button->callback (widgetCallback, this);
    button->type (FL_TOGGLE_BUTTON);
@@ -1010,6 +1013,7 @@ void FltkOptionMenuResource::addItem (const char *str,
 
    item->text = strdup(str);
    item->argument(visibleItems++);
+   item->labeltype(FL_FREE_LABELTYPE);
 
    if (enabled == false)
       item->flags = FL_MENU_INACTIVE;

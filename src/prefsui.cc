@@ -337,11 +337,9 @@ PrefsGui::PrefsGui()
    search_label_move->align(FL_ALIGN_INSIDE | FL_ALIGN_RIGHT);
 
    search_move_up = new Fl_Button(rw-52, top, 24, 24, "@2<-");
-   search_move_up->labeltype(FL_ENGRAVED_LABEL);
    search_move_up->callback(PrefsUI_search_move_up_cb, (void*)search_list);
 
    search_move_dn = new Fl_Button(rw-24, top, 24, 24, "@2->");
-   search_move_dn->labeltype(FL_ENGRAVED_LABEL);
    search_move_dn->callback(PrefsUI_search_move_dn_cb, (void*)search_list);
 
    search->end();
