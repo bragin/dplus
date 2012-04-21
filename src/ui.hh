@@ -197,7 +197,7 @@ class UI : public CustGroupVertical {
                           Fl_Image*deimg, int b_n, int start = 0);
    void make_toolbar(int tw, int th);
    void make_location(int ww);
-   void make_progress_bars(int wide, int thin_up);
+   void make_progress_bars(int wide);
    void make_menubar(int x, int y, int w, int h);
    Fl_Widget *make_filemenu_button();
    void make_panel(int ww);

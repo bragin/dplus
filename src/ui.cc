@@ -474,18 +474,18 @@ void UI::make_location(int ww)
 /*
  * Create the progress bars
  */
-void UI::make_progress_bars(int wide, int thin_up)
+void UI::make_progress_bars(int wide)
 {
     // Images
     IProg = new CustProgressBox(p_xpos,p_ypos,pw,bh);
     IProg->labelsize(PanelSize == P_medium ? 12 : 10);
-    IProg->box(thin_up ? FL_THIN_UP_BOX : FL_EMBOSSED_BOX);
+    IProg->box(FL_FLAT_BOX);
     IProg->update_label(wide ? "Images\n0 of 0" : "0 of 0");
     p_xpos += pw;
     // Page
     PProg = new CustProgressBox(p_xpos,p_ypos,pw,bh);
     PProg->labelsize(PanelSize == P_medium ? 12 : 10);
-    PProg->box(thin_up ? FL_THIN_UP_BOX : FL_EMBOSSED_BOX);
+    PProg->box(FL_FLAT_BOX);
     PProg->update_label(wide ? "Page\n0.0KB" : "0.0KB");
 }
 
@@ -498,7 +498,7 @@ Fl_Widget *UI::make_filemenu_button()
    Fl_Button *btn;
    int w = 0, h = 0, padding;
 
-   FileButton = btn = new CustLightButton(p_xpos,0,bw,bh,"W");
+   FileButton = btn = new FlatLightButton(p_xpos,0,bw,bh,"W");
    btn->labeltype(FL_FREE_LABELTYPE);
    btn->measure_label(w, h);
    padding = w;
@@ -508,7 +508,6 @@ Fl_Widget *UI::make_filemenu_button()
    btn->size(w+padding, h);
    p_xpos += btn->w();
    _MSG("UI::make_filemenu_button w=%d h=%d padding=%d\n", w, h, padding);
-   btn->box(FL_THIN_UP_BOX);
    btn->callback(filemenu_cb, this);
    btn->clear_visible_focus();
    if (!prefs.show_filemenu)
@@ -558,8 +557,7 @@ void UI::make_panel(int ww)
        make_filemenu_button();
        make_location(ww);
        NavBar->resizable(Location);
-       make_progress_bars(0,1);
-      NavBar->box(FL_THIN_UP_FRAME);
+       make_progress_bars(0);
       NavBar->end();
       NavBar->rearrange();
       TopGroup->insert(*NavBar,0);
@@ -587,9 +585,9 @@ void UI::make_panel(int ww)
         NavBar->resizable(w);
         p_xpos = ww - 2*pw;
         if (PanelSize == P_tiny) {
-           make_progress_bars(0,0);
+           make_progress_bars(0);
         } else {
-           make_progress_bars(1,0);
+           make_progress_bars(1);
         }
        NavBar->end();
        NavBar->rearrange();
