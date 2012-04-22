@@ -6,6 +6,9 @@ Short-term goals for the initial D+ Browser release.
 Basically this will be Dillo-Win32 the way I would have done it
 if I hadn't wasted so much time trying to cooperate with mainline.
 
+FIXME:
+[ ] Remove D_Input_Choice cruft
+
 General:
 [X] Merge patches from Dillo-Win32
 [X] Rebrand the browser as D+ (DPlus?)
