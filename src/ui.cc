@@ -994,7 +994,8 @@ void UI::change_panel(int new_size, int small_icons)
  */
 void UI::set_render_layout(Fl_Group *nw)
 {
-   CustRenderFrame *f = new CustRenderFrame(0,Main->y(),Main->w(),Main->h());
+   CustRenderFrame *f = new CustRenderFrame(0,0,0,1);
+   f->end();
    f->add(nw);
    f->resizable(nw);
 
