@@ -21,7 +21,7 @@
 #include "timeout.hh"
 #include "utf8.hh"
 #include "misc.h"
-#include "widgets.hh"
+#include "../widgets/input.hh"
 
 #include <FL/Fl.H>
 #include <FL/Fl_Pixmap.H>

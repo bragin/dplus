@@ -28,7 +28,7 @@
 
 #include "bms.h"
 #include "bookgui.hh"
-#include "widgets.hh"
+#include "../widgets/input.hh"
 
 #include "msg.h"
 #include "../dlib/dlib.h"

@@ -1,5 +1,5 @@
 /*
- * File: widgets.cc
+ * File: input.cc
  *
  * Copyright 2012 Benjamin Johnson <obeythepenguin@users.sourceforge.net>
  *
@@ -9,18 +9,16 @@
  * (at your option) any later version.
  */
 
-// Custom FLTK widgets for D+ Browser
+// An FL_Input with a right-click menu
 
 #include <FL/Fl.H>
 #include <FL/Fl_Widget.H>
 #include <FL/Fl_Menu_Item.H>
 
-#include "widgets.hh"
+#include "input.hh"
 
 
-//
 // Callback functions --------------------------------------------------------
-//
 
 /*
  * Undo callback
@@ -77,8 +75,11 @@ static void Widgets_input_select_all_cb(Fl_Widget *w, void*)
    i->position(i->size(), 0);
 }
 
+
+// Local functions -----------------------------------------------------------
+
 /*
- * Callback for D_Input right-click event
+ * Pop up the right-click menu
  */
 void Widgets_input_popup(Fl_Input *w)
 {
@@ -98,9 +99,7 @@ void Widgets_input_popup(Fl_Input *w)
 }
 
 
-//
-// D_Input -------------------------------------------------------------------
-//
+// Class implementation ------------------------------------------------------
 
 /*
  * Handle D_Input events
@@ -113,17 +112,3 @@ int D_Input::handle(int e)
 
    return Fl_Input::handle(e);
 }
-
-/*
- * Handle D_Input_Choice events
- */
-int D_Input_Choice::handle(int e)
-{
-   int b = Fl::event_button();
-   if (e == FL_RELEASE && b == 3)
-      Widgets_input_popup(input());
-
-   return Fl_Input_Choice::handle(e);
-}
-
-#include "widgets.hh"

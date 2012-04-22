@@ -1,4 +1,4 @@
-SUBDIRS = lout dw dlib dpip src doc
+SUBDIRS = lout widgets dw dlib dpip src doc
 if BUILD_DPI
 SUBDIRS += dpid dpi
 endif

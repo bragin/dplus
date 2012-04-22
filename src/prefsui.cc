@@ -33,7 +33,7 @@
 
 #include "prefs.h"
 #include "prefsui.hh"
-#include "widgets.hh"
+#include "../widgets/input.hh"
 
 #include "url.h"
 #include "misc.h"

@@ -14,6 +14,7 @@ dplus_LDADD = \
 	$(top_builddir)/dlib/libDlib.a \
 	$(top_builddir)/dpip/libDpip.a \
 	IO/libDiof.a \
+	$(top_builddir)/widgets/libDP-widgets.a \
 	$(top_builddir)/dw/libDw-widgets.a \
 	$(top_builddir)/dw/libDw-fltk.a \
 	$(top_builddir)/dw/libDw-core.a \
@@ -31,8 +32,6 @@ dplus_SOURCES = \
 	ui.hh \
 	uicmd.cc \
 	uicmd.hh \
-	widgets.cc \
-	widgets.hh \
 	bw.h \
 	bw.c \
 	cookies.c \

@@ -677,6 +677,7 @@ AC_CONFIG_FILES([
     src/Makefile
     src/IO/Makefile
     test/Makefile
+    widgets/Makefile
 ])
 
 AC_OUTPUT
