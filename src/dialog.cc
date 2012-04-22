@@ -58,6 +58,16 @@ void a_Dialog_msg(const char *msg)
 
 
 /*
+ * Multiple-choice dialog
+ */
+int a_Dialog_choice(const char *msg,
+                    const char *b0, const char *b1, const char *b2)
+{
+   return fl_choice("%s", b0, b1, b2, msg);
+}
+
+
+/*
  * Dialog for password
  */
 const char *a_Dialog_passwd(const char *msg)

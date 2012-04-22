@@ -453,8 +453,8 @@ static void win_cb (Fl_Widget *w, void *cb_data) {
    int choice = 1, ntabs = tabs->num_tabs();
 
    if (ntabs > 1)
-      choice = a_Dialog_choice5("Window contains more than one tab.",
-                                "Close", "Cancel", NULL, NULL, NULL);
+      choice = a_Dialog_choice("Window contains more than one tab.",
+                               "Cancel", "&Close", NULL);
    if (choice == 1)
       while (ntabs-- > 0)
          a_UIcmd_close_bw(a_UIcmd_get_bw_by_widget(tabs->wizard()->value()));
@@ -594,8 +594,8 @@ void a_UIcmd_close_all_bw(void *)
    int choice = 1;
 
    if (a_Bw_num() > 1)
-      choice = a_Dialog_choice5("More than one open tab or window.",
-         "Quit", "Cancel", NULL, NULL, NULL);
+      choice = a_Dialog_choice("More than one open tab or window.",
+                               "Cancel", "&Close", NULL);
    if (choice == 1)
       while ((bw = a_Bw_get(0)))
          a_UIcmd_close_bw((void*)bw);

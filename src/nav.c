@@ -484,9 +484,8 @@ static void Nav_reload_callback(void *data)
       h_url = a_History_get_url(NAV_TOP_UIDX(bw));
       if (URL_FLAGS(h_url) & URL_Post) {
          /* Attempt to repost data, let's confirm... */
-         choice = a_Dialog_choice5("Repost form data?",
-                                   "No", "Yes", "Cancel", NULL, NULL);
-         confirmed = (choice == 2);  /* "Yes" */
+         choice = a_Dialog_choice("Repost form data?", "&Yes", "&No", NULL);
+         confirmed = (choice == 0);  /* "Yes" */
       }
 
       if (confirmed) {
