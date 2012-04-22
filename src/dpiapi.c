@@ -49,7 +49,7 @@ static void Dpiapi_dialog_answer_cb(BrowserWindow *bw, int answer)
  */
 void a_Dpiapi_dialog(BrowserWindow *bw, char *server, char *dpip_tag)
 {
-   char *question, *alt1, *alt2, *alt3, *alt4, *alt5;
+   char *question, *alt1, *alt2, *alt3;
    size_t dpip_tag_len;
    int ret;
 
@@ -65,14 +65,12 @@ void a_Dpiapi_dialog(BrowserWindow *bw, char *server, char *dpip_tag)
    alt1 = a_Dpip_get_attr_l(dpip_tag, dpip_tag_len, "alt1");
    alt2 = a_Dpip_get_attr_l(dpip_tag, dpip_tag_len, "alt2");
    alt3 = a_Dpip_get_attr_l(dpip_tag, dpip_tag_len, "alt3");
-   alt4 = a_Dpip_get_attr_l(dpip_tag, dpip_tag_len, "alt4");
-   alt5 = a_Dpip_get_attr_l(dpip_tag, dpip_tag_len, "alt5");
 
-   ret = a_Dialog_choice5(question, alt1, alt2, alt3, alt4, alt5);
-   /* As choice5 is modal, call the callback function directly. */
+   ret = a_Dialog_choice(question, alt1, alt2, alt3);
+   /* As choice is modal, call the callback function directly. */
    Dpiapi_dialog_answer_cb(bw, ret);
 
-   dFree(alt1); dFree(alt2); dFree(alt3); dFree(alt4); dFree(alt5);
+   dFree(alt1); dFree(alt2); dFree(alt3);
    dFree(question);
 }
 
