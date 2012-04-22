@@ -311,12 +311,13 @@ static void Bookgui_open_cb(Fl_Widget*, void *r)
  */
 static void Bookgui_section_cb(Fl_Widget*, void *r)
 {
-   int b = Fl::event_button();
+   int b = Fl::event_button(), s = Fl::event_state();
 
    if (r == NULL)
       Bookgui_add_section();
 
-   else if (b == FL_MIDDLE_MOUSE && prefs.middle_click_opens_new_tab) {
+   else if (b == FL_MIDDLE_MOUSE ||
+            (b == FL_LEFT_MOUSE && s & FL_CTRL)) {
       int s = a_Bms_get_sec_num(r);  // open an entire section in bg tabs
       dReturn_if_fail(vbw_last != NULL);
 
