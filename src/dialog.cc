@@ -203,22 +203,20 @@ static void Dialog_user_password_cb(Fl_Widget *button, void *)
  */
 int a_Dialog_user_password(const char *message, UserPasswordCB cb, void *vp)
 {
-   int ok = 0, window_h = 280, y, msg_w, msg_h;
-   const int window_w = 300, input_x = 80, input_w = 200, input_h = 30,
-      button_h = 30;
+   int ok = 0, window_h = 158, y, msg_w, msg_h;
+   const int window_w = 450, input_x = 88, input_w = 354, input_h = 24,
+      button_h = 24;
 
-   /* window is resized below */
-   Fl_Window *window = new Fl_Window(window_w,window_h,"Dillo User/Password");
+   Fl_Window *window = new Fl_Window(window_w, window_h,
+                                     "Authentication Required");
    Fl_Group::current(0);
    window->user_data(NULL);
 
    /* message */
-   y = 20;
-   msg_w = window_w - 40;
-   Fl_Box *msg = new Fl_Box(20, y, msg_w, 100); /* resized below */
+   y = 8;
+   msg_w = window_w - 16;
+   Fl_Box *msg = new Fl_Box(8, y, msg_w, 52); /* resized below */
    msg->label(message);
-   msg->labelfont(FL_HELVETICA);
-   msg->labelsize(14);
    msg->align(FL_ALIGN_INSIDE | FL_ALIGN_TOP_LEFT | FL_ALIGN_WRAP);
 
    fl_font(msg->labelfont(), msg->labelsize());
@@ -228,37 +226,29 @@ int a_Dialog_user_password(const char *message, UserPasswordCB cb, void *vp)
    window->add(msg);
 
    /* inputs */
-   y += msg_h + 20;
-   Fl_Input *user_input = new Fl_Input(input_x, y, input_w, input_h, "User");
-   user_input->labelsize(14);
-   user_input->textsize(14);
+   y += msg_h + 8;
+   Fl_Input *user_input = new Fl_Input(input_x, y, input_w, input_h,
+                                       "Username:");
    window->add(user_input);
-   y += input_h + 10;
+   y += input_h + 4;
    Fl_Secret_Input *password_input =
-      new Fl_Secret_Input(input_x, y, input_w, input_h, "Password");
-   password_input->labelsize(14);
-   password_input->textsize(14);
+      new Fl_Secret_Input(input_x, y, input_w, input_h, "Password:");
    window->add(password_input);
 
    /* "OK" button */
-   y += input_h + 20;
-   Fl_Button *ok_button = new Fl_Button(200, y, 50, button_h, "OK");
-   ok_button->labelsize(14);
+   y = window_h - button_h - 8;
+   Fl_Button *ok_button = new Fl_Return_Button(window_w - 176, y, 80,
+                                               button_h, "OK");
    ok_button->callback(Dialog_user_password_cb);
    window->add(ok_button);
 
    /* "Cancel" button */
    Fl_Button *cancel_button =
-      new Fl_Button(50, y, 100, button_h, "Cancel");
-   cancel_button->labelsize(14);
+      new Fl_Button(window_w - 88, y, 80, button_h, "Cancel");
    cancel_button->callback(Dialog_user_password_cb);
    window->add(cancel_button);
 
-   y += button_h + 20;
-   window_h = y;
-   window->size(window_w, window_h);
-   window->size_range(window_w, window_h, window_w, window_h);
-   window->resizable(window);
+   window->set_modal();
 
    window->show();
    while (window->shown())
