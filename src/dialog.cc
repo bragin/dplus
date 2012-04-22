@@ -157,7 +157,7 @@ static void text_window_close_cb(Fl_Widget *, void *vtd)
  */
 void a_Dialog_text_window(const char *txt, const char *title)
 {
-   int wh = prefs.height, ww = prefs.width;
+   int wh = prefs.height - 20, ww = prefs.width - 20;
 
    Fl_Window *window = new Fl_Window(ww, wh, title ? title : "Dillo text");
    Fl_Group::current(0);
