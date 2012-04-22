@@ -12,7 +12,6 @@ FIXME:
 General:
 [X] Merge patches from Dillo-Win32
 [X] Rebrand the browser as D+ (DPlus?)
-[ ] Use config.h rather than -DENABLE_* in CPPFLAGS
 [X] DON'T CHANGE THE WORKING DIRECTORY ON PROGRAM STARTUP!
 
 Documentation:
@@ -26,7 +25,7 @@ Network:
 [ ] Remove all remaining DPI code
 [X] Make DlGui a standard feature
 [ ] Clean up the HTTPS code
-[ ] Fix EMFILE errors on MS-DOS
+[X] Fix EMFILE errors on MS-DOS
 [ ] Move bookmarks user interface into dialog.cc and menu.cc
 [ ] Move directory list generation from file.c into a separate module
 
