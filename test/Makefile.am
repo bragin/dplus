@@ -30,6 +30,7 @@ dw_anchors_test_LDADD = \
 	$(top_builddir)/dw/libDw-widgets.a \
 	$(top_builddir)/dw/libDw-fltk.a \
 	$(top_builddir)/dw/libDw-core.a \
+	$(top_builddir)/widgets/libDP-widgets.a \
 	$(top_builddir)/lout/liblout.a \
 	@LIBFLTK_LIBS@
 
@@ -38,6 +39,7 @@ dw_example_LDADD = \
 	$(top_builddir)/dw/libDw-widgets.a \
 	$(top_builddir)/dw/libDw-fltk.a \
 	$(top_builddir)/dw/libDw-core.a \
+	$(top_builddir)/widgets/libDP-widgets.a \
 	$(top_builddir)/lout/liblout.a \
 	@LIBFLTK_LIBS@
 
@@ -46,6 +48,7 @@ dw_find_test_LDADD = \
 	$(top_builddir)/dw/libDw-widgets.a \
 	$(top_builddir)/dw/libDw-fltk.a \
 	$(top_builddir)/dw/libDw-core.a \
+	$(top_builddir)/widgets/libDP-widgets.a \
 	$(top_builddir)/lout/liblout.a \
 	@LIBFLTK_LIBS@
 
@@ -54,6 +57,7 @@ dw_links_LDADD = \
 	$(top_builddir)/dw/libDw-widgets.a \
 	$(top_builddir)/dw/libDw-fltk.a \
 	$(top_builddir)/dw/libDw-core.a \
+	$(top_builddir)/widgets/libDP-widgets.a \
 	$(top_builddir)/lout/liblout.a \
 	@LIBFLTK_LIBS@
 
@@ -62,6 +66,7 @@ dw_links2_LDADD = \
 	$(top_builddir)/dw/libDw-widgets.a \
 	$(top_builddir)/dw/libDw-fltk.a \
 	$(top_builddir)/dw/libDw-core.a \
+	$(top_builddir)/widgets/libDP-widgets.a \
 	$(top_builddir)/lout/liblout.a \
 	@LIBFLTK_LIBS@
 
@@ -70,6 +75,7 @@ dw_images_simple_LDADD = \
 	$(top_builddir)/dw/libDw-widgets.a \
 	$(top_builddir)/dw/libDw-fltk.a \
 	$(top_builddir)/dw/libDw-core.a \
+	$(top_builddir)/widgets/libDP-widgets.a \
 	$(top_builddir)/lout/liblout.a \
 	@LIBFLTK_LIBS@
 
@@ -78,6 +84,7 @@ dw_images_scaled_LDADD = \
 	$(top_builddir)/dw/libDw-widgets.a \
 	$(top_builddir)/dw/libDw-fltk.a \
 	$(top_builddir)/dw/libDw-core.a \
+	$(top_builddir)/widgets/libDP-widgets.a \
 	$(top_builddir)/lout/liblout.a \
 	@LIBFLTK_LIBS@
 
@@ -86,6 +93,7 @@ dw_images_scaled2_LDADD = \
 	$(top_builddir)/dw/libDw-widgets.a \
 	$(top_builddir)/dw/libDw-fltk.a \
 	$(top_builddir)/dw/libDw-core.a \
+	$(top_builddir)/widgets/libDP-widgets.a \
 	$(top_builddir)/lout/liblout.a \
 	@LIBFLTK_LIBS@
 
@@ -94,6 +102,7 @@ dw_lists_LDADD = \
 	$(top_builddir)/dw/libDw-widgets.a \
 	$(top_builddir)/dw/libDw-fltk.a \
 	$(top_builddir)/dw/libDw-core.a \
+	$(top_builddir)/widgets/libDP-widgets.a \
 	$(top_builddir)/lout/liblout.a \
 	@LIBFLTK_LIBS@
 
@@ -102,6 +111,7 @@ dw_table_aligned_LDADD = \
 	$(top_builddir)/dw/libDw-widgets.a \
 	$(top_builddir)/dw/libDw-fltk.a \
 	$(top_builddir)/dw/libDw-core.a \
+	$(top_builddir)/widgets/libDP-widgets.a \
 	$(top_builddir)/lout/liblout.a \
 	@LIBFLTK_LIBS@
 
@@ -110,6 +120,7 @@ dw_table_LDADD = \
 	$(top_builddir)/dw/libDw-widgets.a \
 	$(top_builddir)/dw/libDw-fltk.a \
 	$(top_builddir)/dw/libDw-core.a \
+	$(top_builddir)/widgets/libDP-widgets.a \
 	$(top_builddir)/lout/liblout.a \
 	@LIBFLTK_LIBS@
 
@@ -118,6 +129,7 @@ dw_border_test_LDADD = \
 	$(top_builddir)/dw/libDw-widgets.a \
 	$(top_builddir)/dw/libDw-fltk.a \
 	$(top_builddir)/dw/libDw-core.a \
+	$(top_builddir)/widgets/libDP-widgets.a \
 	$(top_builddir)/lout/liblout.a \
 	@LIBFLTK_LIBS@
 
@@ -127,6 +139,7 @@ dw_imgbuf_mem_test_LDADD = \
 	$(top_builddir)/dw/libDw-widgets.a \
 	$(top_builddir)/dw/libDw-fltk.a \
 	$(top_builddir)/dw/libDw-core.a \
+	$(top_builddir)/widgets/libDP-widgets.a \
 	$(top_builddir)/lout/liblout.a \
 	@LIBFLTK_LIBS@
 
@@ -135,6 +148,7 @@ dw_resource_test_LDADD = \
 	$(top_builddir)/dw/libDw-widgets.a \
 	$(top_builddir)/dw/libDw-fltk.a \
 	$(top_builddir)/dw/libDw-core.a \
+	$(top_builddir)/widgets/libDP-widgets.a \
 	$(top_builddir)/lout/liblout.a \
 	@LIBFLTK_LIBS@
 
@@ -146,6 +160,7 @@ dw_ui_test_LDADD = \
 	$(top_builddir)/dw/libDw-widgets.a \
 	$(top_builddir)/dw/libDw-fltk.a \
 	$(top_builddir)/dw/libDw-core.a \
+	$(top_builddir)/widgets/libDP-widgets.a \
 	$(top_builddir)/lout/liblout.a \
 	@LIBFLTK_LIBS@
 
@@ -155,6 +170,7 @@ fltk_browser_LDADD = @LIBFLTK_LIBS@
 shapes_SOURCES = shapes.cc
 shapes_LDADD = \
 	$(top_builddir)/dw/libDw-core.a \
+	$(top_builddir)/widgets/libDP-widgets.a \
 	$(top_builddir)/lout/liblout.a
 
 cookies_SOURCES = cookies.c
