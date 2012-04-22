@@ -35,6 +35,7 @@
 #include "prefsui.hh"
 
 #include "url.h"
+#include "misc.h"
 #include "paths.hh"
 #include "../dlib/dlib.h"
 #include "msg.h"
@@ -100,6 +101,103 @@ public:
       return (const char*)dList_nth_data(fonts_list, Fl_Choice::value());
    }
 };
+
+
+/*
+ * Add/edit search engine dialog
+ */
+class Search_edit : public Fl_Window
+{
+public:
+   Search_edit(const char *l = 0, const char *u = 0);
+   ~Search_edit();
+
+   inline const char *search_label() const { return label_input->value(); }
+   inline const char *search_url() const { return url_input->value(); }
+   inline bool accepted() const { return accepted_; }
+
+private:
+   Fl_Input *label_input;
+   Fl_Input *url_input; 
+
+   Fl_Return_Button *button_ok;
+   Fl_Button *button_cancel;
+
+   bool accepted_;
+
+   static void save_cb(Fl_Widget*, void *cbdata);
+   static void cancel_cb(Fl_Widget*, void *cbdata);
+};
+
+Search_edit::Search_edit(const char *l, const char *u)
+   : Fl_Window(450, 130, "Add/Edit Search Engine")
+{
+   begin();
+
+   label_input = new Fl_Input(64, 8, w()-72, 24, "Label:");
+   label_input->value(l);
+
+   url_input = new Fl_Input(64, 36, w()-72, 24, "URL:");
+   url_input->value(u);
+
+   button_ok = new Fl_Return_Button(w()-176, h()-32, 80, 24, "OK");
+   button_ok->callback(Search_edit::save_cb, (void*)this);
+
+   button_cancel = new Fl_Button(w()-88, h()-32, 80, 24, "Cancel");
+   button_cancel->callback(Search_edit::cancel_cb, (void*)this);
+
+   accepted_ = false;
+
+   end();
+   if (strlen(u) > 0)
+      label("Edit Search Engine");
+   else
+      label("Add Search Engine");
+
+   set_modal();
+}
+
+Search_edit::~Search_edit()
+{
+   delete label_input;
+   delete url_input;
+
+   delete button_ok;
+   delete button_cancel;
+}
+
+void Search_edit::save_cb(Fl_Widget*, void *cbdata)
+{
+   Search_edit *e = (Search_edit*)cbdata;
+   bool invalid = false;
+
+   if (!strlen(e->search_label())) {
+      fl_alert("Please enter a label for this search engine.");
+      invalid = true;
+   } else if (!strlen(e->search_url())) {
+      fl_alert("Please enter a URL for this search engine.");
+      invalid = true;
+   } else {  // Don't accept an unparseable search URL
+      char *label, *url, *source;
+      source = dStrconcat(e->search_label(), " ", e->search_url(), NULL);
+      if (a_Misc_parse_search_url(source, &label, &url) < 0) {
+         fl_alert("Invalid search URL.");
+         invalid = true;
+      }
+      dFree((void*)source);
+   }
+
+   dReturn_if(invalid);
+
+   e->accepted_ = true;
+   e->hide();
+}
+
+void Search_edit::cancel_cb(Fl_Widget*, void *cbdata)
+{
+   Search_edit *e = (Search_edit*)cbdata;
+   e->hide();
+}
 
 
 // PrefsGui class definition & implementation --------------------------------
@@ -363,12 +461,14 @@ PrefsGui::PrefsGui()
 
    search_list = new Fl_Select_Browser(rx+8, top, rw-16, 120);
    for (int i = 0; i < dList_length(prefs.search_urls); i++) {
-      const char *url = (const char*)dList_nth_data(prefs.search_urls, i);
-      if (url == NULL)  // indicates the default search engine
-         search_list->select(i);  // this works since Fl_Browser is 1-indexed
+      char *label, *url, *source;
+      source = (char*)dList_nth_data(prefs.search_urls, i);
+      if (a_Misc_parse_search_url(source, &label, &url) < 0)
+         continue;
       else
-         search_list->add(url);
+         search_list->add(label, (void*)dStrdup(source));
    }
+   search_list->select(1);
    top += 128;
 
    search_add = new Fl_Button(rx+8, top, 64, 24, "Add...");
@@ -563,7 +663,7 @@ void PrefsGui::apply()
    }
 
    for (int i = 1; i <= search_list->size(); i++)
-      dList_append(prefs.search_urls, (void*)dStrdup(search_list->text(i)));
+      dList_append(prefs.search_urls, (void*)search_list->data(i));
 
    // If we've deleted the selected search engine, fall back on the default
    if (prefs.search_url_idx >= dList_length(prefs.search_urls))
@@ -714,9 +814,19 @@ void PrefsUI_search_add_cb(Fl_Widget *widget, void *l)
 {
    Fl_Select_Browser *sl = (Fl_Select_Browser*)l;
 
-   const char *u = fl_input("Enter search name and URL:");
-   if (u != NULL)
-      sl->add(u);
+   Search_edit *e = new Search_edit("", "");
+   e->show();
+
+   while (e->shown())
+      Fl::wait();
+
+   if (e->accepted()) {
+      const char *u = dStrconcat(e->search_label(), " ",
+                                 e->search_url(), NULL);
+      sl->add(e->search_label(), (void*)u);
+   }
+
+   delete e;
 }
 
 /*
@@ -726,10 +836,24 @@ void PrefsUI_search_edit_cb(Fl_Widget *widget, void *l)
 {
    Fl_Select_Browser *sl = (Fl_Select_Browser*)l;
    int line = sl->value();
+   char *label, *url, *source = (char*)sl->data(line);
 
-   const char *u = fl_input("Enter search name and URL:", sl->text(line));
-   if (u != NULL)
-      sl->text(line, u);
+   dReturn_if(a_Misc_parse_search_url(source, &label, &url) < 0);
+
+   Search_edit *e = new Search_edit(label, url);
+   e->show();
+
+   while (e->shown())
+      Fl::wait();
+
+   if (e->accepted()) {
+      const char *u = dStrconcat(e->search_label(), " ",
+                                 e->search_url(), NULL);
+      sl->text(line, e->search_label());
+      sl->data(line, (void*)u);
+   }
+
+   delete e;
 }
 
 /*
@@ -740,8 +864,13 @@ void PrefsUI_search_delete_cb(Fl_Widget *widget, void *l)
    Fl_Select_Browser *sl = (Fl_Select_Browser*)l;
    int line = sl->value();
 
-   sl->remove(line);
-   sl->select(line);  // now the line before
+   if (sl->size() == 1) {
+      // Don't delete the last search
+      fl_alert("You must specify at least one search engine.");
+   } else {
+      sl->remove(line);
+      sl->select(line);  // now the line before
+   }
 }
 
 /*
