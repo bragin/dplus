@@ -952,7 +952,7 @@ int FltkOptionMenuResource::getMaxItemWidth()
       const char *str = menu[i].text;
 
       if (str) {
-         width = fl_width(str);
+         width = (int)fl_width(str);
          if (width > max)
             max = width;
       }
@@ -1183,7 +1183,7 @@ int FltkListResource::getMaxItemWidth()
          width += tree->connectorwidth();
 
       if (i->label())
-         width += fl_width(i->label());
+         width += (int)fl_width(i->label());
 
       if (width > max)
          max = width;
