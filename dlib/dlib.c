@@ -835,21 +835,25 @@ void dLib_show_messages(bool_t show)
  */
 
 /*
- * Return the current working directory in a new string
+ * Return the current working directory in a static string (don't free)
  */
 char *dGetcwd ()
 {
-  size_t size = 128;
+  static char *buffer = NULL;
 
-  while (1) {
-      char *buffer = dNew(char, size);
-      if (getcwd (buffer, size) == buffer)
-        return buffer;
-      dFree (buffer);
-      if (errno != ERANGE)
-        return 0;
-      size *= 2;
-  }
+   if (!buffer) {
+      size_t size = 128;
+      while (1) {
+         buffer = dNew0(char, size);
+         if (getcwd (buffer, size) == buffer)
+            break;  // success
+         dFree (buffer);
+         if (errno != ERANGE)
+            break;  // returns NULL
+         size *= 2;
+      }
+   }
+   return buffer;
 }
 
 /*
