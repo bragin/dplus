@@ -456,7 +456,7 @@ PrefsGui::PrefsGui()
 
    search_label = new Fl_Box(rx+8, top, rw-16, 24,
                              "The first search listed will be used "
-                             "as Dillo's default.");
+                             "as the default.");
    top += 28;
 
    search_list = new Fl_Select_Browser(rx+8, top, rw-16, 120);
