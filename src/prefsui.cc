@@ -470,6 +470,7 @@ PrefsGui::PrefsGui()
          search_list->add(label, (void*)dStrdup(source));
    }
    search_list->select(1);
+   search_list->format_char(0);
    top += 128;
 
    search_add = new Fl_Button(rx+8, top, 64, 24, "Add...");
