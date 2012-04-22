@@ -74,7 +74,7 @@ static void select_all_cb(Fl_Widget *w, void*)
 /*
  * Pop up the right-click menu
  */
-void menu_popup(Fl_Text_Editor *w)
+void menu_popup(D_Text_Editor *w)
 {
    const Fl_Menu_Item *m;
    static Fl_Menu_Item popup_menu[] = {
@@ -86,6 +86,18 @@ void menu_popup(Fl_Text_Editor *w)
       {"Select All",FL_CTRL+'a',select_all_cb,0,0,0,0,0,0},
       {0,0,0,0,0,0,0,0,0},
    };
+
+   if (w->read_only) {
+      popup_menu[0].deactivate();
+      popup_menu[1].deactivate();
+      popup_menu[3].deactivate();
+      popup_menu[4].deactivate();
+   } else {
+      popup_menu[0].activate();
+      popup_menu[1].activate();
+      popup_menu[3].activate();
+      popup_menu[4].activate();
+   }
 
    if ((m = popup_menu->popup(Fl::event_x(), Fl::event_y())) && m->callback())
       m->do_callback((Fl_Widget*)w);

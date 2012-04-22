@@ -34,6 +34,7 @@
 #include "dialog.hh"
 #include "misc.h"
 #include "prefs.h"
+#include "../widgets/text_display.hh"
 
 /*
  * Local Data
@@ -152,7 +153,7 @@ void a_Dialog_text_window(const char *txt, const char *title)
 
     Fl_Text_Buffer *buf = new Fl_Text_Buffer();
     buf->text(txt);
-    Fl_Text_Display *td = new Fl_Text_Display(0,0,ww, wh);
+    Fl_Text_Display *td = new D_Text_Display(0,0,ww, wh);
     td->buffer(buf);
     td->textfont(FL_COURIER);
     td->textsize((int) rint(14.0 * prefs.font_factor));
