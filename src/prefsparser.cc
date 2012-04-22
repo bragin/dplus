@@ -89,6 +89,7 @@ const SymNode_t symbols[] = {
    { "show_home", &prefs.show_home, PREFS_BOOL },
    { "show_msg", &prefs.show_msg, PREFS_BOOL },
    { "show_progress_box", &prefs.show_progress_box, PREFS_BOOL },
+   { "show_quit_dialog", &prefs.show_quit_dialog, PREFS_BOOL },
    { "show_reload", &prefs.show_reload, PREFS_BOOL },
    { "show_save", &prefs.show_save, PREFS_BOOL },
    { "show_search", &prefs.show_search, PREFS_BOOL },

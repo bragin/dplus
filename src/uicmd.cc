@@ -452,7 +452,7 @@ static void win_cb (Fl_Widget *w, void *cb_data) {
    CustTabs *tabs = (CustTabs*) cb_data;
    int choice = 1, ntabs = tabs->num_tabs();
 
-   if (ntabs > 1)
+   if (prefs.show_quit_dialog && ntabs > 1)
       choice = a_Dialog_choice("Window contains more than one tab.",
                                "Cancel", "&Close", NULL);
    if (choice == 1)
@@ -593,7 +593,7 @@ void a_UIcmd_close_all_bw(void *)
    BrowserWindow *bw;
    int choice = 1;
 
-   if (a_Bw_num() > 1)
+   if (prefs.show_quit_dialog && a_Bw_num() > 1)
       choice = a_Dialog_choice("More than one open tab or window.",
                                "Cancel", "&Close", NULL);
    if (choice == 1)
