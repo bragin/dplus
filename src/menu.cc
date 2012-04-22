@@ -61,6 +61,8 @@ static void filemenu_cb(Fl_Widget*, void *data)
       a_UIcmd_open_file(popup_bw);
    } else if (strcmp((char*)data, "ou") == 0) {
       a_UIcmd_focus_location(popup_bw);
+   } else if (strcmp((char*)data, "sa") == 0) {
+      a_UIcmd_save(popup_bw);
 #ifdef ENABLE_PRINTER
    } else if (strcmp((char*)data, "pr") == 0) {
       a_UIcmd_print_page(popup_bw);
@@ -338,7 +340,7 @@ void a_Menu_page_popup(BrowserWindow *bw, const DilloUrl *url,
        Menu_add_bookmark_cb,0,FL_MENU_DIVIDER,0,0,0,0},
       {"&Find text", Keys::getShortcut(KEYS_FIND),
        Menu_find_text_cb,0,0,0,0,0,0},
-      {"&Save page as...", Keys::getShortcut(KEYS_SAVE),
+      {"S&ave page as...", Keys::getShortcut(KEYS_SAVE),
        Menu_save_page_cb,0,0,0,0,0,0},
       {0,0,0,0,0,0,0,0,0}
    };
@@ -415,7 +417,7 @@ void a_Menu_link_popup(BrowserWindow *bw, const DilloUrl *url)
       {"&Bookmark this link", 0, Menu_add_bookmark_cb,0,0,0,0,0,0},
       {"&Copy link location", 0, Menu_copy_urlstr_cb,0,FL_MENU_DIVIDER,0,0,0,
        0},
-      {"&Save link as...", 0, Menu_save_link_cb,0,0,0,0,0,0},
+      {"S&ave link as...", 0, Menu_save_link_cb,0,0,0,0,0,0},
       {0,0,0,0,0,0,0,0,0}
    };
 
@@ -446,7 +448,7 @@ void a_Menu_image_popup(BrowserWindow *bw, const DilloUrl *url,
       {"&Bookmark this image", 0, Menu_add_bookmark_cb,0,0,0,0,0,0},
       {"&Copy image location", 0,Menu_copy_urlstr_cb,0,FL_MENU_DIVIDER,0,0,0,
        0},
-      {"&Save image as...", 0, Menu_save_link_cb, 0, FL_MENU_DIVIDER,0,0,0,0},
+      {"S&ave image as...", 0, Menu_save_link_cb, 0, FL_MENU_DIVIDER,0,0,0,0},
       {"Link &menu", 0, Menu_link_cb,0,0,0,0,0,0},
       {0,0,0,0,0,0,0,0,0}
    };
@@ -522,6 +524,8 @@ void a_Menu_file_popup(BrowserWindow *bw, void *v_wid)
        (void*)"of",0,0,0,0,0},
       {"Open UR&L...", Keys::getShortcut(KEYS_GOTO), filemenu_cb,
        (void*)"ou",0,0,0,0,0},
+      {"S&ave as...", Keys::getShortcut(KEYS_SAVE), filemenu_cb,
+       (void*)"sa",0,0,0,0,0},
       {"&Close", Keys::getShortcut(KEYS_CLOSE_TAB), filemenu_cb,
        (void*)"cw", FL_MENU_DIVIDER,0,0,0,0},
 #ifdef ENABLE_PRINTER
