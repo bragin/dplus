@@ -893,16 +893,17 @@ char *dGetprofdir ()
 {
    static char *profdir = NULL;
 
+   if (!profdir) {
 #ifdef MSDOS
-   /* Use an 8.3-safe directory name on DOS. */
-   profdir = dStrconcat(getenv("DILLO"), "/CONFIG", NULL);
+      /* Use an 8.3-safe directory name on DOS. */
+      profdir = dStrconcat(getenv("DILLO"), "/CONFIG", NULL);
 #else
-   /* Note: It would be better if we used the Application Data folder on
-    * Windows, but that's not available on Windows 95/98/Me/NT 4.0, and
-    * switching would break upgrading from previous Dillo-Win32 releases. */
-   profdir = dStrconcat(dGethomedir(), "/.dillo", NULL);
+      /* Note: It would be better if we used the Application Data folder on
+       * Windows, but that's not available on Windows 95/98/Me/NT 4.0, and
+       * switching would break upgrading from previous Dillo-Win32 releases. */
+      profdir = dStrconcat(dGethomedir(), "/.dillo", NULL);
 #endif
-
+   }
    return profdir;
 }
 
