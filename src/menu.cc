@@ -177,7 +177,7 @@ static void Menu_save_page_cb(Fl_Widget*, void*)
  */
 static void Menu_view_page_source_cb(Fl_Widget*, void*)
 {
-   a_UIcmd_view_page_source(popup_bw);
+   a_UIcmd_view_page_source(popup_bw, popup_url);
 }
 
 /*
@@ -237,7 +237,7 @@ static void Menu_form_hiddens_cb(Fl_Widget*, void *user_data)
 static void Menu_stylesheet_cb(Fl_Widget*, void *vUrl)
 {
    const DilloUrl *url = (const DilloUrl *) vUrl;
-   a_UIcmd_open_url(popup_bw, url);
+   a_UIcmd_view_page_source(popup_bw, url);
 }
 
 /*
