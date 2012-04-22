@@ -42,6 +42,7 @@ typedef struct SymNode_ {
 /* Symbol array, sorted alphabetically */
 const SymNode_t symbols[] = {
    { "allow_white_bg", &prefs.allow_white_bg, PREFS_BOOL },
+   { "always_show_tabs", &prefs.always_show_tabs, PREFS_BOOL },
    { "bg_color", &prefs.bg_color, PREFS_COLOR },
    { "buffered_drawing", &prefs.buffered_drawing, PREFS_INT32 },
    { "contrast_visited_color", &prefs.contrast_visited_color, PREFS_BOOL },
@@ -49,7 +50,6 @@ const SymNode_t symbols[] = {
    { "enterpress_forces_submit", &prefs.enterpress_forces_submit,
      PREFS_BOOL },
    { "filter_auto_requests", &prefs.filter_auto_requests, PREFS_FILTER },
-   { "always_show_tabs", &prefs.always_show_tabs, PREFS_BOOL },
    { "focus_new_tab", &prefs.focus_new_tab, PREFS_BOOL },
    { "font_cursive", &prefs.font_cursive, PREFS_STRING },
    { "font_factor", &prefs.font_factor, PREFS_DOUBLE },

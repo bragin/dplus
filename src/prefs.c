@@ -52,9 +52,11 @@ DilloPrefs prefs;
 void a_Prefs_init(void)
 {
    prefs.allow_white_bg = TRUE;
+   prefs.always_show_tabs = TRUE;
    prefs.bg_color = 0xffffff;
    prefs.buffered_drawing = 2;
    prefs.contrast_visited_color = TRUE;
+   prefs.date_format = dStrdup(PREFS_DATE_FORMAT);
    prefs.enterpress_forces_submit = FALSE;
 
    /* PREFS_FILTER_SAME_DOMAIN is the mainline default,
@@ -62,7 +64,6 @@ void a_Prefs_init(void)
     * including Wikipedia, Google, SourceForge, etc. */
    prefs.filter_auto_requests = PREFS_FILTER_ALLOW_ALL;
 
-   prefs.always_show_tabs = TRUE;
    prefs.focus_new_tab = FALSE;
    prefs.font_cursive = dStrdup(PREFS_FONT_CURSIVE);
    prefs.font_factor = 1.0;
@@ -96,6 +97,7 @@ void a_Prefs_init(void)
    prefs.no_proxy = dStrdup(PREFS_NO_PROXY);
    prefs.panel_size = P_small;
    prefs.parse_embedded_css=TRUE;
+   prefs.search_urls = dList_new(16);
    prefs.search_url_idx = 0;
    prefs.show_back = TRUE;
    prefs.show_bookmarks = TRUE;
@@ -116,10 +118,8 @@ void a_Prefs_init(void)
    prefs.small_icons = FALSE;
    prefs.start_page = a_Url_new(PREFS_START_PAGE, NULL);
    prefs.w3c_plus_heuristics = TRUE;
-   prefs.date_format = dStrdup(PREFS_DATE_FORMAT);
 
    /* Initialize the list of default search engines */
-   prefs.search_urls = dList_new(7);
    dList_append(prefs.search_urls, "Google "
                 "http://www.google.com/search?q=%s");
    dList_append(prefs.search_urls, "Google Images "
