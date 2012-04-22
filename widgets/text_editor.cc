@@ -100,8 +100,10 @@ void menu_popup(Fl_Text_Editor *w)
 int D_Text_Editor::handle(int e)
 {
    int b = Fl::event_button();
-   if (e == FL_RELEASE && b == 3)
+   if (e == FL_RELEASE && b == 3) {
+      take_focus();
       menu_popup(this);
+   }
 
    return Fl_Text_Editor::handle(e);
 }

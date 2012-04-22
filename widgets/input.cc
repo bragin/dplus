@@ -107,8 +107,10 @@ void Widgets_input_popup(Fl_Input *w)
 int D_Input::handle(int e)
 {
    int b = Fl::event_button();
-   if (e == FL_RELEASE && b == 3)
+   if (e == FL_RELEASE && b == 3) {
+      take_focus();
       Widgets_input_popup(this);
+   }
 
    return Fl_Input::handle(e);
 }
