@@ -34,7 +34,7 @@
 
 /* Most sites don't recognize Dillo's user agent string, but many will
  * recognize Mozilla/4.0 and generate simpler HTML code (e.g., Google). */
-#ifdef MOZILLA_USER_AGENT
+#ifdef ENABLE_MOZILLA_USER_AGENT
 #  define PREFS_HTTP_USER_AGENT "Mozilla/4.0 (compatible; Dillo " VERSION ")"
 #else  /* use Dillo's default user agent */
 #  define PREFS_HTTP_USER_AGENT "Dillo/" VERSION
