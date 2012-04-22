@@ -45,6 +45,7 @@ const SymNode_t symbols[] = {
    { "bg_color", &prefs.bg_color, PREFS_COLOR },
    { "buffered_drawing", &prefs.buffered_drawing, PREFS_INT32 },
    { "contrast_visited_color", &prefs.contrast_visited_color, PREFS_BOOL },
+   { "date_format", &prefs.date_format, PREFS_STRING },
    { "enterpress_forces_submit", &prefs.enterpress_forces_submit,
      PREFS_BOOL },
    { "filter_auto_requests", &prefs.filter_auto_requests, PREFS_FILTER },
@@ -98,7 +99,6 @@ const SymNode_t symbols[] = {
    { "small_icons", &prefs.small_icons, PREFS_BOOL },
    { "start_page", &prefs.start_page, PREFS_URL },
    { "w3c_plus_heuristics", &prefs.w3c_plus_heuristics, PREFS_BOOL },
-   { "date_format", &prefs.date_format, PREFS_STRING }
 };
 
 /*
