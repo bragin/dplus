@@ -14,14 +14,6 @@
 
 #include <math.h> // for rint()
 
-#ifdef MSDOS
-#  ifdef __DJGPP__
-#     include <unistd.h>  /* DJGPP incorrectly puts basename() here */
-#  else
-#     include <libgen.h>
-#  endif
-#endif
-
 #include <FL/Fl_Window.H>
 #include <FL/Fl_File_Chooser.H>
 #include <FL/Fl_Native_File_Chooser.H>
@@ -82,23 +74,6 @@ const char *a_Dialog_passwd(const char *msg)
 const char *a_Dialog_save_file(const char *msg,
                                const char *pattern, const char *fname)
 {
-#ifdef MSDOS
-   /* This is a temporary workaround since FLTK's file dialogs are badly
-    * broken on DOS, and usually crash the browser (not that they're really
-    * much better on other systems, just slightly less crash-prone...) */
-   const char *retval;
-   char *bname, *rname;
-
-   (void)pattern;
-   bname = dStrdup(fname);
-   rname = dStrconcat(dGethomedir(), "\\", basename(bname), NULL);
-
-   retval = fl_input("%s", rname, msg);
-
-   dFree(bname);
-   dFree(rname);
-   return retval;
-#else
    Fl_Native_File_Chooser fc;
    fc.type(Fl_Native_File_Chooser::BROWSE_SAVE_FILE);
 
@@ -110,7 +85,6 @@ const char *a_Dialog_save_file(const char *msg,
    fname_str = fc.show() ? NULL : dStrdup(fc.filename());
 
    return fname_str;
-#endif
 }
 
 /*
