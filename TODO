@@ -39,6 +39,7 @@ Preferences:
 [ ] Import preferences and bookmarks from Dillo
 
 User interface:
+[X] Try not to look like we designed it drunk
 [X] Normalize keyboard shortcuts
 [ ] Find a better UI font
 [X] Fix the default downloads directory
