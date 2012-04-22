@@ -70,7 +70,19 @@ void a_Sock_freeall()
  */
 int dConnect(int s, const struct sockaddr *name, int namelen)
 {
+#ifdef MSDOS
+   /* Because DOS has a limited number of file descriptors available,
+    * EMFILE happens more frequently than on other platforms.  To work
+    * around this, we will try again up to five times if EMFILE occurs. */
+   int retval, i = 0;
+   do {
+      retval = connect(s, name, namelen);
+      i++;
+   } while (retval < 0 && errno == EMFILE && i < 5);
+   return retval;
+#else
    return connect(s, name, namelen);
+#endif
 }
 
 /*
