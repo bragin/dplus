@@ -745,14 +745,16 @@ int UI::handle(int event)
             panels_toggle();
             temporaryPanels(true);
          }
-         focus_search();
+         if (prefs.show_search)
+            focus_search();
          ret = 1;
       } else if (cmd == KEYS_GOTO) {
          if (Panelmode == UI_HIDDEN) {
             panels_toggle();
             temporaryPanels(true);
          }
-         focus_location();
+         if (prefs.show_url)
+            focus_location();
          ret = 1;
       } else if (cmd == KEYS_HIDE_PANELS) {
          panels_toggle();
