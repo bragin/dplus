@@ -464,8 +464,9 @@ PrefsGui::PrefsGui()
    top = ry + 8;
 
    search_label = new Fl_Box(rx+8, top, rw-16, 24,
-                             "The first search listed will be used "
+                             "The first engine listed will be used "
                              "as the default.");
+   search_label->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
    top += 28;
 
    search_list = new Fl_Select_Browser(rx+8, top, rw-16, 120);
