@@ -50,7 +50,7 @@ User interface:
 [ ] Add a "new tab" button to the tab bar
 [X] Show the tab bar when only one tab is open
 [ ] Remove middle-click opens new window
-[ ] Remove the "Save" button from the toolbar
+[X] Remove the "Save" button from the toolbar
 [X] Fix keyboard navigation in the bookmarks menu
 [ ] Allow changing the stored URL for bookmarks
 
