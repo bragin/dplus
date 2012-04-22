@@ -33,6 +33,7 @@
 
 #include "prefs.h"
 #include "prefsui.hh"
+#include "widgets.hh"
 
 #include "url.h"
 #include "misc.h"
@@ -134,10 +135,10 @@ Search_edit::Search_edit(const char *l, const char *u)
 {
    begin();
 
-   label_input = new Fl_Input(64, 8, w()-72, 24, "Label:");
+   label_input = new D_Input(64, 8, w()-72, 24, "Label:");
    label_input->value(l);
 
-   url_input = new Fl_Input(64, 36, w()-72, 24, "URL:");
+   url_input = new D_Input(64, 36, w()-72, 24, "URL:");
    url_input->value(u);
 
    button_ok = new Fl_Return_Button(w()-176, h()-32, 80, 24, "OK");
@@ -312,11 +313,11 @@ PrefsGui::PrefsGui()
    general->begin();
    top = ry + 8;
 
-   home = new Fl_Input(rx+lm, top, rw-rm, 24, "Home:");
+   home = new D_Input(rx+lm, top, rw-rm, 24, "Home:");
    home->value(URL_STR(prefs.home));
    top += 28;
 
-   start_page = new Fl_Input(rx+lm, top, rw-rm, 24, "Start page:");
+   start_page = new D_Input(rx+lm, top, rw-rm, 24, "Start page:");
    start_page->value(URL_STR(prefs.start_page));
    top += 32;
 
@@ -500,19 +501,19 @@ PrefsGui::PrefsGui()
 
    // It's tempting to make this an Fl_Input_Choice, but FLTK interprets
    // the "/" character as the start of a submenu. (Can this be disabled?)
-   http_user_agent = new Fl_Input(rx+lm, top, rw-rm, 24, "User agent:");
+   http_user_agent = new D_Input(rx+lm, top, rw-rm, 24, "User agent:");
    http_user_agent->value(prefs.http_user_agent);
    top += 28;
 
-   http_language = new Fl_Input(rx+lm, top, rw-rm, 24, "Languages:");
+   http_language = new D_Input(rx+lm, top, rw-rm, 24, "Languages:");
    http_language->value(prefs.http_language);
    top += 32;
 
-   http_proxy = new Fl_Input(rx+lm, top, rw-rm, 24, "HTTP proxy:");
+   http_proxy = new D_Input(rx+lm, top, rw-rm, 24, "HTTP proxy:");
    http_proxy->value(URL_STR(prefs.http_proxy));
    top += 28;
 
-   no_proxy = new Fl_Input(rx+lm, top, rw-rm, 24, "No proxy for:");
+   no_proxy = new D_Input(rx+lm, top, rw-rm, 24, "No proxy for:");
    no_proxy->value(prefs.no_proxy);
    top += 32;
 

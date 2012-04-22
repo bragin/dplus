@@ -28,6 +28,7 @@
 
 #include "bms.h"
 #include "bookgui.hh"
+#include "widgets.hh"
 
 #include "msg.h"
 #include "../dlib/dlib.h"
@@ -84,7 +85,7 @@ Bookgui_edit::Bookgui_edit(int k, const char *u, const char *t, int s)
 
    begin();
 
-   title_input = new Fl_Input(64, 8, w()-72, 24, "Title:");
+   title_input = new D_Input(64, 8, w()-72, 24, "Title:");
    title_input->value(t);
 
    section = new Fl_Choice(64, 36, w()-72, 24, "Section:");
@@ -194,7 +195,7 @@ Bookgui_sec_edit::Bookgui_sec_edit(int k, const char *t)
 
    begin();
 
-   title_input = new Fl_Input(64, 8, w()-72, 24, "Title:");
+   title_input = new D_Input(64, 8, w()-72, 24, "Title:");
    title_input->value(t);
 
    button_ok = new Fl_Return_Button(w()-176, h()-32, 80, 24, "OK");
