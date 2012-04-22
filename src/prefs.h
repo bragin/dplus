@@ -62,7 +62,6 @@ struct _DilloPrefs {
    bool_t show_forw;
    bool_t show_home;
    bool_t show_reload;
-   bool_t show_save;
    bool_t show_stop;
    bool_t show_bookmarks;
    bool_t show_tools;

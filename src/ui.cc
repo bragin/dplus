@@ -34,7 +34,7 @@
 
 struct iconset {
    Fl_Image *ImgMeterOK, *ImgMeterBug,
-            *ImgHome, *ImgReload, *ImgSave, *ImgBook, *ImgTools,
+            *ImgHome, *ImgReload, *ImgBook, *ImgTools,
             *ImgHelp, *ImgLeft, *ImgLeftIn, *ImgRight, *ImgRightIn,
             *ImgStop, *ImgStopIn;
 };
@@ -44,7 +44,6 @@ static struct iconset standard_icons = {
    new Fl_Pixmap(mini_bug_xpm),
    new Fl_Pixmap(home_xpm),
    new Fl_Pixmap(reload_xpm),
-   new Fl_Pixmap(save_xpm),
    new Fl_Pixmap(bm_xpm),
    new Fl_Pixmap(tools_xpm),
    new Fl_Pixmap(help_xpm),
@@ -61,7 +60,6 @@ static struct iconset small_icons = {
    standard_icons.ImgMeterBug,
    new Fl_Pixmap(home_s_xpm),
    new Fl_Pixmap(reload_s_xpm),
-   new Fl_Pixmap(save_s_xpm),
    new Fl_Pixmap(bm_s_xpm),
    new Fl_Pixmap(tools_s_xpm),
    standard_icons.ImgHelp,
@@ -330,11 +328,6 @@ static void b1_cb(Fl_Widget *wid, void *cb_data)
          a_UIcmd_reload(a_UIcmd_get_bw_by_widget(wid));
       }
       break;
-   case UI_SAVE:
-      if (b == FL_LEFT_MOUSE) {
-         a_UIcmd_save(a_UIcmd_get_bw_by_widget(wid));
-      }
-      break;
    case UI_STOP:
       if (b == FL_LEFT_MOUSE) {
          a_UIcmd_stop(a_UIcmd_get_bw_by_widget(wid));
@@ -408,7 +401,6 @@ void UI::make_toolbar(int tw, int th)
    Forw = make_button("Forw", icons->ImgRight, icons->ImgRightIn, UI_FORW);
    Home = make_button("Home", icons->ImgHome, NULL, UI_HOME);
    Reload = make_button("Reload", icons->ImgReload, NULL, UI_RELOAD);
-   Save = make_button("Save", icons->ImgSave, NULL, UI_SAVE);
    Stop = make_button("Stop", icons->ImgStop, icons->ImgStopIn, UI_STOP);
    Bookmarks = make_button("Book", icons->ImgBook, NULL, UI_BOOK);
    Tools = make_button("Prefs", icons->ImgTools, NULL, UI_TOOLS);
@@ -417,7 +409,6 @@ void UI::make_toolbar(int tw, int th)
    Forw->tooltip("Forward");
    Home->tooltip("Home");
    Reload->tooltip("Reload");
-   Save->tooltip("Save");
    Stop->tooltip("Stop");
    Bookmarks->tooltip("Bookmarks");
    Tools->tooltip("Preferences");
@@ -946,8 +937,6 @@ void UI::customize(int flags)
       Home->hide();
    if ( !prefs.show_reload )
       Reload->hide();
-   if ( !prefs.show_save )
-      Save->hide();
    if ( !prefs.show_stop )
       Stop->hide();
    if ( !prefs.show_bookmarks )

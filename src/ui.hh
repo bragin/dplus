@@ -18,7 +18,6 @@ typedef enum {
    UI_FORW,
    UI_HOME,
    UI_RELOAD,
-   UI_SAVE,
    UI_STOP,
    UI_BOOK,
    UI_TOOLS,
@@ -177,7 +176,7 @@ class UI : public CustGroupVertical {
    char *TabTooltip;
 
    CustGroupVertical *TopGroup;
-   Fl_Button *Back, *Forw, *Home, *Reload, *Save, *Stop, *Bookmarks, *Tools,
+   Fl_Button *Back, *Forw, *Home, *Reload, *Stop, *Bookmarks, *Tools,
           *SearchButton, *Help, *BugMeter, *FileButton;
    CustGroupHorizontal *LocBar, *SearchBar, *NavBar, *StatusBar;
    Fl_Input  *Location, *Search;
