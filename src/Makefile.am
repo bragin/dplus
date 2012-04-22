@@ -14,10 +14,10 @@ dplus_LDADD = \
 	$(top_builddir)/dlib/libDlib.a \
 	$(top_builddir)/dpip/libDpip.a \
 	IO/libDiof.a \
-	$(top_builddir)/widgets/libDP-widgets.a \
 	$(top_builddir)/dw/libDw-widgets.a \
 	$(top_builddir)/dw/libDw-fltk.a \
 	$(top_builddir)/dw/libDw-core.a \
+	$(top_builddir)/widgets/libDP-widgets.a \
 	$(top_builddir)/lout/liblout.a \
 	@LIBJPEG_LIBS@ @LIBPNG_LIBS@ @LIBFLTK_LIBS@ @LIBZ_LIBS@ \
 	@LIBICONV_LIBS@ @LIBPTHREAD_LIBS@ @CURL_LIBS@
