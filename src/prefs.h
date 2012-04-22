@@ -85,7 +85,7 @@ struct _DilloPrefs {
    bool_t enterpress_forces_submit;
    bool_t middle_click_opens_new_tab;
    bool_t right_click_closes_tab;
-   bool_t search_url_idx;
+   int search_url_idx;
    Dlist *search_urls;
    bool_t show_msg;
    bool_t show_extra_warnings;
