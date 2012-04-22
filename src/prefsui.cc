@@ -543,8 +543,10 @@ PrefsGui::PrefsGui()
    buttonCancel = new Fl_Button(w()-88, h()-32, 80, 24, "Cancel");
    buttonCancel->callback(PrefsUI_cancel_cb, this);
 
-   end();
    applied_ = false;
+
+   end();
+   set_modal();
 }
 
 /*
