@@ -177,7 +177,7 @@ static void Menu_save_page_cb(Fl_Widget*, void*)
  */
 static void Menu_view_page_source_cb(Fl_Widget*, void*)
 {
-   a_UIcmd_view_page_source(popup_bw, popup_url);
+   a_UIcmd_view_page_source(popup_bw);
 }
 
 /*
@@ -330,7 +330,8 @@ void a_Menu_page_popup(BrowserWindow *bw, const DilloUrl *url,
        Menu_copy_selection_cb,0,0,0,0,0,0},
       {"Copy page UR&L", 0, Menu_copy_location_cb,0,FL_MENU_DIVIDER,
        0,0,0,0},
-      {"View page &source", 0, Menu_view_page_source_cb,0,0,0,0,0,0},
+      {"View page &source", Keys::getShortcut(KEYS_VIEW_SOURCE),
+       Menu_view_page_source_cb,0,0,0,0,0,0},
       {"View page &bugs", 0, Menu_view_page_bugs_cb,0,0,0,0,0,0},
       {"View s&tylesheets", 0, Menu_nop_cb,0,FL_SUBMENU_POINTER|FL_MENU_DIVIDER,
        0,0,0,0},

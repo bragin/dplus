@@ -144,6 +144,7 @@ static const KeyBinding_t default_keys[] = {
    { "top"          , KEYS_TOP          , 0         , FL_Home         },
    { "bottom"       , KEYS_BOTTOM       , 0         , FL_End          },
    { "preferences"  , KEYS_PREFERENCES  , 0         , 0               },
+   { "view-source"  , KEYS_VIEW_SOURCE  , FL_CTRL   , 'u'             },
 };
 
 static Dlist *bindings;

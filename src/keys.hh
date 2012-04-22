@@ -51,7 +51,8 @@ typedef enum {
    KEYS_RIGHT,
    KEYS_TOP,
    KEYS_BOTTOM,
-   KEYS_PREFERENCES
+   KEYS_PREFERENCES,
+   KEYS_VIEW_SOURCE
 } KeysCommand_t;
 
 class Keys {

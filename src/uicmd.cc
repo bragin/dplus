@@ -1063,12 +1063,13 @@ void a_UIcmd_copy_urlstr(BrowserWindow *bw, const char *urlstr)
 /*
  * Show the browser window's HTML source in a text window
  */
-void a_UIcmd_view_page_source(BrowserWindow *bw, const DilloUrl *url)
+void a_UIcmd_view_page_source(BrowserWindow *bw)
 {
    const int size = 128;
    char title[size];
    char *buf;
    int buf_size;
+   const DilloUrl *url = a_History_get_url(NAV_TOP_UIDX(bw));
 
    if (snprintf(title, size, "Source of %s", URL_STR(url)) >= size) {
       uint_t i = MIN(size - 4, 1 + a_Utf8_end_of_char(title, size - 8));

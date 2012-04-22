@@ -786,6 +786,9 @@ int UI::handle(int event)
       } else if (cmd == KEYS_HELP) {
          a_UIcmd_help(a_UIcmd_get_bw_by_widget(this));
          ret = 1;
+      } else if (cmd == KEYS_VIEW_SOURCE) {
+         a_UIcmd_view_page_source(a_UIcmd_get_bw_by_widget(this));
+         ret = 1;
       }
    }
 
