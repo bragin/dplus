@@ -157,7 +157,7 @@ static void text_window_close_cb(Fl_Widget *, void *vtd)
  */
 void a_Dialog_text_window(const char *txt, const char *title)
 {
-   int wh = prefs.height, ww = prefs.width, bh = 30;
+   int wh = prefs.height, ww = prefs.width;
 
    Fl_Window *window = new Fl_Window(ww, wh, title ? title : "Dillo text");
    Fl_Group::current(0);
@@ -165,7 +165,7 @@ void a_Dialog_text_window(const char *txt, const char *title)
 
     Fl_Text_Buffer *buf = new Fl_Text_Buffer();
     buf->text(txt);
-    Fl_Text_Display *td = new Fl_Text_Display(0,0,ww, wh-bh);
+    Fl_Text_Display *td = new Fl_Text_Display(0,0,ww, wh);
     td->buffer(buf);
     td->textfont(FL_COURIER);
     td->textsize((int) rint(14.0 * prefs.font_factor));
@@ -173,10 +173,6 @@ void a_Dialog_text_window(const char *txt, const char *title)
     /* enable wrapping lines; text uses entire width of window */
     td->wrap_mode(true, false);
    window->add(td);
-
-    Fl_Return_Button *b = new Fl_Return_Button (0, wh-bh, ww, bh, "Close");
-    b->callback(text_window_close_cb, td);
-   window->add(b);
 
    window->callback(text_window_close_cb, td);
    window->resizable(td);
