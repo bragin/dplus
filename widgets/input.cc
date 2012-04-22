@@ -23,7 +23,7 @@
 /*
  * Undo callback
  */
-static void Widgets_input_undo_cb(Fl_Widget *w, void*)
+static void undo_cb(Fl_Widget *w, void*)
 {
    Fl_Input *i = (Fl_Input*)w;
    i->undo();
@@ -32,7 +32,7 @@ static void Widgets_input_undo_cb(Fl_Widget *w, void*)
 /*
  * Cut callback
  */
-static void Widgets_input_cut_cb(Fl_Widget *w, void*)
+static void cut_cb(Fl_Widget *w, void*)
 {
    Fl_Input *i = (Fl_Input*)w;
    i->copy(1);
@@ -42,7 +42,7 @@ static void Widgets_input_cut_cb(Fl_Widget *w, void*)
 /*
  * Copy callback
  */
-static void Widgets_input_copy_cb(Fl_Widget *w, void*)
+static void copy_cb(Fl_Widget *w, void*)
 {
    Fl_Input *i = (Fl_Input*)w;
    i->copy(1);
@@ -51,7 +51,7 @@ static void Widgets_input_copy_cb(Fl_Widget *w, void*)
 /*
  * Paste callback
  */
-static void Widgets_input_paste_cb(Fl_Widget *w, void*)
+static void paste_cb(Fl_Widget *w, void*)
 {
    Fl_Input *i = (Fl_Input*)w;
    Fl::paste(*i, 1);
@@ -60,7 +60,7 @@ static void Widgets_input_paste_cb(Fl_Widget *w, void*)
 /*
  * Delete callback
  */
-static void Widgets_input_delete_cb(Fl_Widget *w, void*)
+static void delete_cb(Fl_Widget *w, void*)
 {
    Fl_Input *i = (Fl_Input*)w;
    i->cut();
@@ -69,7 +69,7 @@ static void Widgets_input_delete_cb(Fl_Widget *w, void*)
 /*
  * Select All callback
  */
-static void Widgets_input_select_all_cb(Fl_Widget *w, void*)
+static void select_all_cb(Fl_Widget *w, void*)
 {
    Fl_Input *i = (Fl_Input*)w;
    i->position(i->size(), 0);
@@ -81,16 +81,16 @@ static void Widgets_input_select_all_cb(Fl_Widget *w, void*)
 /*
  * Pop up the right-click menu
  */
-void Widgets_input_popup(Fl_Input *w)
+void menu_popup(Fl_Input *w)
 {
    const Fl_Menu_Item *m;
    static Fl_Menu_Item popup_menu[] = {
-      {"Undo",FL_CTRL+'z',Widgets_input_undo_cb,0,FL_MENU_DIVIDER,0,0,0,0},
-      {"Cut",FL_CTRL+'x',Widgets_input_cut_cb,0,0,0,0,0,0},
-      {"Copy",FL_CTRL+'c',Widgets_input_copy_cb,0,0,0,0,0,0},
-      {"Paste",FL_CTRL+'v',Widgets_input_paste_cb,0,0,0,0,0,0},
-      {"Delete",FL_Delete,Widgets_input_delete_cb,0,FL_MENU_DIVIDER,0,0,0,0},
-      {"Select All",FL_CTRL+'a',Widgets_input_select_all_cb,0,0,0,0,0,0},
+      {"Undo",FL_CTRL+'z',undo_cb,0,FL_MENU_DIVIDER,0,0,0,0},
+      {"Cut",FL_CTRL+'x',cut_cb,0,0,0,0,0,0},
+      {"Copy",FL_CTRL+'c',copy_cb,0,0,0,0,0,0},
+      {"Paste",FL_CTRL+'v',paste_cb,0,0,0,0,0,0},
+      {"Delete",FL_Delete,delete_cb,0,FL_MENU_DIVIDER,0,0,0,0},
+      {"Select All",FL_CTRL+'a',select_all_cb,0,0,0,0,0,0},
       {0,0,0,0,0,0,0,0,0},
    };
 
@@ -109,7 +109,7 @@ int D_Input::handle(int e)
    int b = Fl::event_button();
    if (e == FL_RELEASE && b == 3) {
       take_focus();
-      Widgets_input_popup(this);
+      menu_popup(this);
    }
 
    return Fl_Input::handle(e);
