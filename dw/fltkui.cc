@@ -24,6 +24,7 @@
 #include "fltkcomplexbutton.hh"
 #include "../lout/msg.h"
 #include "../lout/misc.hh"
+#include "../widgets/input.hh"
 
 #include <FL/Fl.H>
 #include <FL/fl_draw.H>
@@ -453,8 +454,8 @@ Fl_Widget *FltkEntryResource::createNewWidget (core::Allocation
                                                     *allocation)
 {
    Fl_Input *input =
-        new Fl_Input(allocation->x, allocation->y, allocation->width,
-                     allocation->ascent + allocation->descent);
+        new D_Input(allocation->x, allocation->y, allocation->width,
+                    allocation->ascent + allocation->descent);
    if (password)
       input->type(FL_SECRET_INPUT);
    input->callback (widgetCallback, this);
