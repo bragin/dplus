@@ -3,6 +3,8 @@ noinst_LIBRARIES = \
 
 libDP_widgets_a_SOURCES = \
 	input.cc \
-	input.hh
+	input.hh \
+	text_editor.cc \
+	text_editor.hh
 
 libDP_widgets_a_CXXFLAGS = @LIBFLTK_CXXFLAGS@
