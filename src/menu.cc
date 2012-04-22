@@ -59,8 +59,6 @@ static void filemenu_cb(Fl_Widget*, void *data)
       a_UIcmd_open_url_nt(popup_bw, NULL, 1);
    } else if (strcmp((char*)data, "of") == 0) {
       a_UIcmd_open_file(popup_bw);
-   } else if (strcmp((char*)data, "ou") == 0) {
-      a_UIcmd_focus_location(popup_bw);
    } else if (strcmp((char*)data, "sa") == 0) {
       a_UIcmd_save(popup_bw);
 #ifdef ENABLE_PRINTER
@@ -520,10 +518,8 @@ void a_Menu_file_popup(BrowserWindow *bw, void *v_wid)
        (void*)"nt",0,0,0,0,0},
       {"New &window", Keys::getShortcut(KEYS_NEW_WINDOW), filemenu_cb,
        (void*)"nw", FL_MENU_DIVIDER,0,0,0,0},
-      {"&Open file...", Keys::getShortcut(KEYS_OPEN), filemenu_cb,
+      {"&Open...", Keys::getShortcut(KEYS_OPEN), filemenu_cb,
        (void*)"of",0,0,0,0,0},
-      {"Open UR&L...", Keys::getShortcut(KEYS_GOTO), filemenu_cb,
-       (void*)"ou",0,0,0,0,0},
       {"S&ave as...", Keys::getShortcut(KEYS_SAVE), filemenu_cb,
        (void*)"sa",0,0,0,0,0},
       {"&Close", Keys::getShortcut(KEYS_CLOSE_TAB), filemenu_cb,
