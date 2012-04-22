@@ -120,6 +120,7 @@ public:
 private:
    Fl_Input *label_input;
    Fl_Input *url_input; 
+   Fl_Box *url_help;
 
    Fl_Return_Button *button_ok;
    Fl_Button *button_cancel;
@@ -140,6 +141,12 @@ Search_edit::Search_edit(const char *l, const char *u)
 
    url_input = new D_Input(64, 36, w()-72, 24, "URL:");
    url_input->value(u);
+
+   url_help = new Fl_Box(64, 60, w()-72, 24,
+                         "\"%s\" in the URL will be replaced "
+                         "with your search query.");
+   url_help->labelsize(FL_NORMAL_SIZE - 2);
+   url_help->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
 
    button_ok = new Fl_Return_Button(w()-176, h()-32, 80, 24, "OK");
    button_ok->callback(Search_edit::save_cb, (void*)this);
@@ -162,6 +169,7 @@ Search_edit::~Search_edit()
 {
    delete label_input;
    delete url_input;
+   delete url_help;
 
    delete button_ok;
    delete button_cancel;
