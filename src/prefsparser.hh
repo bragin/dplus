@@ -16,8 +16,13 @@
 class PrefsParser {
 public:
    static int parseOption(char *name, char *value);
-   static int parseLine(char *line, char *name, char *value);
    static void parse(FILE *fp);
+};
+
+class PrefsWriter {
+public:
+   static void writeOption(FILE *fp, const void *n);
+   static void write(FILE *fp);
 };
 #endif /* __cplusplus */
 
