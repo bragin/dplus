@@ -26,7 +26,6 @@
 #include <FL/Fl_Input.H>
 #include <FL/Fl_Value_Input.H>
 #include <FL/Fl_Choice.H>
-#include <FL/Fl_Input_Choice.H>
 #include <FL/Fl_Check_Button.H>
 #include <FL/Fl_Browser.H>
 #include <FL/Fl_Select_Browser.H>
@@ -53,6 +52,57 @@ const char *PREFSGUI_FILTER_AUTO_REQ[] = {
 
 const int32_t PREFSGUI_WHITE = 0xffffff;  /* prefs.allow_white_bg == 1 */
 const int32_t PREFSGUI_SHADE = 0xdcd1ba;  /* prefs.allow_white_bg == 0 */
+
+Dlist *fonts_list = NULL;
+
+
+// Local functions -----------------------------------------------------------
+
+
+/*
+ * Ugly hack: dList_insert_sorted() expects parameters to be const void*,
+ * and C++ doesn't allow implicit const char* -> const void* conversion.
+ */
+int PrefsUI_strcasecmp(const void *a, const void *b)
+{
+   return dStrcasecmp((const char*)a, (const char*)b);
+}
+
+
+// Local widgets -------------------------------------------------------------
+
+
+/*
+ * A custom Fl_Choice for selecting fonts.
+ */
+class Font_Choice : public Fl_Choice
+{
+public:
+   Font_Choice(int x, int y, int w, int h, const char *l = 0) :
+      Fl_Choice(x, y, w, h, l) {
+      if (fonts_list != NULL) {
+         for (int i = 0; i < dList_length(fonts_list); i++) {
+            add((const char*)dList_nth_data(fonts_list, i));
+         }
+      }
+   }
+   void value(const char *f) {
+      dReturn_if(fonts_list == NULL);
+      // Comparing C-strings requires this ugly two-step process...
+      void *d = dList_find_custom(fonts_list, (const void*)f,
+                                  &PrefsUI_strcasecmp);
+      int i = dList_find_idx(fonts_list, d);
+      if (i != -1)
+         Fl_Choice::value(i);
+   }
+   const char* value() const {
+      dReturn_val_if(fonts_list == NULL, "");
+      return (const char*)dList_nth_data(fonts_list, Fl_Choice::value());
+   }
+};
+
+
+// PrefsGui class definition & implementation --------------------------------
 
 
 class PrefsGui : public Fl_Window
@@ -92,11 +142,11 @@ private:
    Fl_Check_Button *right_click_closes_tab;
 
    Fl_Group *fonts;
-   Fl_Input_Choice *font_serif;
-   Fl_Input_Choice *font_sans_serif;
-   Fl_Input_Choice *font_cursive;
-   Fl_Input_Choice *font_fantasy;
-   Fl_Input_Choice *font_monospace;
+   Font_Choice *font_serif;
+   Font_Choice *font_sans_serif;
+   Font_Choice *font_cursive;
+   Font_Choice *font_fantasy;
+   Font_Choice *font_monospace;
    Fl_Value_Input *font_factor;
    Fl_Value_Input *font_min_size;
 
@@ -119,7 +169,6 @@ private:
    Fl_Choice *filter_auto_requests;
 
    bool applied_;
-   void list_fonts(Fl_Input_Choice *input);
 };
 
 void PrefsUI_return_cb(Fl_Widget *widget, void *d = 0);
@@ -136,6 +185,9 @@ const char *dillorc_http_referer(int v);
 const char *dillorc_filter_auto_requests(int v);
 
 bool PrefsUI_known_user_agent(const char *ua);
+
+void PrefsUI_init_fonts_list(void);
+void PrefsUI_free_fonts_list(void);
 
 
 /*
@@ -255,28 +307,23 @@ PrefsGui::PrefsGui()
    fonts->begin();
    top = ry + 8;
 
-   font_serif = new Fl_Input_Choice(rx+lm, top, rw-rm, 24, "Serif:");
-   list_fonts(font_serif);
+   font_serif = new Font_Choice(rx+lm, top, rw-rm, 24, "Serif:");
    font_serif->value(prefs.font_serif);
    top += 28;
 
-   font_sans_serif = new Fl_Input_Choice(rx+lm, top, rw-rm, 24, "Sans serif:");
-   list_fonts(font_sans_serif);
+   font_sans_serif = new Font_Choice(rx+lm, top, rw-rm, 24, "Sans serif:");
    font_sans_serif->value(prefs.font_sans_serif);
    top += 28;
 
-   font_cursive = new Fl_Input_Choice(rx+lm, top, rw-rm, 24, "Cursive:");
-   list_fonts(font_cursive);
+   font_cursive = new Font_Choice(rx+lm, top, rw-rm, 24, "Cursive:");
    font_cursive->value(prefs.font_cursive);
    top += 28;
 
-   font_fantasy = new Fl_Input_Choice(rx+lm, top, rw-rm, 24, "Fantasy:");
-   list_fonts(font_fantasy);
+   font_fantasy = new Font_Choice(rx+lm, top, rw-rm, 24, "Fantasy:");
    font_fantasy->value(prefs.font_fantasy);
    top += 28;
 
-   font_monospace = new Fl_Input_Choice(rx+lm, top, rw-rm, 24, "Monospace:");
-   list_fonts(font_monospace);
+   font_monospace = new Font_Choice(rx+lm, top, rw-rm, 24, "Monospace:");
    font_monospace->value(prefs.font_monospace);
    top += 32;
 
@@ -634,25 +681,6 @@ void PrefsGui::write()
       fl_alert("Could not open %s for writing!", PATHS_RC_PREFS);
 }
 
-/*
- * List fonts in a given Fl_Input_Choice.
- * FIXME: FLTK returns fonts in a completely arbitrary order.
- * It would be much better if we listed them alphabetically.
- */
-void PrefsGui::list_fonts(Fl_Input_Choice *input)
-{
-   static int fl_font_count = Fl::set_fonts(NULL);
-
-   input->clear();
-   for (int i = 0; i < fl_font_count; i++) {
-      int fl_font_attr;
-      const char *fl_font_name = Fl::get_font_name(i, &fl_font_attr);
-
-      if (!fl_font_attr)
-         input->add(fl_font_name);
-   }
-}
-
 
 /*
  * OK button callback.
@@ -794,6 +822,7 @@ const char *dillorc_filter_auto_requests(int v)
    return "allow_all";
 }
 
+
 /*
  * Return true if the character string represents a known Dillo user agent.
  * This prevents us from saving a UA string containing a Dillo version number,
@@ -813,6 +842,44 @@ bool PrefsUI_known_user_agent(const char *ua)
    return false;
 }
 
+/*
+ * Initialize the list of available fonts.
+ */
+void PrefsUI_init_fonts_list(void)
+{
+   dReturn_if(fonts_list != NULL);
+
+   int fl_font_count = Fl::set_fonts(NULL);
+   fonts_list = dList_new(fl_font_count);
+
+   for (int i = 0; i < fl_font_count; i++) {
+      int fl_font_attr;
+      const char *fl_font_name = Fl::get_font_name(i, &fl_font_attr);
+
+      if (!fl_font_attr && isalpha(fl_font_name[0]))
+         dList_insert_sorted(fonts_list, (void*)fl_font_name,
+                             &PrefsUI_strcasecmp);
+   }
+}
+
+/*
+ * Free memory used by the list of available fonts.
+ */
+void PrefsUI_free_fonts_list(void)
+{
+   dReturn_if(fonts_list == NULL);
+
+   for (int i = dList_length(fonts_list); i >= 0; --i) {
+      void *data = dList_nth_data(fonts_list, i);
+      dList_remove(fonts_list, data);
+      dList_remove(fonts_list, NULL);
+      dFree(data);
+   }
+   dList_free(fonts_list);
+   fonts_list = NULL;
+}
+
+
 
 /*
  * Show the preferences dialog.
@@ -820,13 +887,17 @@ bool PrefsUI_known_user_agent(const char *ua)
 int a_PrefsUI_show()
 {
    int retval;
+   PrefsUI_init_fonts_list();
+
    PrefsGui *dialog = new PrefsGui;
    dialog->show();
 
    while (dialog->shown())
       Fl::wait();
-
    retval = dialog->applied() ? 1 : 0;
+
    delete dialog;
+   PrefsUI_free_fonts_list();
+
    return retval;
 }
