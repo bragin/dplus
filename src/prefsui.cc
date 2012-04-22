@@ -871,8 +871,10 @@ void PrefsUI_search_delete_cb(Fl_Widget *widget, void *l)
       // Don't delete the last search
       fl_alert("You must specify at least one search engine.");
    } else {
+      void *d = sl->data(line);
       sl->remove(line);
-      sl->select(line);  // now the line before
+      sl->select(line);  // now the line before the one we just deleted
+      dFree(d);
    }
 }
 
