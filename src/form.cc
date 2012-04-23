@@ -933,7 +933,7 @@ void DilloHtmlForm::eventHandler(Resource *resource, EventButton *event)
 {
    _MSG("DilloHtmlForm::eventHandler\n");
    if (event && (event->button == 3)) {
-      if (event->state == SHIFT_MASK) {
+      if (event->state & SHIFT_MASK) {
          // Don't clobber the right-click menu for text inputs
          a_UIcmd_form_popup(html->bw, html->page_url, this, showing_hiddens);
       }
