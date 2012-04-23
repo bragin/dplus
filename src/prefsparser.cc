@@ -271,9 +271,13 @@ void PrefsWriter::writeOption(FILE *fp, const void *n)
       fprintf(fp, "%s=%f\n", node->name, *(double*)node->pref);
       break;
    case PREFS_GEOMETRY:
-      fprintf(fp, "%s%s=%dx%d+%d+%d\n",
-              (prefs.xpos >= 0 && prefs.ypos >= 0) ? "" : "#",
-              node->name, prefs.xpos, prefs.ypos, prefs.width, prefs.height);
+      {
+         if (prefs.xpos >= 0 && prefs.ypos >= 0)
+            fprintf(fp, "%s=%dx%d+%d+%d\n", node->name,
+                    prefs.width, prefs.height, prefs.xpos, prefs.ypos);
+         else
+            fprintf(fp, "%s=%dx%d\n", node->name, prefs.width, prefs.height);
+      }
       break;
    case PREFS_FILTER:
       {
