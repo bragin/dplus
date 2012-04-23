@@ -119,21 +119,25 @@ void a_Prefs_init(void)
    prefs.start_page = a_Url_new(PREFS_START_PAGE, NULL);
    prefs.w3c_plus_heuristics = TRUE;
 
+   /* Handy shortcut... */
+#  define ADD_SEARCH(value) dList_append(prefs.search_urls, dStrdup(value))
+
    /* Initialize the list of default search engines */
-   dList_append(prefs.search_urls, "Google "
-                "http://www.google.com/search?q=%s");
-   dList_append(prefs.search_urls, "Google Images "
-                "http://images.google.com/images?q=%s");
-   dList_append(prefs.search_urls, "Wikipedia "
-                "http://en.wikipedia.org/wiki/Special:Search?search=%s");
-   dList_append(prefs.search_urls, "Free Dictionary "
-                "http://www.thefreedictionary.com/%s");
-   dList_append(prefs.search_urls, "SourceForge.net "
-                "http://sourceforge.net/search/?type_of_search=soft&words=%s");
-   dList_append(prefs.search_urls, "OpenBSD Manual "
-                "http://www.openbsd.org/cgi-bin/man.cgi?query=%s");
-   dList_append(prefs.search_urls, "DuckDuckGo "
+   ADD_SEARCH("Google "
+              "http://www.google.com/search?q=%s");
+   ADD_SEARCH("Google Images "
+              "http://images.google.com/images?q=%s");
+   ADD_SEARCH("Wikipedia "
+              "http://en.wikipedia.org/wiki/Special:Search?search=%s");
+   ADD_SEARCH("Free Dictionary "
+              "http://www.thefreedictionary.com/%s");
+   ADD_SEARCH("SourceForge.net "
+              "http://sourceforge.net/search/?type_of_search=soft&words=%s");
+   ADD_SEARCH("OpenBSD Manual "
+              "http://www.openbsd.org/cgi-bin/man.cgi?query=%s");
+   ADD_SEARCH("DuckDuckGo "
                 "http://duckduckgo.com/lite/?kp=-1&q=%s");
+#  undef ADD_SEARCH
 }
 
 /*
