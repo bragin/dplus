@@ -923,7 +923,8 @@ void PrefsUI_init_fonts_list(void)
       const char *fl_font_name = Fl::get_font_name(i, &fl_font_attr);
 
       if (!fl_font_attr && isalpha(fl_font_name[0]))
-         dList_insert_sorted(fonts_list, (void*)fl_font_name,
+         dList_insert_sorted(fonts_list,
+                             (void*)dStrdup(fl_font_name),
                              &PrefsUI_strcasecmp);
    }
 }
@@ -937,9 +938,8 @@ void PrefsUI_free_fonts_list(void)
 
    for (int i = dList_length(fonts_list); i >= 0; --i) {
       void *data = dList_nth_data(fonts_list, i);
-      dList_remove(fonts_list, data);
-      dList_remove(fonts_list, NULL);
       dFree(data);
+      dList_remove(fonts_list, data);
    }
    dList_free(fonts_list);
    fonts_list = NULL;
