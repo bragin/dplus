@@ -673,9 +673,8 @@ void PrefsGui::apply()
    //
    for (int i = dList_length(prefs.search_urls); i >= 0; --i) {
       void *data = dList_nth_data(prefs.search_urls, i);
-      dList_remove(prefs.search_urls, data);
-      dList_remove(prefs.search_urls, NULL);
       dFree(data);
+      dList_remove(prefs.search_urls, data);
    }
 
    for (int i = 1; i <= search_list->size(); i++)

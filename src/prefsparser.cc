@@ -143,9 +143,8 @@ int PrefsParser::parseOption(char *name, char *value)
          /* override the default */
          for (int i = dList_length(lp); i >= 0; --i) {
             void *data = dList_nth_data(lp, i);
-            dList_remove(lp, data);
-            dList_remove(lp, NULL);
             dFree(data);
+            dList_remove(lp, data);
          }
       }
       last_lp = lp;
