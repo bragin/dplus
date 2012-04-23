@@ -29,7 +29,9 @@
 #include <FL/Fl_Check_Button.H>
 #include <FL/Fl_Browser.H>
 #include <FL/Fl_Select_Browser.H>
+
 #include <stdio.h>
+#include <ctype.h>
 
 #include "prefs.h"
 #include "prefsui.hh"
