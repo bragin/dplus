@@ -711,7 +711,7 @@ void PrefsGui::apply()
 void PrefsGui::write()
 {
    FILE *fp;
-   if (fp = Paths::getWriteFP(PATHS_RC_PREFS))
+   if ((fp = Paths::getWriteFP(PATHS_RC_PREFS)))
       PrefsWriter::write(fp);
    else
       fl_alert("Could not open %s for writing!", PATHS_RC_PREFS);
