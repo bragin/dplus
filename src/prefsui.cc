@@ -35,6 +35,8 @@
 
 #include "prefs.h"
 #include "prefsui.hh"
+
+#include "dialog.hh"
 #include "../widgets/input.hh"
 
 #include "url.h"
@@ -227,6 +229,10 @@ private:
    Fl_Input *start_page;
    Fl_Choice *panel_size;
    Fl_Check_Button *small_icons;
+   Fl_Box *bookmarks_file_label;
+   Fl_Check_Button *bookmarks_file_check;
+   Fl_Input *bookmarks_file;
+   Fl_Button *bookmarks_button;
 
    Fl_Group *view;
    Fl_Box *panels_label;
@@ -294,6 +300,8 @@ private:
 static void PrefsUI_return_cb(Fl_Widget *widget, void *d = 0);
 static void PrefsUI_cancel_cb(Fl_Widget *widget, void *d = 0);
 
+static void PrefsUI_bookmarks_button_cb(Fl_Widget *widget, void *l = 0);
+
 static void PrefsUI_search_add_cb(Fl_Widget *widget, void *l = 0);
 static void PrefsUI_search_edit_cb(Fl_Widget *widget, void *l = 0);
 static void PrefsUI_search_delete_cb(Fl_Widget *widget, void *l = 0);
@@ -350,6 +358,10 @@ PrefsDialog::~PrefsDialog()
    delete start_page;
    delete panel_size;
    delete small_icons;
+   delete bookmarks_file_label;
+   delete bookmarks_file_check;
+   delete bookmarks_file;
+   delete bookmarks_button;
    delete general;
 
    delete panels_label;
@@ -457,6 +469,22 @@ void PrefsDialog::make_general_tab()
    small_icons = new Fl_Check_Button(rx+(rw/2)+hw, top, (rw/2)-hm, 24,
                                      "Small icons");
    small_icons->value(prefs.small_icons);
+   top += 32;
+
+   bookmarks_file_label = new Fl_Box(rx+8, top, lm-8, 24, "Bookmarks:");
+   bookmarks_file_label->align(FL_ALIGN_INSIDE | FL_ALIGN_RIGHT);
+
+   bookmarks_file_check = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
+                                              "Use a custom bookmarks file");
+   bookmarks_file_check->value(prefs.bookmarks_file == NULL ? 0 : 1);
+   top += 28;
+
+   bookmarks_file = new D_Input(rx+lm, top, rw-rm-74, 24);
+   bookmarks_file->value(prefs.bookmarks_file);
+
+   bookmarks_button = new Fl_Button(rx+lm+rw-rm-72, top, 72, 24, "Browse...");
+   bookmarks_button->callback(PrefsUI_bookmarks_button_cb,
+                              (void*)bookmarks_file);
 
    general->end();
 }
@@ -705,11 +733,15 @@ void PrefsDialog::apply_general_tab()
 {
    a_Url_free(prefs.home);
    a_Url_free(prefs.start_page);
+   dFree(prefs.bookmarks_file);
 
    prefs.home = a_Url_new(home->value(), NULL);
    prefs.start_page = a_Url_new(start_page->value(), NULL);
    prefs.panel_size = panel_size->value();
    prefs.small_icons = small_icons->value();
+   prefs.bookmarks_file = (bookmarks_file_check->value() &&
+                           strlen(bookmarks_file->value()) > 0) ?
+                          dStrdup(bookmarks_file->value()) : NULL;
 }
 
 /*
@@ -832,6 +864,17 @@ static void PrefsUI_cancel_cb(Fl_Widget *widget, void *d)
    PrefsDialog *dialog = (PrefsDialog*)d;
 
    dialog->hide();
+}
+
+/*
+ * Bookmarks button callback.
+ */
+static void PrefsUI_bookmarks_button_cb(Fl_Widget *widget, void *l)
+{
+   Fl_Input *i = (Fl_Input*)l;
+   i->value(a_Dialog_select_file("Select Bookmarks File",
+                                 "Bookmarks Files\t{bm.txt,bookmark.txt}",
+                                 NULL));
 }
 
 /*
