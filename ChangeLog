@@ -20,6 +20,11 @@ Network and Input/Output:
 - Build file protocol support into the browser.
 - Minor bugfixes.
 
+Preferences:
+- Add support for running as a portable application on Microsoft Windows.
+- Follow the local platform's naming conventions for configuration files.
+- Allow overriding the bookmarks file location via prefs.bookmarks_file.
+
 User Interface:
 - Build bookmarks support into the browser.
 - Add a graphical interface for setting program preferences.
