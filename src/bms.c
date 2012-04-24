@@ -494,7 +494,8 @@ void a_Bms_init(void)
    is_ready = 0;
    B_bms = dList_new(512);
    B_secs = dList_new(32);
-   BmFile = dStrconcat(dGetprofdir(), "/bm.txt", NULL);
+   /* Note: bookmarks.txt looks nicer, but exceeds the 8.3 limit on DOS */
+   BmFile = dStrconcat(dGetprofdir(), "/bookmark.txt", NULL);
 
    /* if we don't already have a bookmarks file, create one */
    if (access(BmFile, F_OK) != 0) {
