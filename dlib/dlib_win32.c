@@ -71,7 +71,7 @@ char *dGetportableappdir ()
    dFree(app_name);
 
    /* Don't run as a portable application if the user says not to. */
-   app_name = dStrconcat(dGetcwd(), "/.dplus_is_not_a_portable_app", NULL);
+   app_name = dStrconcat(dGetcwd(), "/.dplus_is_not_portable_here", NULL);
    if (access(app_name, F_OK | R_OK) == 0) {
       installed = 1;
    }
