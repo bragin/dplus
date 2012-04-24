@@ -27,6 +27,11 @@
 
 #include "dlib.h"
 
+/* Additional platform-specific support code */
+#ifdef _WIN32
+#  include "dlib_win32.h"
+#endif
+
 #if defined(_WIN32)
 #  define DLIB_ROOT "C:\\"
 #  define DLIB_TEMP "C:\\WINDOWS\\TEMP"
@@ -895,21 +900,24 @@ char *dGetprofdir ()
 
    if (!profdir) {
 #if defined(_WIN32)
-      /* Try to locate the Application Data folder. On Windows 2000 and
-       * newer this is %APPDATA%; older versions require more guesswork. */
-      /* TODO: Add portable application support */
-      if (getenv("APPDATA"))
-         profdir = dStrconcat(getenv("APPDATA"), "/DPlus", NULL);
-      else if (getenv("USERPROFILE"))
-         profdir = dStrconcat(getenv("USERPROFILE"),
-                              "/Application Data/DPlus", NULL);
-      else if (getenv("HOMEDRIVE") && getenv("HOMEPATH"))
-         profdir = dStrconcat(getenv("HOMEDRIVE"), getenv("HOMEPATH"),
-                              "/Application Data/DPlus", NULL);
-      else if (getenv("windir")) /* mostly a fallback for Windows 95/98/Me */
-         profdir = dStrconcat(getenv("windir"), "/DPlus", NULL);
-      else /* this should never happen */
-         profdir = dStrconcat(dGethomedir(), "/.dplus", NULL);
+      /* If we're running as a portable application, this will return (and
+       * possibly create) a profile dir under the current working directory. */
+      if (!(profdir = dGetportableappdir())) {
+         /* Try to locate the Application Data folder. On Windows 2000 and
+          * newer this is %APPDATA%; older versions require more guesswork. */
+         if (getenv("APPDATA"))
+            profdir = dStrconcat(getenv("APPDATA"), "/DPlus", NULL);
+         else if (getenv("USERPROFILE"))
+            profdir = dStrconcat(getenv("USERPROFILE"),
+                                 "/Application Data/DPlus", NULL);
+         else if (getenv("HOMEDRIVE") && getenv("HOMEPATH"))
+            profdir = dStrconcat(getenv("HOMEDRIVE"), getenv("HOMEPATH"),
+                                 "/Application Data/DPlus", NULL);
+         else if (getenv("windir")) /* fallback for Windows 95/98/Me */
+            profdir = dStrconcat(getenv("windir"), "/DPlus", NULL);
+         else /* this should never happen */
+            profdir = dStrconcat(dGethomedir(), "/.dplus", NULL);
+      }
 #elif defined(MSDOS)
       /* Use an 8.3-safe directory name on DOS. */
       profdir = dStrconcat(getenv("DPLUS"), "/PROFILE", NULL);
