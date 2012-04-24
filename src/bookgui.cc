@@ -45,7 +45,6 @@ const char *BOOKGUI_LABEL_ADD = "&Bookmark this page";
 const char *BOOKGUI_LABEL_ADD_SEC = "&Add bookmark section";
 
 /* forward declarations */
-void Bookgui_reload(void);
 void Bookgui_add_section(void);
 void Bookgui_do_edit(void *r);
 void Bookgui_do_sec_edit(void *r);
@@ -143,7 +142,7 @@ void Bookgui_edit::save_cb(Fl_Widget*, void *cbdata)
    }
 
    a_Bms_save();
-   Bookgui_reload();
+   a_Bookgui_reload();
 
    e->hide();
 }
@@ -160,7 +159,7 @@ void Bookgui_edit::delete_cb(Fl_Widget*, void *cbdata)
 
    a_Bms_del(e->key);
    a_Bms_save();
-   Bookgui_reload();
+   a_Bookgui_reload();
 
    e->hide();
 }
@@ -240,7 +239,7 @@ void Bookgui_sec_edit::save_cb(Fl_Widget*, void *cbdata)
    }
 
    a_Bms_save();
-   Bookgui_reload();
+   a_Bookgui_reload();
 
    e->hide();
 }
@@ -257,7 +256,7 @@ void Bookgui_sec_edit::delete_cb(Fl_Widget*, void *cbdata)
 
    a_Bms_sec_del(e->key);
    a_Bms_save();
-   Bookgui_reload();
+   a_Bookgui_reload();
 
    e->hide();
 }
@@ -407,8 +406,10 @@ void Bookgui_clean_menu(void)
 
 /*
  * Reload bookmarks from disk.
+ * Note: This was originally an internal function, but we also call it in
+ * a_UIcmd_preferences() in case the user changed prefs.bookmarks_file.
  */
-void Bookgui_reload(void)
+void a_Bookgui_reload(void)
 {
    Bookgui_clean_menu();
    menu = NULL;

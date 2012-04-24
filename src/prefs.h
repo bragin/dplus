@@ -91,6 +91,7 @@ struct _DilloPrefs {
    bool_t show_extra_warnings;
    bool_t middle_click_drags_page;
    char *date_format;
+   char *bookmarks_file;
 };
 
 /* Global Data */

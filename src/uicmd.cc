@@ -1149,6 +1149,7 @@ void a_UIcmd_preferences(void *vbw)
    BrowserWindow *bw = (BrowserWindow*)vbw;
    if (a_PrefsUI_show()) {
       BW2UI(bw)->change_panel(prefs.panel_size, prefs.small_icons);
+      a_Bookgui_reload();  // in case the user changed prefs.bookmarks_file
    }
 }
 

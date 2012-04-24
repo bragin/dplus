@@ -53,6 +53,7 @@ void a_Prefs_init(void)
 {
    prefs.allow_white_bg = TRUE;
    prefs.always_show_tabs = TRUE;
+   prefs.bookmarks_file = NULL;  /* only set if we intend to override */
    prefs.bg_color = 0xffffff;
    prefs.buffered_drawing = 2;
    prefs.contrast_visited_color = TRUE;
@@ -148,6 +149,8 @@ void a_Prefs_freeall(void)
 {
    int i;
 
+   dFree(prefs.bookmarks_file);
+   dFree(prefs.date_format);
    dFree(prefs.font_cursive);
    dFree(prefs.font_fantasy);
    dFree(prefs.font_monospace);
@@ -164,5 +167,4 @@ void a_Prefs_freeall(void)
       dFree(dList_nth_data(prefs.search_urls, i));
    dList_free(prefs.search_urls);
    a_Url_free(prefs.start_page);
-   dFree(prefs.date_format);
 }

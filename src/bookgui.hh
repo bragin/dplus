@@ -6,6 +6,7 @@ extern "C" {
 #endif /* __cplusplus */
 
 
+void a_Bookgui_reload(void);
 void a_Bookgui_add(const char *url, const char *title);
 void a_Bookgui_popup(BrowserWindow *bw, void *v_wid);
 

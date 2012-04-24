@@ -43,6 +43,7 @@ typedef struct SymNode_ {
 const SymNode_t symbols[] = {
    { "allow_white_bg", &prefs.allow_white_bg, PREFS_BOOL },
    { "always_show_tabs", &prefs.always_show_tabs, PREFS_BOOL },
+   { "bookmarks_file", &prefs.bookmarks_file, PREFS_STRING },
    { "bg_color", &prefs.bg_color, PREFS_COLOR },
    { "buffered_drawing", &prefs.buffered_drawing, PREFS_INT32 },
    { "contrast_visited_color", &prefs.contrast_visited_color, PREFS_BOOL },
