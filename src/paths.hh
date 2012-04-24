@@ -12,9 +12,21 @@
 #ifndef __PATHS_HH__
 #define __PATHS_HH__
 
-#define PATHS_RC_PREFS  "dplusrc"
-#define PATHS_RC_KEYS   "keysrc"
+/* Windows and DOS users are more likely to recognize ".cfg" as indicating
+ * a configuration file, whereas Unix traditionally uses the "-rc" (readable
+ * configuration) suffix.  Following local convention also avoids problems
+ * on platforms like DOS with strict limitations on valid filenames. */
+#if defined(_WIN32) || defined(MSDOS)
+#  define PATHS_RC_PREFS   "dplus.cfg"
+#  define PATHS_RC_KEYS    "keys.cfg"
+#  define PATHS_RC_COOKIES "cookies.cfg"
+#else
+#  define PATHS_RC_PREFS   "dplusrc"
+#  define PATHS_RC_KEYS    "keysrc"
+#  define PATHS_RC_COOKIES "cookiesrc"
+#endif
 
+#ifdef __cplusplus
 class Paths {
 public:
    static void init(void);
@@ -22,5 +34,6 @@ public:
    static FILE *getPrefsFP(const char *rcFile);
    static FILE *getWriteFP(const char *rcFile);
 };
+#endif /* __cplusplus */
 
 #endif /* __PATHS_HH__ */

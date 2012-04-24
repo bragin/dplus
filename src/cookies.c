@@ -43,6 +43,7 @@ void a_Cookies_init(void)
 #include "cookies.h"
 #include "capi.h"
 #include "msg.h"
+#include "paths.hh"
 
 #include "../dlib/dsock.h"
 #include "dlib/dfcntl.h"
@@ -1343,14 +1344,8 @@ static int Cookie_control_init(void)
    char rule[LINE_MAXLEN];
    bool_t enabled = FALSE;
 
-#ifdef MSDOS
-#  define COOKIESRC "COOKIES.RC"  /* 8.3-safe name ("cookiesrc" is 9 chars) */
-#else
-#  define COOKIESRC "cookiesrc"
-#endif
-
    /* Get a file pointer */
-   filename = dStrconcat(dGetprofdir(), "/" COOKIESRC, NULL);
+   filename = dStrconcat(dGetprofdir(), "/" PATHS_RC_COOKIES, NULL);
    stream = Cookies_fopen(filename, "r", "DEFAULT ACCEPT_SESSION\n");
    dFree(filename);
 
