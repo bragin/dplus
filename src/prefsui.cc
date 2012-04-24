@@ -44,17 +44,6 @@
 #include "../dlib/dlib.h"
 #include "msg.h"
 
-const char *PREFSGUI_HTTP_REFERER[] = {
-   "none",
-   "host",
-   "path"
-};
-
-const char *PREFSGUI_FILTER_AUTO_REQ[] = {
-   "allow_all",
-   "same_domain"
-};
-
 const int32_t PREFSGUI_WHITE = 0xffffff;  /* prefs.allow_white_bg == 1 */
 const int32_t PREFSGUI_SHADE = 0xdcd1ba;  /* prefs.allow_white_bg == 0 */
 
@@ -227,6 +216,8 @@ public:
    inline bool applied() const { return applied_; }
 
 private:
+   int top, rx, ry, rw, rh, lm, rm, hw, hm;
+
    Fl_Tabs *tabs;
    Fl_Return_Button *buttonOK;
    Fl_Button *buttonCancel;
@@ -279,6 +270,18 @@ private:
    Fl_Choice *filter_auto_requests;
 
    bool applied_;
+
+   void make_general_tab();
+   void make_browsing_tab();
+   void make_fonts_tab();
+   void make_search_tab();
+   void make_network_tab();
+
+   void apply_general_tab();
+   void apply_browsing_tab();
+   void apply_fonts_tab();
+   void apply_search_tab();
+   void apply_network_tab();
 };
 
 static void PrefsUI_return_cb(Fl_Widget *widget, void *d = 0);
@@ -288,9 +291,6 @@ static void PrefsUI_search_edit_cb(Fl_Widget *widget, void *l = 0);
 static void PrefsUI_search_delete_cb(Fl_Widget *widget, void *l = 0);
 static void PrefsUI_search_move_up_cb(Fl_Widget *widget, void *l = 0);
 static void PrefsUI_search_move_dn_cb(Fl_Widget *widget, void *l = 0);
-
-static const char *PrefsUI_http_referer(int v);
-static const char *PrefsUI_filter_auto_requests(int v);
 
 static void PrefsUI_init_fonts_list(void);
 static void PrefsUI_free_fonts_list(void);
@@ -304,8 +304,7 @@ static void PrefsUI_free_fonts_list(void);
 PrefsDialog::PrefsDialog()
    : Fl_Window(360, 270, "Preferences")
 {
-   int top, rx, ry, rw, rh;
-   int lm = 88, rm = 96, hw = 48, hm = 56;
+   lm = 88, rm = 96, hw = 48, hm = 56;
    begin();
 
    tabs = new Fl_Tabs(8, 8, w()-16, h()-48);
@@ -313,237 +312,11 @@ PrefsDialog::PrefsDialog()
 
    tabs->begin();
 
-   //
-   // General tab
-   //
-   general = new Fl_Group(rx, ry, rw, rh, "General");
-   general->begin();
-   top = ry + 8;
-
-   home = new D_Input(rx+lm, top, rw-rm, 24, "Home:");
-   home->value(URL_STR(prefs.home));
-   top += 28;
-
-   start_page = new D_Input(rx+lm, top, rw-rm, 24, "Start page:");
-   start_page->value(URL_STR(prefs.start_page));
-   top += 32;
-
-   panel_size = new Fl_Choice(rx+lm, top, (rw/2)-44, 24, "Panel size:");
-   panel_size->add("Tiny");
-   panel_size->add("Small");
-   panel_size->add("Medium");
-   panel_size->value(prefs.panel_size);
-
-   small_icons = new Fl_Check_Button(rx+(rw/2)+hw, top, (rw/2)-hm, 24,
-                                     "Small icons");
-   small_icons->value(prefs.small_icons);
-   top += 28;
-
-   fullwindow_start = new Fl_Check_Button(rx+(rw/2)+hw, top, (rw/2)-hm, 24,
-				          "Hide on startup");
-   fullwindow_start->value(prefs.fullwindow_start);
-   top += 32;
-
-   colors = new Fl_Box(rx+8, top, lm-8, 24, "Colors:");
-   colors->align(FL_ALIGN_INSIDE | FL_ALIGN_RIGHT);
-
-   allow_white_bg = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
-                                        "Darken white backgrounds");
-   allow_white_bg->value(!prefs.allow_white_bg);
-   top += 28;
-
-   contrast_visited_color = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
-                                                "Always contrast "
-					        "visited link color");
-   contrast_visited_color->value(prefs.contrast_visited_color);
-
-   general->end();
-   tabs->add(general);
-
-   //
-   // Browsing tab
-   //
-   browsing = new Fl_Group(rx, ry, rw, rh, "Browsing");
-   browsing->begin();
-   top = ry + 8;
-
-   content = new Fl_Box(rx+8, top, lm-8, 24, "Content:");
-   content->align(FL_ALIGN_INSIDE | FL_ALIGN_RIGHT);
-
-   load_images = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
-                                     "Load images");
-   load_images->value(prefs.load_images);
-   top += 28;
-
-   load_stylesheets = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
-                                          "Load stylesheets");
-   load_stylesheets->value(prefs.load_stylesheets);
-   top += 28;
-
-   parse_embedded_css = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
-                                            "Use embedded styles");
-   parse_embedded_css->value(prefs.parse_embedded_css);
-   top += 32;
-
-   tabopts = new Fl_Box(rx+8, top, lm-8, 24, "Tabs:");
-   tabopts->align(FL_ALIGN_INSIDE | FL_ALIGN_RIGHT);
-
-   middle_click_opens_new_tab = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
-					            "Open tabs instead "
-						    "of windows");
-   middle_click_opens_new_tab->value(prefs.middle_click_opens_new_tab);
-   top += 28;
-
-   focus_new_tab = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
-                                       "Focus new tabs");
-   focus_new_tab->value(prefs.focus_new_tab);
-   top += 28;
-
-   right_click_closes_tab = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
-                                                "Right-click to close tabs");
-   right_click_closes_tab->value(prefs.right_click_closes_tab);
-
-   browsing->end();
-   tabs->add(browsing);
-
-   //
-   // Fonts tab
-   //
-   fonts = new Fl_Group(rx, ry, rw, rh, "Fonts");
-   fonts->begin();
-   top = ry + 8;
-
-   font_serif = new Font_Choice(rx+lm, top, rw-rm, 24, "Serif:");
-   font_serif->value(prefs.font_serif);
-   top += 28;
-
-   font_sans_serif = new Font_Choice(rx+lm, top, rw-rm, 24, "Sans serif:");
-   font_sans_serif->value(prefs.font_sans_serif);
-   top += 28;
-
-   font_cursive = new Font_Choice(rx+lm, top, rw-rm, 24, "Cursive:");
-   font_cursive->value(prefs.font_cursive);
-   top += 28;
-
-   font_fantasy = new Font_Choice(rx+lm, top, rw-rm, 24, "Fantasy:");
-   font_fantasy->value(prefs.font_fantasy);
-   top += 28;
-
-   font_monospace = new Font_Choice(rx+lm, top, rw-rm, 24, "Monospace:");
-   font_monospace->value(prefs.font_monospace);
-   top += 32;
-
-   font_factor = new Fl_Value_Input(rx+lm, top, (rw/2)-hw, 24, "Scaling:");
-   font_factor->value(prefs.font_factor);
-   font_factor->minimum(0.1);
-   font_factor->maximum(10.0);
-   font_factor->step(0.1);
-   top += 28;
-
-   font_min_size = new Fl_Value_Input(rx+lm, top, (rw/2)-hw, 24,
-                                      "Minimum size:");
-   font_min_size->value(prefs.font_min_size);
-   font_min_size->minimum(1);
-   font_min_size->maximum(100);
-   font_min_size->step(1);
-
-   // FIXME: These look pretty ugly here.
-   // Let's find someplace else to put them.
-   font_factor->hide();
-   font_min_size->hide();
-
-   fonts->end();
-   tabs->add(fonts);
-
-   //
-   // Search tab
-   //
-   search = new Fl_Group(rx, ry, rw, rh, "Search");
-   search->begin();
-   top = ry + 8;
-
-   search_label = new Fl_Box(rx+8, top, rw-16, 24,
-                             "The first engine listed will be used "
-                             "as the default.");
-   search_label->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
-   top += 28;
-
-   search_list = new Fl_Select_Browser(rx+8, top, rw-16, 120);
-   for (int i = 0; i < dList_length(prefs.search_urls); i++) {
-      char *label, *url, *source;
-      source = (char*)dList_nth_data(prefs.search_urls, i);
-      if (a_Misc_parse_search_url(source, &label, &url) < 0)
-         continue;
-      else
-         search_list->add(label, (void*)dStrdup(source));
-   }
-   search_list->select(1);
-   search_list->format_char(0);
-   top += 128;
-
-   search_add = new Fl_Button(rx+8, top, 64, 24, "Add...");
-   search_add->callback(PrefsUI_search_add_cb, (void*)search_list);
-
-   search_edit = new Fl_Button(rx+76, top, 64, 24, "Edit...");
-   search_edit->callback(PrefsUI_search_edit_cb, (void*)search_list);
-
-   search_delete = new Fl_Button(rx+144, top, 64, 24, "Delete");
-   search_delete->callback(PrefsUI_search_delete_cb, (void*)search_list);
-
-   search_label_move = new Fl_Box(rw-100, top, 48, 24, "Order:");
-   search_label_move->align(FL_ALIGN_INSIDE | FL_ALIGN_RIGHT);
-
-   search_move_up = new Fl_Button(rw-52, top, 24, 24, "@2<-");
-   search_move_up->callback(PrefsUI_search_move_up_cb, (void*)search_list);
-
-   search_move_dn = new Fl_Button(rw-24, top, 24, 24, "@2->");
-   search_move_dn->callback(PrefsUI_search_move_dn_cb, (void*)search_list);
-
-   search->end();
-
-   //
-   // Network tab
-   //
-   network = new Fl_Group(rx, ry, rw, rh, "Network");
-   network->begin();
-   top = ry + 8;
-
-   // It's tempting to make this an Fl_Input_Choice, but FLTK interprets
-   // the "/" character as the start of a submenu. (Can this be disabled?)
-   http_user_agent = new D_Input(rx+lm, top, rw-rm, 24, "User agent:");
-   http_user_agent->value(prefs.http_user_agent);
-   top += 28;
-
-   http_language = new D_Input(rx+lm, top, rw-rm, 24, "Languages:");
-   http_language->value(prefs.http_language);
-   top += 32;
-
-   http_proxy = new D_Input(rx+lm, top, rw-rm, 24, "HTTP proxy:");
-   http_proxy->value(URL_STR(prefs.http_proxy));
-   top += 28;
-
-   no_proxy = new D_Input(rx+lm, top, rw-rm, 24, "No proxy for:");
-   no_proxy->value(prefs.no_proxy);
-   top += 32;
-
-   http_referer = new Fl_Choice(rx+lm, top, rw-rm, 24, "Referer:");
-   http_referer->add("Don't send referer");
-   http_referer->add("Send hostname only");
-   http_referer->add("Send hostname and path");
-   if (!strcmp(prefs.http_referer, "none"))
-      http_referer->value(0);
-   else if (!strcmp(prefs.http_referer, "host"))
-      http_referer->value(1);
-   else if (!strcmp(prefs.http_referer, "path"))
-      http_referer->value(2);
-   top += 28;
-
-   filter_auto_requests = new Fl_Choice(rx+lm, top, rw-rm, 24, "Requests:");
-   filter_auto_requests->add("Allow all requests (recommended)");
-   filter_auto_requests->add("Allow auto requests from same domain only");
-   filter_auto_requests->value(prefs.filter_auto_requests);
-
-   network->end();
+   make_general_tab();
+   make_browsing_tab();
+   make_fonts_tab();
+   make_search_tab();
+   make_network_tab();
 
    tabs->end();
 
@@ -621,81 +394,11 @@ PrefsDialog::~PrefsDialog()
  */
 void PrefsDialog::apply()
 {
-   //
-   // General tab
-   //
-   a_Url_free(prefs.home);
-   a_Url_free(prefs.start_page);
-
-   prefs.home = a_Url_new(home->value(), NULL);
-   prefs.start_page = a_Url_new(start_page->value(), NULL);
-   prefs.panel_size = panel_size->value();
-   prefs.small_icons = small_icons->value();
-   prefs.fullwindow_start = fullwindow_start->value();
-   prefs.allow_white_bg = !(allow_white_bg->value());
-   prefs.bg_color = allow_white_bg->value() ? PREFSGUI_SHADE : PREFSGUI_WHITE;
-   prefs.contrast_visited_color = contrast_visited_color->value();
-
-   //
-   // Browsing tab
-   //
-   prefs.load_images = load_images->value();
-   prefs.load_stylesheets = load_stylesheets->value();
-   prefs.parse_embedded_css = parse_embedded_css->value();
-   prefs.middle_click_opens_new_tab = middle_click_opens_new_tab->value();
-   prefs.focus_new_tab = focus_new_tab->value();
-   prefs.right_click_closes_tab = right_click_closes_tab->value();
-
-   //
-   // Fonts tab
-   //
-   dFree(prefs.font_serif);
-   dFree(prefs.font_sans_serif);
-   dFree(prefs.font_cursive);
-   dFree(prefs.font_fantasy);
-   dFree(prefs.font_monospace);
-
-   prefs.font_serif = dStrdup(font_serif->value());
-   prefs.font_sans_serif = dStrdup(font_sans_serif->value());
-   prefs.font_cursive = dStrdup(font_cursive->value());
-   prefs.font_fantasy = dStrdup(font_fantasy->value());
-   prefs.font_monospace = dStrdup(font_monospace->value());
-   prefs.font_factor = font_factor->value();
-   prefs.font_min_size = (int)(font_min_size->value());
-   prefs.font_max_size = prefs.font_min_size + 94;  // based on def. dillorc
-
-   //
-   // Search tab
-   //
-   for (int i = dList_length(prefs.search_urls); i >= 0; --i) {
-      void *data = dList_nth_data(prefs.search_urls, i);
-      dFree(data);
-      dList_remove(prefs.search_urls, data);
-   }
-
-   for (int i = 1; i <= search_list->size(); i++)
-      dList_append(prefs.search_urls, (void*)search_list->data(i));
-
-   // If we've deleted the selected search engine, fall back on the default
-   if (prefs.search_url_idx >= dList_length(prefs.search_urls))
-      prefs.search_url_idx = 0;
-
-   //
-   // Network tab
-   //
-   dFree(prefs.http_user_agent);
-   dFree(prefs.http_language);
-   a_Url_free(prefs.http_proxy);
-   dFree(prefs.no_proxy);
-   dFree(prefs.http_referer);
-
-   prefs.http_user_agent = dStrdup(http_user_agent->value());
-   prefs.http_language = dStrdup(http_language->value());
-   prefs.http_proxy = (strlen(http_proxy->value()) ?
-		       a_Url_new(http_proxy->value(), NULL) : NULL);
-   prefs.no_proxy = dStrdup(no_proxy->value());
-   prefs.http_referer = dStrdup(PrefsUI_http_referer(http_referer->value()));
-   prefs.filter_auto_requests = filter_auto_requests->value();
+   apply_general_tab();
+   apply_browsing_tab();
+   apply_fonts_tab();
+   apply_search_tab();
+   apply_network_tab();
 
    applied_ = true;
 }
@@ -710,6 +413,351 @@ void PrefsDialog::write()
       PrefsWriter::write(fp);
    else
       fl_alert("Could not open %s for writing!", PATHS_RC_PREFS);
+}
+
+/*
+ * Create the General tab.
+ */
+void PrefsDialog::make_general_tab()
+{
+   general = new Fl_Group(rx, ry, rw, rh, "General");
+   general->begin();
+   top = ry + 8;
+
+   home = new D_Input(rx+lm, top, rw-rm, 24, "Home:");
+   home->value(URL_STR(prefs.home));
+   top += 28;
+
+   start_page = new D_Input(rx+lm, top, rw-rm, 24, "Start page:");
+   start_page->value(URL_STR(prefs.start_page));
+   top += 32;
+
+   panel_size = new Fl_Choice(rx+lm, top, (rw/2)-44, 24, "Panel size:");
+   panel_size->add("Tiny");
+   panel_size->add("Small");
+   panel_size->add("Medium");
+   panel_size->value(prefs.panel_size);
+
+   small_icons = new Fl_Check_Button(rx+(rw/2)+hw, top, (rw/2)-hm, 24,
+                                     "Small icons");
+   small_icons->value(prefs.small_icons);
+   top += 28;
+
+   fullwindow_start = new Fl_Check_Button(rx+(rw/2)+hw, top, (rw/2)-hm, 24,
+				          "Hide on startup");
+   fullwindow_start->value(prefs.fullwindow_start);
+   top += 32;
+
+   colors = new Fl_Box(rx+8, top, lm-8, 24, "Colors:");
+   colors->align(FL_ALIGN_INSIDE | FL_ALIGN_RIGHT);
+
+   allow_white_bg = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
+                                        "Darken white backgrounds");
+   allow_white_bg->value(!prefs.allow_white_bg);
+   top += 28;
+
+   contrast_visited_color = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
+                                                "Always contrast "
+					        "visited link color");
+   contrast_visited_color->value(prefs.contrast_visited_color);
+
+   general->end();
+}
+
+/*
+ * Create the Browsing tab.
+ */
+void PrefsDialog::make_browsing_tab()
+{
+   browsing = new Fl_Group(rx, ry, rw, rh, "Browsing");
+   browsing->begin();
+   top = ry + 8;
+
+   content = new Fl_Box(rx+8, top, lm-8, 24, "Content:");
+   content->align(FL_ALIGN_INSIDE | FL_ALIGN_RIGHT);
+
+   load_images = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
+                                     "Load images");
+   load_images->value(prefs.load_images);
+   top += 28;
+
+   load_stylesheets = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
+                                          "Load stylesheets");
+   load_stylesheets->value(prefs.load_stylesheets);
+   top += 28;
+
+   parse_embedded_css = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
+                                            "Use embedded styles");
+   parse_embedded_css->value(prefs.parse_embedded_css);
+   top += 32;
+
+   tabopts = new Fl_Box(rx+8, top, lm-8, 24, "Tabs:");
+   tabopts->align(FL_ALIGN_INSIDE | FL_ALIGN_RIGHT);
+
+   middle_click_opens_new_tab = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
+					            "Open tabs instead "
+						    "of windows");
+   middle_click_opens_new_tab->value(prefs.middle_click_opens_new_tab);
+   top += 28;
+
+   focus_new_tab = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
+                                       "Focus new tabs");
+   focus_new_tab->value(prefs.focus_new_tab);
+   top += 28;
+
+   right_click_closes_tab = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
+                                                "Right-click to close tabs");
+   right_click_closes_tab->value(prefs.right_click_closes_tab);
+
+   browsing->end();
+}
+
+/*
+ * Create the Fonts tab.
+ */
+void PrefsDialog::make_fonts_tab()
+{
+   fonts = new Fl_Group(rx, ry, rw, rh, "Fonts");
+   fonts->begin();
+   top = ry + 8;
+
+   font_serif = new Font_Choice(rx+lm, top, rw-rm, 24, "Serif:");
+   font_serif->value(prefs.font_serif);
+   top += 28;
+
+   font_sans_serif = new Font_Choice(rx+lm, top, rw-rm, 24, "Sans serif:");
+   font_sans_serif->value(prefs.font_sans_serif);
+   top += 28;
+
+   font_cursive = new Font_Choice(rx+lm, top, rw-rm, 24, "Cursive:");
+   font_cursive->value(prefs.font_cursive);
+   top += 28;
+
+   font_fantasy = new Font_Choice(rx+lm, top, rw-rm, 24, "Fantasy:");
+   font_fantasy->value(prefs.font_fantasy);
+   top += 28;
+
+   font_monospace = new Font_Choice(rx+lm, top, rw-rm, 24, "Monospace:");
+   font_monospace->value(prefs.font_monospace);
+   top += 32;
+
+   font_factor = new Fl_Value_Input(rx+lm, top, (rw/2)-hw, 24, "Scaling:");
+   font_factor->value(prefs.font_factor);
+   font_factor->minimum(0.1);
+   font_factor->maximum(10.0);
+   font_factor->step(0.1);
+   top += 28;
+
+   font_min_size = new Fl_Value_Input(rx+lm, top, (rw/2)-hw, 24,
+                                      "Minimum size:");
+   font_min_size->value(prefs.font_min_size);
+   font_min_size->minimum(1);
+   font_min_size->maximum(100);
+   font_min_size->step(1);
+
+   // FIXME: These look pretty ugly here.
+   // Let's find someplace else to put them.
+   font_factor->hide();
+   font_min_size->hide();
+
+   fonts->end();
+}
+
+/*
+ * Create the Search tab.
+ */
+void PrefsDialog::make_search_tab()
+{
+   search = new Fl_Group(rx, ry, rw, rh, "Search");
+   search->begin();
+   top = ry + 8;
+
+   search_label = new Fl_Box(rx+8, top, rw-16, 24,
+                             "The first engine listed will be used "
+                             "as the default.");
+   search_label->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
+   top += 28;
+
+   search_list = new Fl_Select_Browser(rx+8, top, rw-16, 120);
+   for (int i = 0; i < dList_length(prefs.search_urls); i++) {
+      char *label, *url, *source;
+      source = (char*)dList_nth_data(prefs.search_urls, i);
+      if (a_Misc_parse_search_url(source, &label, &url) < 0)
+         continue;
+      else
+         search_list->add(label, (void*)dStrdup(source));
+   }
+   search_list->select(1);
+   search_list->format_char(0);
+   top += 128;
+
+   search_add = new Fl_Button(rx+8, top, 64, 24, "Add...");
+   search_add->callback(PrefsUI_search_add_cb, (void*)search_list);
+
+   search_edit = new Fl_Button(rx+76, top, 64, 24, "Edit...");
+   search_edit->callback(PrefsUI_search_edit_cb, (void*)search_list);
+
+   search_delete = new Fl_Button(rx+144, top, 64, 24, "Delete");
+   search_delete->callback(PrefsUI_search_delete_cb, (void*)search_list);
+
+   search_label_move = new Fl_Box(rw-100, top, 48, 24, "Order:");
+   search_label_move->align(FL_ALIGN_INSIDE | FL_ALIGN_RIGHT);
+
+   search_move_up = new Fl_Button(rw-52, top, 24, 24, "@2<-");
+   search_move_up->callback(PrefsUI_search_move_up_cb, (void*)search_list);
+
+   search_move_dn = new Fl_Button(rw-24, top, 24, 24, "@2->");
+   search_move_dn->callback(PrefsUI_search_move_dn_cb, (void*)search_list);
+
+   search->end();
+}
+
+/*
+ * Create the Network tab.
+ */
+void PrefsDialog::make_network_tab()
+{
+   network = new Fl_Group(rx, ry, rw, rh, "Network");
+   network->begin();
+   top = ry + 8;
+
+   // It's tempting to make this an Fl_Input_Choice, but FLTK interprets
+   // the "/" character as the start of a submenu. (Can this be disabled?)
+   http_user_agent = new D_Input(rx+lm, top, rw-rm, 24, "User agent:");
+   http_user_agent->value(prefs.http_user_agent);
+   top += 28;
+
+   http_language = new D_Input(rx+lm, top, rw-rm, 24, "Languages:");
+   http_language->value(prefs.http_language);
+   top += 32;
+
+   http_proxy = new D_Input(rx+lm, top, rw-rm, 24, "HTTP proxy:");
+   http_proxy->value(URL_STR(prefs.http_proxy));
+   top += 28;
+
+   no_proxy = new D_Input(rx+lm, top, rw-rm, 24, "No proxy for:");
+   no_proxy->value(prefs.no_proxy);
+   top += 32;
+
+   http_referer = new Fl_Choice(rx+lm, top, rw-rm, 24, "Referer:");
+   http_referer->add("Don't send referer");
+   http_referer->add("Send hostname only");
+   http_referer->add("Send hostname and path");
+   if (!strcmp(prefs.http_referer, "none"))
+      http_referer->value(0);
+   else if (!strcmp(prefs.http_referer, "host"))
+      http_referer->value(1);
+   else if (!strcmp(prefs.http_referer, "path"))
+      http_referer->value(2);
+   top += 28;
+
+   filter_auto_requests = new Fl_Choice(rx+lm, top, rw-rm, 24, "Requests:");
+   filter_auto_requests->add("Allow all requests (recommended)");
+   filter_auto_requests->add("Allow auto requests from same domain only");
+   filter_auto_requests->value(prefs.filter_auto_requests);
+
+   network->end();
+}
+
+/*
+ * Apply the General tab.
+ */
+void PrefsDialog::apply_general_tab()
+{
+   a_Url_free(prefs.home);
+   a_Url_free(prefs.start_page);
+
+   prefs.home = a_Url_new(home->value(), NULL);
+   prefs.start_page = a_Url_new(start_page->value(), NULL);
+   prefs.panel_size = panel_size->value();
+   prefs.small_icons = small_icons->value();
+   prefs.fullwindow_start = fullwindow_start->value();
+   prefs.allow_white_bg = !(allow_white_bg->value());
+   prefs.bg_color = allow_white_bg->value() ? PREFSGUI_SHADE : PREFSGUI_WHITE;
+   prefs.contrast_visited_color = contrast_visited_color->value();
+}
+
+/*
+ * Apply the Browsing tab.
+ */
+void PrefsDialog::apply_browsing_tab()
+{
+   prefs.load_images = load_images->value();
+   prefs.load_stylesheets = load_stylesheets->value();
+   prefs.parse_embedded_css = parse_embedded_css->value();
+   prefs.middle_click_opens_new_tab = middle_click_opens_new_tab->value();
+   prefs.focus_new_tab = focus_new_tab->value();
+   prefs.right_click_closes_tab = right_click_closes_tab->value();
+}
+
+/*
+ * Apply the Fonts tab.
+ */
+void PrefsDialog::apply_fonts_tab()
+{
+   dFree(prefs.font_serif);
+   dFree(prefs.font_sans_serif);
+   dFree(prefs.font_cursive);
+   dFree(prefs.font_fantasy);
+   dFree(prefs.font_monospace);
+
+   prefs.font_serif = dStrdup(font_serif->value());
+   prefs.font_sans_serif = dStrdup(font_sans_serif->value());
+   prefs.font_cursive = dStrdup(font_cursive->value());
+   prefs.font_fantasy = dStrdup(font_fantasy->value());
+   prefs.font_monospace = dStrdup(font_monospace->value());
+   prefs.font_factor = font_factor->value();
+   prefs.font_min_size = (int)(font_min_size->value());
+   prefs.font_max_size = prefs.font_min_size + 94;  // based on def. dillorc
+}
+
+/*
+ * Apply the Search tab.
+ */
+void PrefsDialog::apply_search_tab()
+{
+   for (int i = dList_length(prefs.search_urls); i >= 0; --i) {
+      void *data = dList_nth_data(prefs.search_urls, i);
+      dFree(data);
+      dList_remove(prefs.search_urls, data);
+   }
+
+   for (int i = 1; i <= search_list->size(); i++)
+      dList_append(prefs.search_urls, (void*)search_list->data(i));
+
+   // If we've deleted the selected engine, fall back on the first one listed.
+   if (prefs.search_url_idx >= dList_length(prefs.search_urls))
+      prefs.search_url_idx = 0;
+}
+
+/*
+ * Apply the Network tab.
+ */
+void PrefsDialog::apply_network_tab()
+{
+   dFree(prefs.http_user_agent);
+   dFree(prefs.http_language);
+   a_Url_free(prefs.http_proxy);
+   dFree(prefs.no_proxy);
+   dFree(prefs.http_referer);
+
+   prefs.http_user_agent = dStrdup(http_user_agent->value());
+   prefs.http_language = dStrdup(http_language->value());
+   prefs.http_proxy = (strlen(http_proxy->value()) ?
+		       a_Url_new(http_proxy->value(), NULL) : NULL);
+   prefs.no_proxy = dStrdup(no_proxy->value());
+   switch (http_referer->value()) {
+   case 0:
+      prefs.http_referer = dStrdup("none");
+      break;
+   case 1:
+      prefs.http_referer = dStrdup("host");
+      break;
+   case 2:
+      prefs.http_referer = dStrdup("path");
+      break;
+   }
+   prefs.filter_auto_requests = filter_auto_requests->value();
 }
 
 
@@ -828,36 +876,6 @@ static void PrefsUI_search_move_dn_cb(Fl_Widget *widget, void *l)
 
    sl->swap(line, line+1);
    sl->select(line+1);
-}
-
-/*
- * Convert the HTTP referer selection to a dillorc string.
- */
-static const char *PrefsUI_http_referer(int v)
-{
-   switch (v) {
-      case 0:
-         return "none";
-      case 1:
-         return "host";
-      case 2:
-         return "path";
-   }
-   return "host";
-}
-
-/*
- * Convert the filter_auto_requests selection to a dillorc string.
- */
-static const char *PrefsUI_filter_auto_requests(int v)
-{
-   switch (v) {
-      case PREFS_FILTER_ALLOW_ALL:
-         return "allow_all";
-      case PREFS_FILTER_SAME_DOMAIN:
-         return "same_domain";
-   }
-   return "allow_all";
 }
 
 /*
