@@ -1,0 +1,6 @@
+The DPlus icon font is Georgia Bold Italic.
+
+The icon is deliberately simple because some platforms, including older
+versions of Windows, only support 16-color icons regardless of the user's
+display settings or color depth; we would rather it look exactly consistent
+across all platforms than extraordinarily beautiful on a select few.
