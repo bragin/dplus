@@ -74,7 +74,7 @@ static int PrefsUI_strcasecmp(const void *a, const void *b)
 }
 
 
-// Local widgets -------------------------------------------------------------
+// -- Local widgets ----------------------------------------------------------
 
 
 /*
@@ -212,14 +212,14 @@ void Search_edit::cancel_cb(Fl_Widget*, void *cbdata)
 }
 
 
-// PrefsGui class definition & implementation --------------------------------
+// -- PrefsDialog class definition & implementation --------------------------
 
 
-class PrefsGui : public Fl_Window
+class PrefsDialog : public Fl_Window
 {
 public:
-   PrefsGui();
-   ~PrefsGui();
+   PrefsDialog();
+   ~PrefsDialog();
 
    void apply();
    void write();
@@ -297,11 +297,11 @@ static void PrefsUI_free_fonts_list(void);
 
 
 /*
- * PrefsGui class constructor
+ * PrefsDialog class constructor
  *   rx, ry, rw, rh are      lm = left margin        hw = half width
  *   the tab client area     rm = right margin       hm = hw margin
  */
-PrefsGui::PrefsGui()
+PrefsDialog::PrefsDialog()
    : Fl_Window(360, 270, "Preferences")
 {
    int top, rx, ry, rw, rh;
@@ -560,9 +560,9 @@ PrefsGui::PrefsGui()
 }
 
 /*
- * PrefsGui class destructor
+ * PrefsDialog class destructor
  */
-PrefsGui::~PrefsGui()
+PrefsDialog::~PrefsDialog()
 {
    delete home;
    delete start_page;
@@ -619,7 +619,7 @@ PrefsGui::~PrefsGui()
 /*
  * Apply new preferences.
  */
-void PrefsGui::apply()
+void PrefsDialog::apply()
 {
    //
    // General tab
@@ -703,7 +703,7 @@ void PrefsGui::apply()
 /*
  * Write preferences to configuration file.
  */
-void PrefsGui::write()
+void PrefsDialog::write()
 {
    FILE *fp;
    if ((fp = Paths::getWriteFP(PATHS_RC_PREFS)))
@@ -719,7 +719,7 @@ void PrefsGui::write()
 static void PrefsUI_return_cb(Fl_Widget *widget, void *d)
 {
    (void)widget;
-   PrefsGui *dialog = (PrefsGui*)d;
+   PrefsDialog *dialog = (PrefsDialog*)d;
 
    dialog->apply();  // apply our new preferences
    dialog->write();  // save our preferences to disk
@@ -733,7 +733,7 @@ static void PrefsUI_return_cb(Fl_Widget *widget, void *d)
 static void PrefsUI_cancel_cb(Fl_Widget *widget, void *d)
 {
    (void)widget;
-   PrefsGui *dialog = (PrefsGui*)d;
+   PrefsDialog *dialog = (PrefsDialog*)d;
 
    dialog->hide();
 }
@@ -907,7 +907,7 @@ int a_PrefsUI_show(void)
    int retval;
    PrefsUI_init_fonts_list();
 
-   PrefsGui *dialog = new PrefsGui;
+   PrefsDialog *dialog = new PrefsDialog;
    dialog->show();
 
    while (dialog->shown())
