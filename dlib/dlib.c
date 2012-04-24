@@ -867,8 +867,8 @@ char *dGethomedir ()
       if (getenv("HOME")) {
          homedir = dStrdup(getenv("HOME"));
 #ifdef MSDOS
-      } else if (getenv("DILLO")) {
-         homedir = dStrdup(getenv("DILLO"));  /* set in DILLO.BAT */
+      } else if (getenv("DPLUS")) {
+         homedir = dStrdup(getenv("DPLUS"));  /* set in DPLUS.BAT */
 #endif /* MSDOS */
 #ifdef _WIN32
       } else if (getenv("USERPROFILE")) {
@@ -887,7 +887,7 @@ char *dGethomedir ()
 }
 
 /*
- * Return the ~/.dillo directory in a static string (don't free)
+ * Return the ~/.dplus directory in a static string (don't free)
  */
 char *dGetprofdir ()
 {
@@ -896,12 +896,12 @@ char *dGetprofdir ()
    if (!profdir) {
 #ifdef MSDOS
       /* Use an 8.3-safe directory name on DOS. */
-      profdir = dStrconcat(getenv("DILLO"), "/CONFIG", NULL);
+      profdir = dStrconcat(getenv("DPLUS"), "/CONFIG", NULL);
 #else
       /* Note: It would be better if we used the Application Data folder on
        * Windows, but that's not available on Windows 95/98/Me/NT 4.0, and
        * switching would break upgrading from previous Dillo-Win32 releases. */
-      profdir = dStrconcat(dGethomedir(), "/.dillo", NULL);
+      profdir = dStrconcat(dGethomedir(), "/.dplus", NULL);
 #endif
    }
    return profdir;
@@ -920,8 +920,8 @@ char *dGettempdir ()
       } else if (getenv("TMP")) {
 	 tempdir = dStrdup(getenv("TMP"));
 #ifdef MSDOS
-      } else if (getenv("DILLO")) {
-         tempdir = dStrdup(getenv("DILLO"));
+      } else if (getenv("DPLUS")) {
+         tempdir = dStrdup(getenv("DPLUS"));
 #endif /* MSDOS */
 #ifdef _WIN32
       } else if (getenv("windir")) {

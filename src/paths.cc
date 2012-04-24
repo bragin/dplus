@@ -18,7 +18,7 @@
 #include "paths.hh"
 
 /*
- * Changes current working directory to /tmp and creates ~/.dillo
+ * Changes current working directory to /tmp and creates ~/.dplus
  * if not exists.
  */
 void Paths::init(void)

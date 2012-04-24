@@ -12,7 +12,7 @@
 #ifndef __PATHS_HH__
 #define __PATHS_HH__
 
-#define PATHS_RC_PREFS  "dillorc"
+#define PATHS_RC_PREFS  "dplusrc"
 #define PATHS_RC_KEYS   "keysrc"
 
 class Paths {
