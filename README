@@ -14,39 +14,120 @@ DPlus currently supports Windows, DOS, OS X, and Unix systems.
 Table of Contents
 -----------------
 
-  1. Current Plans
-  2. Building and Installing
-  3. Developer Information
-  4. Contact
+  1. Features
+  2. Limitations
+  3. Compatibility
+  4. Project History
+  5. Building and Installing
+  6. Developer Information
+  7. Contact
 
 
-1. Current Plans
+1. Features
+-----------
+
+  - Modern tabbed browsing interface.
+  
+  - Extremely low memory usage.
+
+  - Tiny executable size (the Windows version fits on a floppy disk).
+
+  - Standalone executable requires no installation or external dependencies.
+
+  - Incredible portability (see "Compatibility," below).
+
+  - Mostly-complete support for HTML 4.01.
+  
+  - Partial support for CSS 2.1.
+  
+  - Full support for HTTP 1.1, including basic authentication and gzip
+    compression.
+
+  - Support for HTTPS (minus certificate validation) via OpenSSL or CyaSSL.
+
+  - Always-on "private browsing" mode.
+    Cookies and history are NEVER written to disk.
+
+
+2. Limitations
+--------------
+
+  - Limited support for HTML 4.01 and CSS 2.1.  In particular, no support
+    for floating elements, putting rendering about a decade behind Netscape 4.
+
+  - No support for JavaScript (mostly by design).
+
+  - No support for plugins like Flash, Java, etc. (mostly by design).
+
+  - No support for HTML frames.
+
+  - No support for SSL certificate validation.
+    DO NOT USE DPLUS FOR ONLINE BANKING AND OTHER SENSITIVE TRANSACTIONS.
+
+  - No support for FTP and other non-HTTP protocols.
+
+  - Little hope for rendering improvements due to poor code design.
+
+
+3. Compatibility
 ----------------
 
+  - Microsoft Windows 95, 98, Me, NT 4.0, 2000, XP, Vista, and 7,
+    including all x64 versions.
+
+  - DOS and compatible systems (tested mainly on MS-DOS 6.22 and FreeDOS).
+
+  - All recent Linux/Unix systems.  Linux binary packages are available
+    for current CentOS, Debian, Fedora, openSUSE, RHEL, and Ubuntu releases.
+
+  - Mac OS X should work, but has not been tested by the developer.
+    Mainline Dillo has been reported to run fine.
+
+  - Theoretically any other platform with a sockets library and FLTK 1.3.
+
+
+4. Project History
+------------------
+
 DPlus continues where Dillo-Win32 (http://dillo-win32.sourceforge.net/)
-left off.  The initial release will essentially be "Dillo-Win32 improved,"
-with a cleaner user interface, greater portability, and less legacy code
-than was possible when we were attempting to maintain upstream compatibility.
+left off, providing an enhanced Dillo browser with significantly improved
+usability, performance, and portability over the mainline release.
+
+Unlike Dillo-Win32, DPlus is a completely separate project and will no
+longer attempt to maintain upstream compatibility, as the mainline developers
+have made abundantly clear they are not interested in outside contributions.
+
+The initial release, DPlus 0.5, is forked from the final Dillo-Win32 3.0p9
+release.  It will essentially be "Dillo-Win32 improved," with a cleaner user
+interface, greater portability, numerous bugfixes, and a less misleading name
+than the original program.  (The renderer, however, is still just as bad.)
 
 At the moment there are no plans for long-term development.
-I (Benjamin Johnson) am releasing DPlus because I personally find it useful,
-and I think others might find it useful as well; however, I have neither the
-time nor the interest to make this anything more than a one-off release.
+I (Benjamin Johnson) am releasing DPlus because, despite my sworn intention
+never to touch the Dillo code again, I have found it useful and necessary for
+my own purposes to fix a few glaring problems in Dillo-Win32.  I suspect the
+two or three other people who care about these things may find it useful, too.
+
+However, developing a web browser requires planning and commitment, and I
+have neither the time nor interest to make this anything more than a one-off
+release.  Please read through the `HACKING' file before you try to persuade
+me otherwise; nothing short of large quantities of money and/or bass guitars
+will work, anyhow (though those two both work exceedingly well).
 
 
-2. Building and Installing
+5. Building and Installing
 --------------------------
 
 Please see the `BUILDING' file.
 
 
-3. Developer Information
+6. Developer Information
 ------------------------
 
 Please see the `HACKING' file.
 
 
-4. Contact
+7. Contact
 ----------
 
 Benjamin Johnson <obeythepenguin@users.sourceforge.net>
