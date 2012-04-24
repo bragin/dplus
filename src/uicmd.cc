@@ -53,7 +53,7 @@
 #define DEFAULT_TAB_LABEL "New tab"
 
 #ifndef HELP_URL
-#  define HELP_URL "http://dillo-win32.sourceforge.net/help/"
+#  define HELP_URL "http://dplus-browser.sourceforge.net/docs/" VERSION "/"
 #endif
 
 // Handy macro

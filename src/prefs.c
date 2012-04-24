@@ -13,7 +13,7 @@
 #include "prefs.h"
 
 #define PREFS_START_PAGE      "about:splash"
-#define PREFS_HOME            "http://dillo-win32.sourceforge.net/"
+#define PREFS_HOME            "http://dplus-browser.sourceforge.net/"
 #define PREFS_NO_PROXY        "localhost 127.0.0.1"
 #define PREFS_HTTP_REFERER    "host"
 #define PREFS_DATE_FORMAT     "%m/%d/%Y %I:%M%p"

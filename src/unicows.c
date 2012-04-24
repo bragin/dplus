@@ -39,7 +39,7 @@
 #include "unicows.h"
 
 const char *UNICOWS_URL =
-   "http://dillo-win32.sourceforge.net/deps/unicows.dll";
+   "http://dplus-browser.sourceforge.net/files/unicows.dll";
 
 /*
  * Exit with an error.
