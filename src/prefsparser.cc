@@ -53,6 +53,7 @@ const SymNode_t symbols[] = {
    { "filter_auto_requests", &prefs.filter_auto_requests, PREFS_FILTER },
    { "focus_new_tab", &prefs.focus_new_tab, PREFS_BOOL },
    { "font_cursive", &prefs.font_cursive, PREFS_STRING },
+   { "font_default_serif", &prefs.font_default_serif, PREFS_BOOL },
    { "font_factor", &prefs.font_factor, PREFS_DOUBLE },
    { "font_fantasy", &prefs.font_fantasy, PREFS_STRING },
    { "font_max_size", &prefs.font_max_size, PREFS_INT32 },

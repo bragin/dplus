@@ -67,6 +67,7 @@ void a_Prefs_init(void)
 
    prefs.focus_new_tab = FALSE;
    prefs.font_cursive = dStrdup(PREFS_FONT_CURSIVE);
+   prefs.font_default_serif = FALSE;
    prefs.font_factor = 1.0;
    prefs.font_max_size = 100;
    prefs.font_min_size = 6;

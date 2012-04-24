@@ -82,6 +82,7 @@ struct _DilloPrefs {
    char *font_cursive;
    char *font_fantasy;
    char *font_monospace;
+   bool_t font_default_serif;
    bool_t enterpress_forces_submit;
    bool_t middle_click_opens_new_tab;
    bool_t right_click_closes_tab;
