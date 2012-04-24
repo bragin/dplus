@@ -256,11 +256,10 @@ private:
    Fl_Group *fonts;
    Font_Choice *font_serif;
    Font_Choice *font_sans_serif;
-   Font_Choice *font_cursive;
-   Font_Choice *font_fantasy;
    Font_Choice *font_monospace;
-   Fl_Value_Input *font_factor;
+   Fl_Choice *font_default_serif;
    Fl_Value_Input *font_min_size;
+   Fl_Value_Input *font_max_size;
 
    Fl_Group *search;
    Fl_Box *search_label;
@@ -385,11 +384,10 @@ PrefsDialog::~PrefsDialog()
 
    delete font_serif;
    delete font_sans_serif;
-   delete font_cursive;
-   delete font_fantasy;
    delete font_monospace;
-   delete font_factor;
+   delete font_default_serif;
    delete font_min_size;
+   delete font_max_size;
    delete fonts;
 
    delete search_label;
@@ -596,36 +594,28 @@ void PrefsDialog::make_fonts_tab()
    font_sans_serif->value(prefs.font_sans_serif);
    top += 28;
 
-   font_cursive = new Font_Choice(rx+lm, top, rw-rm, 24, "Cursive:");
-   font_cursive->value(prefs.font_cursive);
-   top += 28;
-
-   font_fantasy = new Font_Choice(rx+lm, top, rw-rm, 24, "Fantasy:");
-   font_fantasy->value(prefs.font_fantasy);
-   top += 28;
-
    font_monospace = new Font_Choice(rx+lm, top, rw-rm, 24, "Monospace:");
    font_monospace->value(prefs.font_monospace);
    top += 32;
 
-   font_factor = new Fl_Value_Input(rx+lm, top, (rw/2)-hw, 24, "Scaling:");
-   font_factor->value(prefs.font_factor);
-   font_factor->minimum(0.1);
-   font_factor->maximum(10.0);
-   font_factor->step(0.1);
-   top += 28;
+   font_default_serif = new Fl_Choice(rx+lm, top, (rw/2)-hw, 24, "Default:");
+   font_default_serif->add("Serif");
+   font_default_serif->add("Sans serif");
+   font_default_serif->value(prefs.font_default_serif ? 0 : 1);
+   top += 32;
 
-   font_min_size = new Fl_Value_Input(rx+lm, top, (rw/2)-hw, 24,
-                                      "Minimum size:");
+   font_min_size = new Fl_Value_Input(rx+lm, top, (rw/2)-hw, 24, "Min size:");
    font_min_size->value(prefs.font_min_size);
    font_min_size->minimum(1);
    font_min_size->maximum(100);
    font_min_size->step(1);
+   top += 28;
 
-   // FIXME: These look pretty ugly here.
-   // Let's find someplace else to put them.
-   font_factor->hide();
-   font_min_size->hide();
+   font_max_size = new Fl_Value_Input(rx+lm, top, (rw/2)-hw, 24, "Max size:");
+   font_max_size->value(prefs.font_max_size);
+   font_max_size->minimum(1);
+   font_max_size->maximum(100);
+   font_max_size->step(1);
 
    fonts->end();
 }
@@ -777,18 +767,21 @@ void PrefsDialog::apply_fonts_tab()
 {
    dFree(prefs.font_serif);
    dFree(prefs.font_sans_serif);
-   dFree(prefs.font_cursive);
-   dFree(prefs.font_fantasy);
    dFree(prefs.font_monospace);
 
    prefs.font_serif = dStrdup(font_serif->value());
    prefs.font_sans_serif = dStrdup(font_sans_serif->value());
-   prefs.font_cursive = dStrdup(font_cursive->value());
-   prefs.font_fantasy = dStrdup(font_fantasy->value());
    prefs.font_monospace = dStrdup(font_monospace->value());
-   prefs.font_factor = font_factor->value();
+   switch (font_default_serif->value()) {
+   case 0: /* serif */
+      prefs.font_default_serif = 1;
+      break;
+   case 1: /* sans serif */
+      prefs.font_default_serif = 0;
+      break;
+   }
    prefs.font_min_size = (int)(font_min_size->value());
-   prefs.font_max_size = prefs.font_min_size + 94;  // based on def. dillorc
+   prefs.font_max_size = (int)(font_max_size->value());
 }
 
 /*
