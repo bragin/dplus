@@ -354,40 +354,6 @@ void Bms_normalize(void)
 /* -- Load bookmarks file -------------------------------------------------- */
 
 /*
- * If there's no "bm.txt", create one from "bookmarks.html".
- */
-void Bms_check_import(void)
-{
-   FILE *output;
-   char *OldBmFile;
-   char *cmd =
-      "grep -i \"href\" %s | "
-      "sed -e 's/<li><A HREF=\"/s0 /' -e 's/\">/ /' -e 's/<.*$//' >> %s";
-   Dstr *dstr = dStr_new("");
-   int rc;
-
-   if (access(BmFile, F_OK) != 0) {
-      OldBmFile = dStrconcat(dGetprofdir(), "/bookmarks.html", NULL);
-      if (access(OldBmFile, F_OK) != 0) {
-#ifndef _WIN32
-         /* FIXME: This code is not portable. */
-         dStr_sprintf(dstr, cmd, OldBmFile, BmFile);
-         rc = system(dstr->str);
-         if (rc == 127) {
-            MSG("Bookmarks: /bin/sh could not be executed\n");
-         } else if (rc == -1) {
-            MSG("Bookmarks: process creation failure: %s\n",
-                dStrerror(errno));
-         }
-#endif /* _WIN32 */
-
-         dStr_free(dstr, TRUE);
-         dFree(OldBmFile);
-      }
-   }
-}
-
-/*
  * Load bookmarks data from a file
  */
 int Bms_load(void)
@@ -450,10 +416,7 @@ int a_Bms_cond_load(void)
    struct stat TimeStamp;
 
    if (stat(BmFile, &TimeStamp) != 0) {
-      /* try to import... */
-      Bms_check_import();
-      if (stat(BmFile, &TimeStamp) != 0)
-         TimeStamp.st_mtime = 0;
+      TimeStamp.st_mtime = 0;
    }
 
    if (!BmFileTimeStamp || !dList_length(B_bms) || !dList_length(B_secs) ||
