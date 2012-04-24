@@ -227,20 +227,25 @@ private:
    Fl_Input *start_page;
    Fl_Choice *panel_size;
    Fl_Check_Button *small_icons;
+
+   Fl_Group *view;
+   Fl_Box *panels_label;
+   Fl_Check_Button *show_search;
+   Fl_Check_Button *show_progress_box;
    Fl_Check_Button *fullwindow_start;
-   Fl_Box *colors;
-   Fl_Check_Button *allow_white_bg;  // negate
-   Fl_Check_Button *contrast_visited_color;
+   Fl_Box *tabs_label;
+   Fl_Check_Button *always_show_tabs;
+   Fl_Check_Button *focus_new_tab;
+   Fl_Check_Button *right_click_closes_tab;
 
    Fl_Group *browsing;
-   Fl_Box *content;
+   Fl_Box *content_label;
    Fl_Check_Button *load_images;
    Fl_Check_Button *load_stylesheets;
    Fl_Check_Button *parse_embedded_css;
-   Fl_Box *tabopts;
-   Fl_Check_Button *middle_click_opens_new_tab;
-   Fl_Check_Button *focus_new_tab;
-   Fl_Check_Button *right_click_closes_tab;
+   Fl_Box *colors_label;
+   Fl_Check_Button *allow_white_bg;  // negate
+   Fl_Check_Button *contrast_visited_color;
 
    Fl_Group *fonts;
    Font_Choice *font_serif;
@@ -272,12 +277,14 @@ private:
    bool applied_;
 
    void make_general_tab();
+   void make_view_tab();
    void make_browsing_tab();
    void make_fonts_tab();
    void make_search_tab();
    void make_network_tab();
 
    void apply_general_tab();
+   void apply_view_tab();
    void apply_browsing_tab();
    void apply_fonts_tab();
    void apply_search_tab();
@@ -286,6 +293,7 @@ private:
 
 static void PrefsUI_return_cb(Fl_Widget *widget, void *d = 0);
 static void PrefsUI_cancel_cb(Fl_Widget *widget, void *d = 0);
+
 static void PrefsUI_search_add_cb(Fl_Widget *widget, void *l = 0);
 static void PrefsUI_search_edit_cb(Fl_Widget *widget, void *l = 0);
 static void PrefsUI_search_delete_cb(Fl_Widget *widget, void *l = 0);
@@ -313,6 +321,7 @@ PrefsDialog::PrefsDialog()
    tabs->begin();
 
    make_general_tab();
+   make_view_tab();
    make_browsing_tab();
    make_fonts_tab();
    make_search_tab();
@@ -341,19 +350,25 @@ PrefsDialog::~PrefsDialog()
    delete start_page;
    delete panel_size;
    delete small_icons;
-   delete fullwindow_start;
-   delete colors;
-   delete allow_white_bg;
-   delete contrast_visited_color;
    delete general;
 
-   delete content;
+   delete panels_label;
+   delete show_search;
+   delete show_progress_box;
+   delete fullwindow_start;
+   delete tabs_label;
+   delete always_show_tabs;
+   delete focus_new_tab;
+   delete right_click_closes_tab;
+   delete view;
+
+   delete content_label;
    delete load_images;
    delete load_stylesheets;
    delete parse_embedded_css;
-   delete middle_click_opens_new_tab;
-   delete focus_new_tab;
-   delete right_click_closes_tab;
+   delete colors_label;
+   delete allow_white_bg;
+   delete contrast_visited_color;
    delete browsing;
 
    delete font_serif;
@@ -395,6 +410,7 @@ PrefsDialog::~PrefsDialog()
 void PrefsDialog::apply()
 {
    apply_general_tab();
+   apply_view_tab();
    apply_browsing_tab();
    apply_fonts_tab();
    apply_search_tab();
@@ -441,27 +457,55 @@ void PrefsDialog::make_general_tab()
    small_icons = new Fl_Check_Button(rx+(rw/2)+hw, top, (rw/2)-hm, 24,
                                      "Small icons");
    small_icons->value(prefs.small_icons);
+
+   general->end();
+}
+
+/*
+ * Create the View tab.
+ */
+void PrefsDialog::make_view_tab()
+{
+   view = new Fl_Group(rx, ry, rw, rh, "View");
+   view->begin();
+   top = ry + 8;
+
+   panels_label = new Fl_Box(rx+8, top, lm-8, 24, "Panels:");
+   panels_label->align(FL_ALIGN_INSIDE | FL_ALIGN_RIGHT);
+
+   show_search = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
+                                     "Show search");
+   show_search->value(prefs.show_search);
    top += 28;
 
-   fullwindow_start = new Fl_Check_Button(rx+(rw/2)+hw, top, (rw/2)-hm, 24,
-				          "Hide on startup");
+   show_progress_box = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
+                                           "Show page load progress");
+   show_progress_box->value(prefs.show_progress_box);
+   top += 28;
+
+   fullwindow_start = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
+				          "Hide panels on startup");
    fullwindow_start->value(prefs.fullwindow_start);
    top += 32;
 
-   colors = new Fl_Box(rx+8, top, lm-8, 24, "Colors:");
-   colors->align(FL_ALIGN_INSIDE | FL_ALIGN_RIGHT);
+   tabs_label = new Fl_Box(rx+8, top, lm-8, 24, "Tabs:");
+   tabs_label->align(FL_ALIGN_INSIDE | FL_ALIGN_RIGHT);
 
-   allow_white_bg = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
-                                        "Darken white backgrounds");
-   allow_white_bg->value(!prefs.allow_white_bg);
+   always_show_tabs = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
+                                          "Always show the tab bar");
+   always_show_tabs->value(prefs.always_show_tabs);
    top += 28;
 
-   contrast_visited_color = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
-                                                "Always contrast "
-					        "visited link color");
-   contrast_visited_color->value(prefs.contrast_visited_color);
+   focus_new_tab = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
+                                       "Focus new tabs");
+   focus_new_tab->value(prefs.focus_new_tab);
+   top += 28;
 
-   general->end();
+   right_click_closes_tab = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
+                                                "Right-click to close tabs");
+   right_click_closes_tab->value(prefs.right_click_closes_tab);
+
+   view->end();
 }
 
 /*
@@ -473,8 +517,8 @@ void PrefsDialog::make_browsing_tab()
    browsing->begin();
    top = ry + 8;
 
-   content = new Fl_Box(rx+8, top, lm-8, 24, "Content:");
-   content->align(FL_ALIGN_INSIDE | FL_ALIGN_RIGHT);
+   content_label = new Fl_Box(rx+8, top, lm-8, 24, "Content:");
+   content_label->align(FL_ALIGN_INSIDE | FL_ALIGN_RIGHT);
 
    load_images = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
                                      "Load images");
@@ -491,23 +535,18 @@ void PrefsDialog::make_browsing_tab()
    parse_embedded_css->value(prefs.parse_embedded_css);
    top += 32;
 
-   tabopts = new Fl_Box(rx+8, top, lm-8, 24, "Tabs:");
-   tabopts->align(FL_ALIGN_INSIDE | FL_ALIGN_RIGHT);
+   colors_label = new Fl_Box(rx+8, top, lm-8, 24, "Colors:");
+   colors_label->align(FL_ALIGN_INSIDE | FL_ALIGN_RIGHT);
 
-   middle_click_opens_new_tab = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
-					            "Open tabs instead "
-						    "of windows");
-   middle_click_opens_new_tab->value(prefs.middle_click_opens_new_tab);
+   allow_white_bg = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
+                                        "Darken white backgrounds");
+   allow_white_bg->value(!prefs.allow_white_bg);
    top += 28;
 
-   focus_new_tab = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
-                                       "Focus new tabs");
-   focus_new_tab->value(prefs.focus_new_tab);
-   top += 28;
-
-   right_click_closes_tab = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
-                                                "Right-click to close tabs");
-   right_click_closes_tab->value(prefs.right_click_closes_tab);
+   contrast_visited_color = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
+                                                "Always contrast "
+					        "visited link color");
+   contrast_visited_color->value(prefs.contrast_visited_color);
 
    browsing->end();
 }
@@ -671,10 +710,19 @@ void PrefsDialog::apply_general_tab()
    prefs.start_page = a_Url_new(start_page->value(), NULL);
    prefs.panel_size = panel_size->value();
    prefs.small_icons = small_icons->value();
+}
+
+/*
+ * Apply the View tab.
+ */
+void PrefsDialog::apply_view_tab()
+{
+   prefs.show_search = show_search->value();
+   prefs.show_progress_box = show_progress_box->value();
    prefs.fullwindow_start = fullwindow_start->value();
-   prefs.allow_white_bg = !(allow_white_bg->value());
-   prefs.bg_color = allow_white_bg->value() ? PREFSGUI_SHADE : PREFSGUI_WHITE;
-   prefs.contrast_visited_color = contrast_visited_color->value();
+   prefs.always_show_tabs = always_show_tabs->value();
+   prefs.focus_new_tab = focus_new_tab->value();
+   prefs.right_click_closes_tab = right_click_closes_tab->value();
 }
 
 /*
@@ -685,9 +733,9 @@ void PrefsDialog::apply_browsing_tab()
    prefs.load_images = load_images->value();
    prefs.load_stylesheets = load_stylesheets->value();
    prefs.parse_embedded_css = parse_embedded_css->value();
-   prefs.middle_click_opens_new_tab = middle_click_opens_new_tab->value();
-   prefs.focus_new_tab = focus_new_tab->value();
-   prefs.right_click_closes_tab = right_click_closes_tab->value();
+   prefs.allow_white_bg = !(allow_white_bg->value());
+   prefs.bg_color = allow_white_bg->value() ? PREFSGUI_SHADE : PREFSGUI_WHITE;
+   prefs.contrast_visited_color = contrast_visited_color->value();
 }
 
 /*
