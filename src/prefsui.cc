@@ -68,7 +68,7 @@ Dlist *fonts_list = NULL;
  * Ugly hack: dList_insert_sorted() expects parameters to be const void*,
  * and C++ doesn't allow implicit const char* -> const void* conversion.
  */
-int PrefsUI_strcasecmp(const void *a, const void *b)
+static int PrefsUI_strcasecmp(const void *a, const void *b)
 {
    return dStrcasecmp((const char*)a, (const char*)b);
 }
@@ -281,23 +281,19 @@ private:
    bool applied_;
 };
 
-void PrefsUI_return_cb(Fl_Widget *widget, void *d = 0);
-void PrefsUI_cancel_cb(Fl_Widget *widget, void *d = 0);
-void PrefsUI_search_add_cb(Fl_Widget *widget, void *l = 0);
-void PrefsUI_search_edit_cb(Fl_Widget *widget, void *l = 0);
-void PrefsUI_search_delete_cb(Fl_Widget *widget, void *l = 0);
-void PrefsUI_search_move_up_cb(Fl_Widget *widget, void *l = 0);
-void PrefsUI_search_move_dn_cb(Fl_Widget *widget, void *l = 0);
+static void PrefsUI_return_cb(Fl_Widget *widget, void *d = 0);
+static void PrefsUI_cancel_cb(Fl_Widget *widget, void *d = 0);
+static void PrefsUI_search_add_cb(Fl_Widget *widget, void *l = 0);
+static void PrefsUI_search_edit_cb(Fl_Widget *widget, void *l = 0);
+static void PrefsUI_search_delete_cb(Fl_Widget *widget, void *l = 0);
+static void PrefsUI_search_move_up_cb(Fl_Widget *widget, void *l = 0);
+static void PrefsUI_search_move_dn_cb(Fl_Widget *widget, void *l = 0);
 
-const char *dillorc_bool(int v);
-const char *dillorc_panel_size(int v);
-const char *dillorc_http_referer(int v);
-const char *dillorc_filter_auto_requests(int v);
+static const char *PrefsUI_http_referer(int v);
+static const char *PrefsUI_filter_auto_requests(int v);
 
-bool PrefsUI_known_user_agent(const char *ua);
-
-void PrefsUI_init_fonts_list(void);
-void PrefsUI_free_fonts_list(void);
+static void PrefsUI_init_fonts_list(void);
+static void PrefsUI_free_fonts_list(void);
 
 
 /*
@@ -698,7 +694,7 @@ void PrefsGui::apply()
    prefs.http_proxy = (strlen(http_proxy->value()) ?
 		       a_Url_new(http_proxy->value(), NULL) : NULL);
    prefs.no_proxy = dStrdup(no_proxy->value());
-   prefs.http_referer = dStrdup(dillorc_http_referer(http_referer->value()));
+   prefs.http_referer = dStrdup(PrefsUI_http_referer(http_referer->value()));
    prefs.filter_auto_requests = filter_auto_requests->value();
 
    applied_ = true;
@@ -720,7 +716,7 @@ void PrefsGui::write()
 /*
  * OK button callback.
  */
-void PrefsUI_return_cb(Fl_Widget *widget, void *d)
+static void PrefsUI_return_cb(Fl_Widget *widget, void *d)
 {
    (void)widget;
    PrefsGui *dialog = (PrefsGui*)d;
@@ -734,7 +730,7 @@ void PrefsUI_return_cb(Fl_Widget *widget, void *d)
 /*
  * Cancel button callback.
  */
-void PrefsUI_cancel_cb(Fl_Widget *widget, void *d)
+static void PrefsUI_cancel_cb(Fl_Widget *widget, void *d)
 {
    (void)widget;
    PrefsGui *dialog = (PrefsGui*)d;
@@ -745,7 +741,7 @@ void PrefsUI_cancel_cb(Fl_Widget *widget, void *d)
 /*
  * Add Search callback.
  */
-void PrefsUI_search_add_cb(Fl_Widget *widget, void *l)
+static void PrefsUI_search_add_cb(Fl_Widget *widget, void *l)
 {
    Fl_Select_Browser *sl = (Fl_Select_Browser*)l;
 
@@ -767,7 +763,7 @@ void PrefsUI_search_add_cb(Fl_Widget *widget, void *l)
 /*
  * Edit Search callback.
  */
-void PrefsUI_search_edit_cb(Fl_Widget *widget, void *l)
+static void PrefsUI_search_edit_cb(Fl_Widget *widget, void *l)
 {
    Fl_Select_Browser *sl = (Fl_Select_Browser*)l;
    int line = sl->value();
@@ -794,7 +790,7 @@ void PrefsUI_search_edit_cb(Fl_Widget *widget, void *l)
 /*
  * Delete Search callback.
  */
-void PrefsUI_search_delete_cb(Fl_Widget *widget, void *l)
+static void PrefsUI_search_delete_cb(Fl_Widget *widget, void *l)
 {
    Fl_Select_Browser *sl = (Fl_Select_Browser*)l;
    int line = sl->value();
@@ -813,7 +809,7 @@ void PrefsUI_search_delete_cb(Fl_Widget *widget, void *l)
 /*
  * Move Search Up callback.
  */
-void PrefsUI_search_move_up_cb(Fl_Widget *widget, void *l)
+static void PrefsUI_search_move_up_cb(Fl_Widget *widget, void *l)
 {
    Fl_Select_Browser *sl = (Fl_Select_Browser*)l;
    int line = sl->value();
@@ -825,7 +821,7 @@ void PrefsUI_search_move_up_cb(Fl_Widget *widget, void *l)
 /*
  * Move Search Down callback.
  */
-void PrefsUI_search_move_dn_cb(Fl_Widget *widget, void *l)
+static void PrefsUI_search_move_dn_cb(Fl_Widget *widget, void *l)
 {
    Fl_Select_Browser *sl = (Fl_Select_Browser*)l;
    int line = sl->value();
@@ -835,33 +831,9 @@ void PrefsUI_search_move_dn_cb(Fl_Widget *widget, void *l)
 }
 
 /*
- * Convert a Boolean value to a dillorc string.
- */
-const char *dillorc_bool(int v)
-{
-   return v ? "YES" : "NO";
-}
-
-/*
- * Convert the Dillo panel size to a dillorc string.
- */
-const char *dillorc_panel_size(int v)
-{
-   switch (v) {
-      case P_tiny:
-         return "tiny";
-      case P_small:
-         return "small";
-      case P_medium:
-         return "medium";
-   }
-   return "medium";
-}
-
-/*
  * Convert the HTTP referer selection to a dillorc string.
  */
-const char *dillorc_http_referer(int v)
+static const char *PrefsUI_http_referer(int v)
 {
    switch (v) {
       case 0:
@@ -877,7 +849,7 @@ const char *dillorc_http_referer(int v)
 /*
  * Convert the filter_auto_requests selection to a dillorc string.
  */
-const char *dillorc_filter_auto_requests(int v)
+static const char *PrefsUI_filter_auto_requests(int v)
 {
    switch (v) {
       case PREFS_FILTER_ALLOW_ALL:
@@ -888,30 +860,10 @@ const char *dillorc_filter_auto_requests(int v)
    return "allow_all";
 }
 
-
-/*
- * Return true if the character string represents a known Dillo user agent.
- * This prevents us from saving a UA string containing a Dillo version number,
- * which would hard-code the version in the configuration file.
- */
-bool PrefsUI_known_user_agent(const char *ua)
-{
-   // default user agent
-   if (!strcmp(ua, "Dillo/" VERSION))
-      return true;
-
-   // alternate Mozilla/4.0 user agent
-   if (!strcmp(ua, "Mozilla/4.0 (compatible; Dillo " VERSION ")"))
-      return true;
-
-   // unrecognized
-   return false;
-}
-
 /*
  * Initialize the list of available fonts.
  */
-void PrefsUI_init_fonts_list(void)
+static void PrefsUI_init_fonts_list(void)
 {
    dReturn_if(fonts_list != NULL);
 
@@ -932,7 +884,7 @@ void PrefsUI_init_fonts_list(void)
 /*
  * Free memory used by the list of available fonts.
  */
-void PrefsUI_free_fonts_list(void)
+static void PrefsUI_free_fonts_list(void)
 {
    dReturn_if(fonts_list == NULL);
 
@@ -950,7 +902,7 @@ void PrefsUI_free_fonts_list(void)
 /*
  * Show the preferences dialog.
  */
-int a_PrefsUI_show()
+int a_PrefsUI_show(void)
 {
    int retval;
    PrefsUI_init_fonts_list();
