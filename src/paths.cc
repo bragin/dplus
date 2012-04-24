@@ -18,10 +18,6 @@
 #include "paths.hh"
 
 /*
- * Local data
- */
-
-/*
  * Changes current working directory to /tmp and creates ~/.dillo
  * if not exists.
  */
