@@ -164,7 +164,9 @@ static FILE *Cookies_fopen(const char *filename, const char *mode,
                            const char *init_str)
 {
    FILE *F_in;
+#ifdef ENABLE_COOKIES_TXT
    int fd, rc;
+#endif /* ENABLE_COOKIES_TXT */
 
    if ((F_in = fopen(filename, mode)) == NULL) {
 #ifdef ENABLE_COOKIES_TXT
@@ -185,7 +187,7 @@ static FILE *Cookies_fopen(const char *filename, const char *mode,
       } else {
          MSG("Could not create file: %s!\n", filename);
       }
-#endif  /* ENABLE_COOKIES_TXT */
+#endif /* ENABLE_COOKIES_TXT */
    }
 
    if (F_in) {
@@ -312,7 +314,9 @@ static void Cookies_load_cookies(FILE *stream)
  */
 void a_Cookies_init(void)
 {
+#ifdef ENABLE_COOKIES_TXT
    char *filename;
+#endif /* ENABLE_COOKIES_TXT */
 #ifndef HAVE_LOCKF
    struct flock lck;
 #endif
@@ -336,9 +340,9 @@ void a_Cookies_init(void)
    file_stream = Cookies_fopen(filename, "r+", cookies_txt_header_str);
 
    dFree(filename);
-#else  /* ENABLE_COOKIES_TXT */
+#else /* ENABLE_COOKIES_TXT */
    file_stream = NULL;
-#endif  /* ENABLE_COOKIES_TXT */
+#endif /* ENABLE_COOKIES_TXT */
 
    if (file_stream) {
       /* Try to get a lock from the file descriptor */
@@ -1353,10 +1357,10 @@ static int Cookie_control_init(void)
 #ifdef ENABLE_COOKIES_TXT
    if (!stream)
       return 2;
-#else  /* ENABLE_COOKIES_TXT */
+#else /* ENABLE_COOKIES_TXT */
    if (!stream)
       return 0;
-#endif  /* ENABLE_COOKIES_TXT */
+#endif /* ENABLE_COOKIES_TXT */
 
    /* Get all lines in the file */
    while (!feof(stream)) {
