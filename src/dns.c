@@ -512,7 +512,7 @@ void a_Dns_dillohost_to_string(DilloHost *host, char *dst, size_t size)
    sa_host.sin_family = host->af;
    memcpy(&sa_host.sin_addr, host->data, host->alen);
 
-   switch (getnameinfo(&sa_host, sizeof(sa_host),
+   switch (getnameinfo((struct sockaddr*)&sa_host, sizeof(sa_host),
 		       dst, size, NULL, 0, NI_NUMERICHOST)) {
       case EAI_FAMILY:
 	 snprintf(dst, size, "Unknown address family");
