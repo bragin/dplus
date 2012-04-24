@@ -130,6 +130,15 @@ void a_Cache_init(void)
       dStr_free(ds, 1);
       a_Url_free(url);
    }
+
+   /* inject about:blank into the cache */
+   {
+      DilloUrl *url = a_Url_new("about:blank", NULL);
+      Dstr *ds = dStr_new("");
+      Cache_entry_inject(url, ds);
+      dStr_free(ds, 1);
+      a_Url_free(url);
+   }
 }
 
 /* Client operations ------------------------------------------------------ */
