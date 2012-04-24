@@ -87,13 +87,17 @@ char *dGetportableappdir ()
             dFree(profdir);
             profdir = NULL;
          } else {
-            /* Make the profile directory hidden. Note: Windows API
-             * functions require backslash as the directory separator. */
-            tmp_dir = dStrdup(profdir);
-            for (i = 0; i < (int)strlen(tmp_dir); i++)
-               tmp_dir[i] = (tmp_dir[i] == '/') ? '\\' : tmp_dir[i];
-            SetFileAttributes(tmp_dir, FILE_ATTRIBUTE_HIDDEN);
-            dFree(tmp_dir);
+            /* Make the profile directory hidden if it's outside the home
+             * directory, e.g. on a flash drive. Otherwise, leave it visible
+             * so the user can easily delete it if desired. */
+            if (dStrncasecmp(profdir, dGethomedir(), strlen(dGethomedir()))) {
+               /* WinAPI functions MUST have backslashes in dir paths. */
+               tmp_dir = dStrdup(profdir);
+               for (i = 0; i < (int)strlen(tmp_dir); i++)
+                  tmp_dir[i] = (tmp_dir[i] == '/') ? '\\' : tmp_dir[i];
+               SetFileAttributes(tmp_dir, FILE_ATTRIBUTE_HIDDEN);
+               dFree(tmp_dir);
+            }
          }
       } else {
          /* Either this is an installed instance and no portable profile
