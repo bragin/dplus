@@ -477,7 +477,7 @@ void Download_set_basic_options(CURL *dl_handle, const char *url)
       // Don't use a proxy for these URLs (available in libcurl >= 7.19.4)
       // Note: curl expects a comma-separated list, while Dillo uses spaces.
       char *no_proxy = dStrdup(prefs.no_proxy);
-      for (int i = 0; i < strlen(no_proxy); i++)
+      for (int i = 0; i < (int)strlen(no_proxy); i++)
          no_proxy[i] = (no_proxy[i] == ' ') ? ',' : no_proxy[i];
       curl_easy_setopt(dl_handle, CURLOPT_NOPROXY, no_proxy);
       dFree(no_proxy);
