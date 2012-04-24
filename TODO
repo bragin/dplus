@@ -29,7 +29,7 @@ Network:
 Preferences:
 [ ] Trim the default search engines list (remove OpenBSD man pages, etc.)
 [>] Add an option to use a custom bookmarks file location
-[ ] Add portable application support on Windows (save prefs to current dir)
+[X] Add portable application support on Windows (save prefs to current dir)
 [X] Save preferences in prefsparser.cc, not PrefsGui
 [X] Initialize default search list in prefs.c
 [ ] Split PrefsGui generation into separate functions
