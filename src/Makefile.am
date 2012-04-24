@@ -28,6 +28,8 @@ dplus_SOURCES = \
 	unicows.c \
 	paths.cc \
 	paths.hh \
+	import.c \
+	import.h \
 	ui.cc \
 	ui.hh \
 	uicmd.cc \

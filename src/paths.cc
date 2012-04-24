@@ -17,22 +17,34 @@
 #include "../dlib/dlib.h"
 #include "paths.hh"
 
+#include "import.h"
+
 /*
  * Changes current working directory to /tmp and creates ~/.dplus
  * if not exists.
  */
 void Paths::init(void)
 {
-   char *path;
+   char *path, *dillo_path;
    struct stat st;
 
    path = dStrdup(dGetprofdir());
+   dillo_path = dStrconcat(dGethomedir(), "/.dillo", NULL);
    if (stat(path, &st) == -1) {
       if (errno == ENOENT) {
          MSG("paths: creating directory %s.\n", path);
          if (dMkdir(path, 0700) < 0) {
             MSG("paths: error creating directory %s: %s\n",
                 path, dStrerror(errno));
+         } else {
+#ifndef MSDOS
+            /* Attempt to import preferences, bookmarks, etc. from Dillo */
+            if (stat(dillo_path, &st) != -1) {
+               MSG("paths: attempting to import Dillo profile from %s.\n",
+                   dillo_path);
+               a_Import_dillo_profile(dillo_path);
+            }
+#endif /* MSDOS */
          }
       } else {
          MSG("Dillo: error reading %s: %s\n", path, dStrerror(errno));
@@ -40,6 +52,7 @@ void Paths::init(void)
    }
 
    dFree(path);
+   dFree(dillo_path);
 }
 
 /*
