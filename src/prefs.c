@@ -133,12 +133,12 @@ void a_Prefs_init(void)
               "http://en.wikipedia.org/wiki/Special:Search?search=%s");
    ADD_SEARCH("Free Dictionary "
               "http://www.thefreedictionary.com/%s");
+   ADD_SEARCH("Softpedia Downloads "
+              "http://www.softpedia.com/dyn-search.php?search_term=%s");
    ADD_SEARCH("SourceForge.net "
               "http://sourceforge.net/search/?type_of_search=soft&words=%s");
-   ADD_SEARCH("OpenBSD Manual "
-              "http://www.openbsd.org/cgi-bin/man.cgi?query=%s");
-   ADD_SEARCH("DuckDuckGo "
-                "http://duckduckgo.com/lite/?kp=-1&q=%s");
+   ADD_SEARCH("Wayback Machine "
+              "http://wayback.archive.org/form-submit.jsp?url=%s");
 #  undef ADD_SEARCH
 }
 
