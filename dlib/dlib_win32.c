@@ -70,6 +70,13 @@ char *dGetportableappdir ()
    }
    dFree(app_name);
 
+   /* Don't run as a portable application if the user says not to. */
+   app_name = dStrconcat(dGetcwd(), "/.dplus_is_not_a_portable_app", NULL);
+   if (access(app_name, F_OK | R_OK) == 0) {
+      installed = 1;
+   }
+   dFree(app_name);
+
    /* Always run as a portable application if we find a profile dir. */
    profdir = dStrconcat(dGetcwd(), "/.dplus-portable", NULL);
    if (stat(profdir, &st) == -1) {
