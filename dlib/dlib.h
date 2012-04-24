@@ -178,7 +178,14 @@ char *dGethomedir ();
 char *dGetprofdir ();
 char *dGettempdir ();
 char *dGetline (FILE *stream);
-int dMkdir (const char *path, int mode);
+
+/* Work around incompatible prototypes for mkdir()
+ * Windows expects one argument, most others expect two */
+#ifdef _WIN32
+#  define dMkdir(path,mode) mkdir(mode)
+#else
+#  define dMkdir mkdir
+#endif
 
 
 #ifdef __cplusplus

@@ -960,16 +960,3 @@ char *dGetline (FILE *stream)
    return line;
 }
 
-/*
- * Portability wrapper around mkdir().
- * UNIX expects two arguments, Windows expects one.
- */
-int dMkdir (const char *path, int mode)
-{
-#ifdef _WIN32
-   return mkdir(path);
-#else /* _WIN32 */
-   return mkdir(path, (mode_t)mode);
-#endif /* _WIN32 */
-}
-
