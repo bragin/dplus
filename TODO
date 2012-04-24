@@ -27,20 +27,21 @@ Network:
 [ ] Move directory list generation from file.c into a separate module
 
 Preferences:
+[>] Add an option to use a custom bookmarks file location
 [ ] Add portable application support on Windows (save prefs to current dir)
 [X] Save preferences in prefsparser.cc, not PrefsGui
 [X] Initialize default search list in prefs.c
 [ ] Split PrefsGui generation into separate functions
 [ ] Implement the remaining useful preferences from dillorc
 [X] Change the configuration filename
-[ ] Import preferences and bookmarks from Dillo
+[X] Import preferences and bookmarks from Dillo
 
 User interface:
 [X] Try not to look like we designed it drunk
 [X] Normalize keyboard shortcuts
 [ ] Find a better UI font
 [X] Fix the default downloads directory
-[>] Right-click menu for input boxes
+[X] Right-click menu for input boxes
 [X] Switch to a Firefox-style search bar
 [ ] Use the arrow cursor over the status bar
 [ ] Add zoom controls in the status bar
