@@ -894,13 +894,27 @@ char *dGetprofdir ()
    static char *profdir = NULL;
 
    if (!profdir) {
-#ifdef MSDOS
+#if defined(_WIN32)
+      /* Try to locate the Application Data folder. On Windows 2000 and
+       * newer this is %APPDATA%; older versions require more guesswork. */
+      /* TODO: Add portable application support */
+      if (getenv("APPDATA"))
+         profdir = dStrconcat(getenv("APPDATA"), "/DPlus", NULL);
+      else if (getenv("USERPROFILE"))
+         profdir = dStrconcat(getenv("USERPROFILE"),
+                              "/Application Data/DPlus", NULL);
+      else if (getenv("HOMEDRIVE") && getenv("HOMEPATH"))
+         profdir = dStrconcat(getenv("HOMEDRIVE"), getenv("HOMEPATH"),
+                              "/Application Data/DPlus", NULL);
+      else if (getenv("windir")) /* mostly a fallback for Windows 95/98/Me */
+         profdir = dStrconcat(getenv("windir"), "/DPlus", NULL);
+      else /* this should never happen */
+         profdir = dStrconcat(dGethomedir(), "/.dplus", NULL);
+#elif defined(MSDOS)
       /* Use an 8.3-safe directory name on DOS. */
-      profdir = dStrconcat(getenv("DPLUS"), "/CONFIG", NULL);
+      profdir = dStrconcat(getenv("DPLUS"), "/PROFILE", NULL);
 #else
-      /* Note: It would be better if we used the Application Data folder on
-       * Windows, but that's not available on Windows 95/98/Me/NT 4.0, and
-       * switching would break upgrading from previous Dillo-Win32 releases. */
+      /* Unix and others use the conventional ~/.dplus location. */
       profdir = dStrconcat(dGethomedir(), "/.dplus", NULL);
 #endif
    }
