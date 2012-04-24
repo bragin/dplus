@@ -444,7 +444,7 @@ int a_Bms_save(void)
 
    /* make a safety backup */
    if (stat(BmFile, &BmStat) == 0 && BmStat.st_size > 256) {
-      char *BmFileBak = dStrconcat(BmFile, ".bak", NULL);
+      char *BmFileBak = dStrconcat(dGetprofdir(), "/bookmark.bak", NULL);
       rename(BmFile, BmFileBak);
       dFree(BmFileBak);
    }
