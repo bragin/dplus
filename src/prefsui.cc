@@ -24,8 +24,8 @@
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Return_Button.H>
 #include <FL/Fl_Input.H>
-#include <FL/Fl_Value_Input.H>
 #include <FL/Fl_Choice.H>
+#include <FL/Fl_Input_Choice.H>
 #include <FL/Fl_Check_Button.H>
 #include <FL/Fl_Browser.H>
 #include <FL/Fl_Select_Browser.H>
@@ -94,6 +94,45 @@ public:
    const char* value() const {
       dReturn_val_if(fonts_list == NULL, "");
       return (const char*)dList_nth_data(fonts_list, Fl_Choice::value());
+   }
+};
+
+/*
+ * A custom Fl_Input_Choice for selecting font sizes.
+ * (I'd really rather avoid that clumsy widget completely,
+ *  but for now it seems to be the sanest option available.)
+ */
+class Font_Size_Choice : public Fl_Input_Choice
+{
+public:
+   Font_Size_Choice(int x, int y, int w, int h, const char *l = 0) :
+      Fl_Input_Choice(x, y, w, h, l) {
+      input()->type(FL_INT_INPUT);
+      menubutton()->clear_visible_focus();
+      add("8");
+      add("9");
+      add("10");
+      add("11");
+      add("12");
+      add("14");
+      add("16");
+      add("18");
+      add("20");
+      add("22");
+      add("24");
+      add("26");
+      add("28");
+      add("36");
+      add("48");
+      add("72");
+   }
+   void value(int v) {
+      char vs[8];
+      snprintf(vs, sizeof(vs), "%d", v);
+      input()->value(vs);
+   }
+   int value() {
+      return atoi(input()->value());
    }
 };
 
@@ -258,8 +297,8 @@ private:
    Font_Choice *font_sans_serif;
    Font_Choice *font_monospace;
    Fl_Choice *font_default_serif;
-   Fl_Value_Input *font_min_size;
-   Fl_Value_Input *font_max_size;
+   Font_Size_Choice *font_min_size;
+   Font_Size_Choice *font_max_size;
 
    Fl_Group *search;
    Fl_Box *search_label;
@@ -604,18 +643,14 @@ void PrefsDialog::make_fonts_tab()
    font_default_serif->value(prefs.font_default_serif ? 0 : 1);
    top += 32;
 
-   font_min_size = new Fl_Value_Input(rx+lm, top, (rw/2)-hw, 24, "Min size:");
+   font_min_size = new Font_Size_Choice(rx+lm, top, (rw/2)-hw, 24,
+                                        "Min size:");
    font_min_size->value(prefs.font_min_size);
-   font_min_size->minimum(1);
-   font_min_size->maximum(100);
-   font_min_size->step(1);
    top += 28;
 
-   font_max_size = new Fl_Value_Input(rx+lm, top, (rw/2)-hw, 24, "Max size:");
+   font_max_size = new Font_Size_Choice(rx+lm, top, (rw/2)-hw, 24,
+                                        "Max size:");
    font_max_size->value(prefs.font_max_size);
-   font_max_size->minimum(1);
-   font_max_size->maximum(100);
-   font_max_size->step(1);
 
    fonts->end();
 }
@@ -780,8 +815,8 @@ void PrefsDialog::apply_fonts_tab()
       prefs.font_default_serif = 0;
       break;
    }
-   prefs.font_min_size = (int)(font_min_size->value());
-   prefs.font_max_size = (int)(font_max_size->value());
+   prefs.font_min_size = font_min_size->value();
+   prefs.font_max_size = font_max_size->value();
 }
 
 /*
