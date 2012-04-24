@@ -27,7 +27,7 @@
 #else /* _WIN32 */
 #  define PREFS_FONT_SERIF      "Times New Roman"
 #  define PREFS_FONT_SANS_SERIF "Arial"
-#  define PREFS_FONT_CURSIVE    "Comic Sans MS"
+#  define PREFS_FONT_CURSIVE    "Lucida Calligraphy"
 #  define PREFS_FONT_FANTASY    "Comic Sans MS"
 #  define PREFS_FONT_MONOSPACE  "Courier New"
 #endif /* _WIN32 */
