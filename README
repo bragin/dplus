@@ -32,7 +32,8 @@ Table of Contents
 
   - Tiny executable size (the Windows version fits on a floppy disk).
 
-  - Standalone executable requires no installation or external dependencies.
+  - Standalone executable requires no installation or external dependencies;
+    also supports running as a portable executable on Windows.
 
   - Incredible portability (see "Compatibility," below).
 
