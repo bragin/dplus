@@ -27,6 +27,7 @@ Network:
 [ ] Move directory list generation from file.c into a separate module
 
 Preferences:
+[ ] Trim the default search engines list (remove OpenBSD man pages, etc.)
 [>] Add an option to use a custom bookmarks file location
 [ ] Add portable application support on Windows (save prefs to current dir)
 [X] Save preferences in prefsparser.cc, not PrefsGui
