@@ -182,7 +182,7 @@ char *dGetline (FILE *stream);
 /* Work around incompatible prototypes for mkdir()
  * Windows expects one argument, most others expect two */
 #ifdef _WIN32
-#  define dMkdir(path,mode) mkdir(mode)
+#  define dMkdir(path,mode) mkdir(path)
 #else
 #  define dMkdir mkdir
 #endif
