@@ -28,12 +28,12 @@ Network:
 
 Preferences:
 [X] Trim the default search engines list (remove OpenBSD man pages, etc.)
-[>] Add an option to use a custom bookmarks file location
+[X] Add an option to use a custom bookmarks file location
 [X] Add portable application support on Windows (save prefs to current dir)
 [X] Save preferences in prefsparser.cc, not PrefsGui
 [X] Initialize default search list in prefs.c
 [X] Split PrefsGui generation into separate functions
-[ ] Implement the remaining useful preferences from dillorc
+[>] Implement the remaining useful preferences from dillorc
 [X] Change the configuration filename
 [X] Import preferences and bookmarks from Dillo
 
@@ -44,8 +44,8 @@ User interface:
 [X] Fix the default downloads directory
 [X] Right-click menu for input boxes
 [X] Switch to a Firefox-style search bar
-[ ] Use the arrow cursor over the status bar
-[ ] Add zoom controls in the status bar
+[X] Use the arrow cursor over the status bar
+[X] Add zoom controls in the status bar
 [ ] Add a "new tab" button to the tab bar
 [X] Show the tab bar when only one tab is open
 [ ] Remove middle-click opens new window
