@@ -136,6 +136,24 @@ public:
    }
 };
 
+/*
+ * An Fl_Int_Input that actually supports integer value()s.
+ */
+class Sane_Int_Input : public Fl_Input
+{
+public:
+   Sane_Int_Input(int x, int y, int w, int h, const char *l = 0) :
+      Fl_Input(x, y, w, h, l) { type(FL_INT_INPUT); }
+   void value(int v) {
+      char vs[8];
+      snprintf(vs, sizeof(vs), "%d", v);
+      Fl_Input::value(vs);
+   }
+   int value() {
+      return atoi(Fl_Input::value());
+   }
+};
+
 
 /*
  * Add/edit search engine dialog
@@ -281,6 +299,11 @@ private:
    Fl_Check_Button *always_show_tabs;
    Fl_Check_Button *focus_new_tab;
    Fl_Check_Button *right_click_closes_tab;
+   Sane_Int_Input *width;
+   Fl_Box *geometry_x;
+   Sane_Int_Input *height;
+   Sane_Int_Input *font_factor;
+   Fl_Box *font_factor_percent;
 
    Fl_Group *browsing;
    Fl_Group *content_group;
@@ -409,6 +432,11 @@ PrefsDialog::~PrefsDialog()
    delete focus_new_tab;
    delete right_click_closes_tab;
    delete tabs_group;
+   delete width;
+   delete geometry_x;
+   delete height;
+   delete font_factor;
+   delete font_factor_percent;
    delete view;
 
    delete load_images;
@@ -563,7 +591,7 @@ void PrefsDialog::make_view_tab()
    }
 
    panels_group->end();
-   ltop += panels_group->h() + lh + 4;
+   ltop += panels_group->h() + lh + 8;
 
    tabs_group = new Fl_Group(rx+iw+8, rtop+lh, iw, 88, "Tabs:");
    tabs_group->box(FL_ENGRAVED_BOX);
@@ -591,7 +619,25 @@ void PrefsDialog::make_view_tab()
    }
 
    tabs_group->end();
-   rtop += tabs_group->h() + lh + 4;
+   rtop += tabs_group->h() + lh + 8;
+
+   width = new Sane_Int_Input(rx+8, ltop+lh, 64, 24, "Initial window size:");
+   width->align(FL_ALIGN_TOP | FL_ALIGN_LEFT);
+   width->value(prefs.width);
+
+   geometry_x = new Fl_Box(rx+72, ltop+lh, 12, 24, "x");
+   geometry_x->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
+
+   height = new Sane_Int_Input(rx+84, ltop+lh, 64, 24);
+   height->align(FL_ALIGN_TOP | FL_ALIGN_LEFT);
+   height->value(prefs.height);
+
+   font_factor = new Sane_Int_Input(rx+iw+8, rtop+lh, 64, 24, "Zoom:");
+   font_factor->align(FL_ALIGN_TOP | FL_ALIGN_LEFT);
+   font_factor->value((int)(prefs.font_factor * 100.0));
+
+   font_factor_percent = new Fl_Box(rx+iw+72, rtop+lh, 12, 24, "%");
+   font_factor_percent->align(FL_ALIGN_INSIDE | FL_ALIGN_LEFT);
 
    view->end();
 }
@@ -636,7 +682,6 @@ void PrefsDialog::make_browsing_tab()
    }
 
    content_group->end();
-   ltop += content_group->h() + lh + 4;
 
    // It's tempting to make this an Fl_Input_Choice, but FLTK interprets
    // the "/" character as the start of a submenu. (Can this be disabled?)
@@ -824,6 +869,9 @@ void PrefsDialog::apply_view_tab()
    prefs.always_show_tabs = always_show_tabs->value();
    prefs.focus_new_tab = focus_new_tab->value();
    prefs.right_click_closes_tab = right_click_closes_tab->value();
+   prefs.width = width->value();
+   prefs.height = height->value();
+   prefs.font_factor = (double)font_factor->value() / 100.0;
 }
 
 /*
