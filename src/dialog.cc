@@ -15,6 +15,7 @@
 // Some dialogs are implemented in other source files due to size/complexity:
 //   The Preferences dialog is implemented in prefsui.cc.
 //   The download progress dialog is implemented in download.cc.
+//   The bookmarks dialogs are implemented in bookmark.cc.
 
 #include <math.h> // for rint()
 

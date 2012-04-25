@@ -11,6 +11,8 @@
 
 // Functions/Methods for menus
 
+// Note: The Bookmarks menu is generated in bookmark.cc.
+
 #include <FL/Fl.H>
 #include <FL/Fl_Menu_Item.H>
 
