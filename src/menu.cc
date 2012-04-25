@@ -354,11 +354,6 @@ void a_Menu_page_popup(BrowserWindow *bw, const DilloUrl *url,
 
    has_bugs == TRUE ? pm[3].activate() : pm[3].deactivate();
 
-   if (strncmp(URL_STR(url), "dpi:/vsource/", 13) == 0)
-      pm[2].deactivate();
-   else
-      pm[2].activate();
-
    if (stylesheets) {
       while (stylesheets[j].text) {
          dFree((char *) stylesheets[j].label());

@@ -718,16 +718,7 @@ static void Cache_parse_header(CacheEntry_t *entry)
                entry->Flags |= CA_TempRedirect;   /* 302 Temporary Redirect */
 
             location_url = a_Url_new(location_str, URL_STR_(entry->Url));
-            if (URL_FLAGS(location_url) & (URL_Post + URL_Get) &&
-                dStrcasecmp(URL_SCHEME(location_url), "dpi") == 0 &&
-                dStrcasecmp(URL_SCHEME(entry->Url), "dpi") != 0) {
-               /* Forbid dpi GET and POST from non dpi-generated urls */
-               MSG("Redirection Denied! '%s' -> '%s'\n",
-                   URL_STR(entry->Url), URL_STR(location_url));
-               a_Url_free(location_url);
-            } else {
-               entry->Location = location_url;
-            }
+            entry->Location = location_url;
             dFree(location_str);
          }
       } else if (strncmp(header + 9, "401", 3) == 0) {

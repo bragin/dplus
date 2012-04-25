@@ -472,12 +472,7 @@ void a_Capi_ccc(int Op, int Branch, int Dir, ChainLink *Info,
             conn = Info->LocalKey;
             conn->InfoSend = NULL;
             if (Data2) {
-               if (!strcmp(Data2, "DpidERROR")) {
-                  a_UIcmd_set_msg(conn->bw,
-                                  "ERROR: can't start dpid daemon "
-                                  "(URL scheme = '%s')!",
-                                  conn->url ? URL_SCHEME(conn->url) : "");
-               } else if (!strcmp(Data2, "Both") && conn->InfoRecv) {
+               if (!strcmp(Data2, "Both") && conn->InfoRecv) {
                   /* abort the other branch too */
                   a_Capi_ccc(OpAbort, 2, BCK, conn->InfoRecv, NULL, NULL);
                }
