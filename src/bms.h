@@ -2,8 +2,12 @@
 #define __BMS_H__
 
 /*
- * Shared between bookmark.c and bookgui.cc.
- * Don't call these functions outside those files!
+ * Bookmark storage functions.
+ * These should not be called outside the Bookmarks module.
+ *
+ * Note: Really these should be merged into the Bookmarks module, but
+ * that would result in a nightmarishly long bookmark.cc.  Anyway, it
+ * would take a while to convert all these functions to valid C++.
  */
 
 #ifdef __cplusplus
