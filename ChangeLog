@@ -39,4 +39,5 @@ User Interface:
 - Treat Ctrl-clicking a hyperlink the same as middle-clicking it.
 - Use standard keyboard shortcuts to match other browsers.
 - Always show the tab bar by default.
+- Add a zoom control in the status bar.
 - Minor bugfixes.
