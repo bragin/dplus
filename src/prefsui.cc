@@ -11,8 +11,12 @@
 
 // Preferences dialog
 
-// This currently supports about half the options allowed in dillorc.
-// TODO: Implement support for the other half.
+// This covers most of the preferences the user is likely to want to change.
+// Some more abstruse options (like the option to hide the Preferences dialog!)
+// still require manually editing the configuration file.
+
+// TODO: Finish reorganizing the dialog.
+// TODO: Clean up some of the (insane) geometry calculations.
 
 #include <FL/fl_ask.H>
 #include <FL/Fl.H>
@@ -525,13 +529,13 @@ void PrefsDialog::make_general_tab()
    start_page->value(URL_STR(prefs.start_page));
    top += 32;
 
-   panel_size = new Fl_Choice(rx+lm, top, (rw/2)-44, 24, "Panel size:");
+   panel_size = new Fl_Choice(rx+lm, top, (rw/2)-hw, 24, "Panel size:");
    panel_size->add("Tiny");
    panel_size->add("Small");
    panel_size->add("Medium");
    panel_size->value(prefs.panel_size);
 
-   small_icons = new Fl_Check_Button(rx+(rw/2)+hw, top, (rw/2)-hm, 24,
+   small_icons = new Fl_Check_Button(rx+lm+(rw/2)-hw+8, top, (rw/2)-hm, 24,
                                      "Small icons");
    small_icons->value(prefs.small_icons);
    top += 32;
