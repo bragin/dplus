@@ -257,8 +257,7 @@ public:
    inline bool applied() const { return applied_; }
 
 private:
-   int top, rx, ry, rw, rh, lm, rm, hw, hm;
-   int iw, ltop, rtop;
+   int top, rx, ry, rw, rh, lm, rm, hw, hm, lh;
 
    Fl_Tabs *tabs;
    Fl_Return_Button *buttonOK;
@@ -269,29 +268,31 @@ private:
    Fl_Input *start_page;
    Fl_Choice *panel_size;
    Fl_Check_Button *small_icons;
-   Fl_Box *bookmarks_file_label;
-   Fl_Check_Button *bookmarks_file_check;
-   Fl_Input *bookmarks_file;
-   Fl_Button *bookmarks_button;
+   Fl_Box *colors_label;
+   Fl_Check_Button *allow_white_bg;  // negate
+   Fl_Check_Button *contrast_visited_color;
 
    Fl_Group *view;
-   Fl_Box *panels_label;
+   Fl_Group *panels_group;
    Fl_Check_Button *show_search;
    Fl_Check_Button *show_progress_box;
    Fl_Check_Button *fullwindow_start;
-   Fl_Box *tabs_label;
+   Fl_Group *tabs_group;
    Fl_Check_Button *always_show_tabs;
    Fl_Check_Button *focus_new_tab;
    Fl_Check_Button *right_click_closes_tab;
 
    Fl_Group *browsing;
-   Fl_Box *content_label;
+   Fl_Group *content_group;
    Fl_Check_Button *load_images;
    Fl_Check_Button *load_stylesheets;
    Fl_Check_Button *parse_embedded_css;
-   Fl_Box *colors_label;
-   Fl_Check_Button *allow_white_bg;  // negate
-   Fl_Check_Button *contrast_visited_color;
+   Fl_Input *http_user_agent;
+   Fl_Choice *filter_auto_requests;
+   Fl_Box *bookmarks_file_label;
+   Fl_Check_Button *bookmarks_file_check;
+   Fl_Input *bookmarks_file;
+   Fl_Button *bookmarks_button;
 
    Fl_Group *fonts;
    Font_Choice *font_serif;
@@ -312,12 +313,10 @@ private:
    Fl_Button *search_move_dn;
 
    Fl_Group *network;
-   Fl_Input *http_user_agent;
    Fl_Input *http_language;
    Fl_Input *http_proxy;
    Fl_Input *no_proxy;
    Fl_Choice *http_referer;
-   Fl_Choice *filter_auto_requests;
 
    bool applied_;
 
@@ -359,7 +358,7 @@ static void PrefsUI_free_fonts_list(void);
 PrefsDialog::PrefsDialog()
    : Fl_Window(400, 270, "Preferences")
 {
-   lm = 108, rm = 116, hw = 68, hm = 76;
+   lm = 108, rm = 116, hw = 68, hm = 76, lh = 16;
    begin();
 
    tabs = new Fl_Tabs(8, 8, w()-16, h()-48);
@@ -397,29 +396,31 @@ PrefsDialog::~PrefsDialog()
    delete start_page;
    delete panel_size;
    delete small_icons;
+   delete colors_label;
+   delete allow_white_bg;
+   delete contrast_visited_color;
+   delete general;
+
+   delete show_search;
+   delete show_progress_box;
+   delete fullwindow_start;
+   delete panels_group;
+   delete always_show_tabs;
+   delete focus_new_tab;
+   delete right_click_closes_tab;
+   delete tabs_group;
+   delete view;
+
+   delete load_images;
+   delete load_stylesheets;
+   delete parse_embedded_css;
+   delete content_group;
+   delete http_user_agent;
+   delete filter_auto_requests;
    delete bookmarks_file_label;
    delete bookmarks_file_check;
    delete bookmarks_file;
    delete bookmarks_button;
-   delete general;
-
-   delete panels_label;
-   delete show_search;
-   delete show_progress_box;
-   delete fullwindow_start;
-   delete tabs_label;
-   delete always_show_tabs;
-   delete focus_new_tab;
-   delete right_click_closes_tab;
-   delete view;
-
-   delete content_label;
-   delete load_images;
-   delete load_stylesheets;
-   delete parse_embedded_css;
-   delete colors_label;
-   delete allow_white_bg;
-   delete contrast_visited_color;
    delete browsing;
 
    delete font_serif;
@@ -440,12 +441,10 @@ PrefsDialog::~PrefsDialog()
    delete search_move_dn;
    delete search;
 
-   delete http_user_agent;
    delete http_language;
    delete http_proxy;
    delete no_proxy;
    delete http_referer;
-   delete filter_auto_requests;
    delete network;
 
    delete tabs;
@@ -509,20 +508,18 @@ void PrefsDialog::make_general_tab()
    small_icons->value(prefs.small_icons);
    top += 32;
 
-   bookmarks_file_label = new Fl_Box(rx+8, top, lm-8, 24, "Bookmarks:");
-   bookmarks_file_label->align(FL_ALIGN_INSIDE | FL_ALIGN_RIGHT);
+   colors_label = new Fl_Box(rx+8, top, lm-8, 24, "Colors:");
+   colors_label->align(FL_ALIGN_INSIDE | FL_ALIGN_RIGHT);
 
-   bookmarks_file_check = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
-                                              "Use a custom bookmarks file");
-   bookmarks_file_check->value(prefs.bookmarks_file == NULL ? 0 : 1);
+   allow_white_bg = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
+                                        "Darken white backgrounds");
+   allow_white_bg->value(!prefs.allow_white_bg);
    top += 28;
 
-   bookmarks_file = new D_Input(rx+lm, top, rw-rm-74, 24);
-   bookmarks_file->value(prefs.bookmarks_file);
-
-   bookmarks_button = new Fl_Button(rx+lm+rw-rm-72, top, 72, 24, "Browse...");
-   bookmarks_button->callback(PrefsUI_bookmarks_button_cb,
-                              (void*)bookmarks_file);
+   contrast_visited_color = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
+                                                "Always contrast "
+					        "visited link color");
+   contrast_visited_color->value(prefs.contrast_visited_color);
 
    general->end();
 }
@@ -540,41 +537,61 @@ void PrefsDialog::make_view_tab()
    iw = (rw - 16) / 2;
    ltop = rtop = top;
 
-   panels_label = new Fl_Box(rx+8, ltop, iw, 24, "Panels:");
-   panels_label->align(FL_ALIGN_INSIDE | FL_ALIGN_LEFT);
-   ltop += 28;
+   panels_group = new Fl_Group(rx+8, ltop+lh, iw-8, 88, "Panels:");
+   panels_group->box(FL_ENGRAVED_BOX);
+   panels_group->align(FL_ALIGN_TOP | FL_ALIGN_LEFT);
+   panels_group->begin();
 
-   show_search = new Fl_Check_Button(rx+8, ltop, iw, 24,
-                                     "Show the search bar");
-   show_search->value(prefs.show_search);
-   ltop += 28;
+   {
+      int rx = panels_group->x() - 4,
+          ltop = panels_group->y() + 4,
+          iw = panels_group->w() - 8;
 
-   show_progress_box = new Fl_Check_Button(rx+8, ltop, iw, 24,
-                                           "Show progress bars");
-   show_progress_box->value(prefs.show_progress_box);
-   ltop += 28;
+      show_search = new Fl_Check_Button(rx+8, ltop, iw, 24,
+                                        "Show the search bar");
+      show_search->value(prefs.show_search);
+      ltop += 28;
 
-   fullwindow_start = new Fl_Check_Button(rx+8, ltop, iw, 24,
-				          "Hide panels on startup");
-   fullwindow_start->value(prefs.fullwindow_start);
+      show_progress_box = new Fl_Check_Button(rx+8, ltop, iw, 24,
+                                              "Show progress bars");
+      show_progress_box->value(prefs.show_progress_box);
+      ltop += 28;
 
-   tabs_label = new Fl_Box(rx+iw+8, rtop, iw, 24, "Tabs:");
-   tabs_label->align(FL_ALIGN_INSIDE | FL_ALIGN_LEFT);
-   rtop += 28;
+      fullwindow_start = new Fl_Check_Button(rx+8, ltop, iw, 24,
+                                             "Hide panels on startup");
+      fullwindow_start->value(prefs.fullwindow_start);
+   }
 
-   always_show_tabs = new Fl_Check_Button(rx+iw+8, rtop, iw, 24,
-                                          "Always show the tab bar");
-   always_show_tabs->value(prefs.always_show_tabs);
-   rtop += 28;
+   panels_group->end();
+   ltop += panels_group->h() + lh + 4;
 
-   focus_new_tab = new Fl_Check_Button(rx+iw+8, rtop, iw, 24,
-                                       "Focus new tabs");
-   focus_new_tab->value(prefs.focus_new_tab);
-   rtop += 28;
+   tabs_group = new Fl_Group(rx+iw+8, rtop+lh, iw, 88, "Tabs:");
+   tabs_group->box(FL_ENGRAVED_BOX);
+   tabs_group->align(FL_ALIGN_TOP | FL_ALIGN_LEFT);
+   tabs_group->begin();
 
-   right_click_closes_tab = new Fl_Check_Button(rx+iw+8, rtop, iw, 24,
-                                                "Right-click tabs to close");
-   right_click_closes_tab->value(prefs.right_click_closes_tab);
+   {
+      int rx = tabs_group->x() - iw + 4,
+          rtop = tabs_group->y() + 4,
+          iw = tabs_group->w() - 8;
+
+      always_show_tabs = new Fl_Check_Button(rx+iw+8, rtop, iw, 24,
+                                             "Always show the tab bar");
+      always_show_tabs->value(prefs.always_show_tabs);
+      rtop += 28;
+
+      focus_new_tab = new Fl_Check_Button(rx+iw+8, rtop, iw, 24,
+                                          "Focus new tabs");
+      focus_new_tab->value(prefs.focus_new_tab);
+      rtop += 28;
+
+      right_click_closes_tab = new Fl_Check_Button(rx+iw+8, rtop, iw, 24,
+                                                   "Right-click tabs to close");
+      right_click_closes_tab->value(prefs.right_click_closes_tab);
+   }
+
+   tabs_group->end();
+   rtop += tabs_group->h() + lh + 4;
 
    view->end();
 }
@@ -588,36 +605,69 @@ void PrefsDialog::make_browsing_tab()
    browsing->begin();
    top = ry + 8;
 
-   content_label = new Fl_Box(rx+8, top, lm-8, 24, "Content:");
-   content_label->align(FL_ALIGN_INSIDE | FL_ALIGN_RIGHT);
+   int iw, ltop, rtop;
+   iw = (rw - 16) / 2;
+   ltop = rtop = top;
 
-   load_images = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
-                                     "Load images");
-   load_images->value(prefs.load_images);
+   content_group = new Fl_Group(rx+8, ltop+lh, iw-8, 88, "Content:");
+   content_group->box(FL_ENGRAVED_BOX);
+   content_group->align(FL_ALIGN_TOP | FL_ALIGN_LEFT);
+   content_group->begin();
+
+   {
+      int rx = content_group->x() - 4,
+          ltop = content_group->y() + 4,
+          iw = content_group->w() - 8;
+
+      load_images = new Fl_Check_Button(rx+8, ltop, iw, 24,
+                                        "Load images");
+      load_images->value(prefs.load_images);
+      ltop += 28;
+
+      load_stylesheets = new Fl_Check_Button(rx+8, ltop, iw, 24,
+                                             "Load stylesheets");
+      load_stylesheets->value(prefs.load_stylesheets);
+      ltop += 28;
+
+      parse_embedded_css = new Fl_Check_Button(rx+8, ltop, iw, 24,
+                                               "Use embedded styles");
+      parse_embedded_css->value(prefs.parse_embedded_css);
+      ltop += 28;
+   }
+
+   content_group->end();
+   ltop += content_group->h() + lh + 4;
+
+   // It's tempting to make this an Fl_Input_Choice, but FLTK interprets
+   // the "/" character as the start of a submenu. (Can this be disabled?)
+   http_user_agent = new D_Input(rx+iw+8, rtop+lh, iw, 24, "User agent:");
+   http_user_agent->align(FL_ALIGN_TOP | FL_ALIGN_LEFT);
+   http_user_agent->value(prefs.http_user_agent);
+   http_user_agent->redraw();
+   rtop += lh + 28;
+
+   filter_auto_requests = new Fl_Choice(rx+iw+8, rtop+lh, iw, 24,
+                                        "Automatic requests:");
+   filter_auto_requests->align(FL_ALIGN_TOP | FL_ALIGN_LEFT);
+   filter_auto_requests->add("Allow all requests");
+   filter_auto_requests->add("From same domain only");
+   filter_auto_requests->value(prefs.filter_auto_requests);
+
+   top = ry + rh - 64;
+   bookmarks_file_label = new Fl_Box(rx+8, top, lm-8, 24, "Bookmarks:");
+   bookmarks_file_label->align(FL_ALIGN_INSIDE | FL_ALIGN_RIGHT);
+
+   bookmarks_file_check = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
+                                              "Use a custom bookmarks file");
+   bookmarks_file_check->value(prefs.bookmarks_file == NULL ? 0 : 1);
    top += 28;
 
-   load_stylesheets = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
-                                          "Load stylesheets");
-   load_stylesheets->value(prefs.load_stylesheets);
-   top += 28;
+   bookmarks_file = new D_Input(rx+lm, top, rw-rm-74, 24);
+   bookmarks_file->value(prefs.bookmarks_file);
 
-   parse_embedded_css = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
-                                            "Use embedded styles");
-   parse_embedded_css->value(prefs.parse_embedded_css);
-   top += 32;
-
-   colors_label = new Fl_Box(rx+8, top, lm-8, 24, "Colors:");
-   colors_label->align(FL_ALIGN_INSIDE | FL_ALIGN_RIGHT);
-
-   allow_white_bg = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
-                                        "Darken white backgrounds");
-   allow_white_bg->value(!prefs.allow_white_bg);
-   top += 28;
-
-   contrast_visited_color = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
-                                                "Always contrast "
-					        "visited link color");
-   contrast_visited_color->value(prefs.contrast_visited_color);
+   bookmarks_button = new Fl_Button(rx+lm+rw-rm-72, top, 72, 24, "Browse...");
+   bookmarks_button->callback(PrefsUI_bookmarks_button_cb,
+                              (void*)bookmarks_file);
 
    browsing->end();
 }
@@ -719,12 +769,6 @@ void PrefsDialog::make_network_tab()
    network->begin();
    top = ry + 8;
 
-   // It's tempting to make this an Fl_Input_Choice, but FLTK interprets
-   // the "/" character as the start of a submenu. (Can this be disabled?)
-   http_user_agent = new D_Input(rx+lm, top, rw-rm, 24, "User agent:");
-   http_user_agent->value(prefs.http_user_agent);
-   top += 28;
-
    http_language = new D_Input(rx+lm, top, rw-rm, 24, "Languages:");
    http_language->value(prefs.http_language);
    top += 32;
@@ -749,11 +793,6 @@ void PrefsDialog::make_network_tab()
       http_referer->value(2);
    top += 28;
 
-   filter_auto_requests = new Fl_Choice(rx+lm, top, rw-rm, 24, "Requests:");
-   filter_auto_requests->add("Allow all requests (recommended)");
-   filter_auto_requests->add("Allow auto requests from same domain only");
-   filter_auto_requests->value(prefs.filter_auto_requests);
-
    network->end();
 }
 
@@ -764,15 +803,14 @@ void PrefsDialog::apply_general_tab()
 {
    a_Url_free(prefs.home);
    a_Url_free(prefs.start_page);
-   dFree(prefs.bookmarks_file);
 
    prefs.home = a_Url_new(home->value(), NULL);
    prefs.start_page = a_Url_new(start_page->value(), NULL);
    prefs.panel_size = panel_size->value();
    prefs.small_icons = small_icons->value();
-   prefs.bookmarks_file = (bookmarks_file_check->value() &&
-                           strlen(bookmarks_file->value()) > 0) ?
-                          dStrdup(bookmarks_file->value()) : NULL;
+   prefs.allow_white_bg = !(allow_white_bg->value());
+   prefs.bg_color = allow_white_bg->value() ? PREFSGUI_SHADE : PREFSGUI_WHITE;
+   prefs.contrast_visited_color = contrast_visited_color->value();
 }
 
 /*
@@ -796,9 +834,15 @@ void PrefsDialog::apply_browsing_tab()
    prefs.load_images = load_images->value();
    prefs.load_stylesheets = load_stylesheets->value();
    prefs.parse_embedded_css = parse_embedded_css->value();
-   prefs.allow_white_bg = !(allow_white_bg->value());
-   prefs.bg_color = allow_white_bg->value() ? PREFSGUI_SHADE : PREFSGUI_WHITE;
-   prefs.contrast_visited_color = contrast_visited_color->value();
+
+   dFree(prefs.http_user_agent);
+   prefs.http_user_agent = dStrdup(http_user_agent->value());
+   prefs.filter_auto_requests = filter_auto_requests->value();
+
+   dFree(prefs.bookmarks_file);
+   prefs.bookmarks_file = (bookmarks_file_check->value() &&
+                           strlen(bookmarks_file->value()) > 0) ?
+                          dStrdup(bookmarks_file->value()) : NULL;
 }
 
 /*
@@ -849,13 +893,11 @@ void PrefsDialog::apply_search_tab()
  */
 void PrefsDialog::apply_network_tab()
 {
-   dFree(prefs.http_user_agent);
    dFree(prefs.http_language);
    a_Url_free(prefs.http_proxy);
    dFree(prefs.no_proxy);
    dFree(prefs.http_referer);
 
-   prefs.http_user_agent = dStrdup(http_user_agent->value());
    prefs.http_language = dStrdup(http_language->value());
    prefs.http_proxy = (strlen(http_proxy->value()) ?
 		       a_Url_new(http_proxy->value(), NULL) : NULL);
@@ -871,7 +913,6 @@ void PrefsDialog::apply_network_tab()
       prefs.http_referer = dStrdup("path");
       break;
    }
-   prefs.filter_auto_requests = filter_auto_requests->value();
 }
 
 
