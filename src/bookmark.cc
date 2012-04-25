@@ -45,10 +45,10 @@ const char *BOOKMARKS_LABEL_ADD = "&Bookmark this page";
 const char *BOOKMARKS_LABEL_ADD_SEC = "&Add bookmark section";
 
 /* forward declarations */
-void Bookmarks_add(const char *url, const char *title);
-void Bookmarks_add_section(void);
-void Bookmarks_do_edit(void *r);
-void Bookmarks_do_sec_edit(void *r);
+static void Bookmarks_add(const char *url, const char *title);
+static void Bookmarks_add_section(void);
+static void Bookmarks_do_edit(void *r);
+static void Bookmarks_do_sec_edit(void *r);
 
 
 /* -- Add/edit bookmark dialog --------------------------------------------- */
@@ -336,7 +336,7 @@ static void Bookmarks_section_cb(Fl_Widget*, void *r)
 /*
  * Generate the bookmarks menu.
  */
-void Bookmarks_generate_menu(void)
+static void Bookmarks_generate_menu(void)
 {
    void *r;
    int k = 0;
@@ -396,7 +396,7 @@ void Bookmarks_generate_menu(void)
 /*
  * Destroy the bookmarks menu.
  */
-void Bookmarks_clean_menu(void)
+static void Bookmarks_clean_menu(void)
 {
    if (menu != NULL)
       dFree(menu);
@@ -421,7 +421,7 @@ void a_Bookmarks_reload(void)
 /*
  * Add a new bookmark.
  */
-void Bookmarks_add(const char *url, const char *title)
+static void Bookmarks_add(const char *url, const char *title)
 {
    Bookmarks_edit *e = new Bookmarks_edit(-1, url, title, last_section);
    e->show();
@@ -435,7 +435,7 @@ void Bookmarks_add(const char *url, const char *title)
 /*
  * Add a new section.
  */
-void Bookmarks_add_section(void)
+static void Bookmarks_add_section(void)
 {
    Bookmarks_sec_edit *e = new Bookmarks_sec_edit(-1, NULL);
    e->show();
@@ -449,7 +449,7 @@ void Bookmarks_add_section(void)
 /*
  * Edit an existing bookmark.
  */
-void Bookmarks_do_edit(void *r)
+static void Bookmarks_do_edit(void *r)
 {
    Bookmarks_edit *e = new Bookmarks_edit(a_Bms_get_bm_key(r),
                                           a_Bms_get_bm_url(r),
@@ -466,7 +466,7 @@ void Bookmarks_do_edit(void *r)
 /*
  * Edit an existing section.
  */
-void Bookmarks_do_sec_edit(void *r)
+static void Bookmarks_do_sec_edit(void *r)
 {
    Bookmarks_sec_edit *e = new Bookmarks_sec_edit(a_Bms_get_sec_num(r),
                                                   a_Bms_get_sec_title(r));
