@@ -49,7 +49,7 @@
 #include "capi.h"
 #include "dicache.h"
 #include "cookies.h"
-#include "bookmark.h"
+#include "bookmark.hh"
 #include "auth.h"
 #include "download.hh"
 #include "unicows.h"

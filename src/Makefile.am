@@ -104,10 +104,8 @@ dplus_SOURCES = \
 	table.hh \
 	bms.h \
 	bms.c \
-	bookgui.hh \
-	bookgui.cc \
-	bookmark.c \
-	bookmark.h \
+	bookmark.cc \
+	bookmark.hh \
 	dns.c \
 	dns.h \
 	gif.c \

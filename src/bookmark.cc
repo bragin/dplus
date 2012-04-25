@@ -1,5 +1,5 @@
 /*
- * File: bookgui.cc
+ * File: bookmark.cc
  *
  * Copyright 2011 Benjamin Johnson <obeythepenguin@users.sourceforge.net>
  *
@@ -27,7 +27,7 @@
 #include "keys.hh"
 
 #include "bms.h"
-#include "bookgui.hh"
+#include "bookmark.hh"
 #include "../widgets/input.hh"
 
 #include "msg.h"
@@ -41,22 +41,23 @@ void *vbw_last = NULL;
 Fl_Menu_Item *menu = NULL;
 static int last_section = 0;
 
-const char *BOOKGUI_LABEL_ADD = "&Bookmark this page";
-const char *BOOKGUI_LABEL_ADD_SEC = "&Add bookmark section";
+const char *BOOKMARKS_LABEL_ADD = "&Bookmark this page";
+const char *BOOKMARKS_LABEL_ADD_SEC = "&Add bookmark section";
 
 /* forward declarations */
-void Bookgui_add_section(void);
-void Bookgui_do_edit(void *r);
-void Bookgui_do_sec_edit(void *r);
+void Bookmarks_add(const char *url, const char *title);
+void Bookmarks_add_section(void);
+void Bookmarks_do_edit(void *r);
+void Bookmarks_do_sec_edit(void *r);
 
 
 /* -- Add/edit bookmark dialog --------------------------------------------- */
 
-class Bookgui_edit : public Fl_Window
+class Bookmarks_edit : public Fl_Window
 {
 public:
-   Bookgui_edit(int k, const char *u = 0, const char *t = 0, int s = 0);
-   ~Bookgui_edit();
+   Bookmarks_edit(int k, const char *u = 0, const char *t = 0, int s = 0);
+   ~Bookmarks_edit();
 
 private:
    int key;  // -1 to add, otherwise modifies
@@ -74,7 +75,7 @@ private:
    static void delete_cb(Fl_Widget*, void *cbdata);
 };
 
-Bookgui_edit::Bookgui_edit(int k, const char *u, const char *t, int s)
+Bookmarks_edit::Bookmarks_edit(int k, const char *u, const char *t, int s)
    : Fl_Window(450, 130, "Add/Edit Bookmark")
 {
    void *r;
@@ -93,14 +94,14 @@ Bookgui_edit::Bookgui_edit(int k, const char *u, const char *t, int s)
    section->value(s);
 
    button_ok = new Fl_Return_Button(w()-176, h()-32, 80, 24, "OK");
-   button_ok->callback(Bookgui_edit::save_cb, (void*)this);
+   button_ok->callback(Bookmarks_edit::save_cb, (void*)this);
 
    button_cancel = new Fl_Button(w()-88, h()-32, 80, 24, "Cancel");
-   button_cancel->callback(Bookgui_edit::cancel_cb, (void*)this);
+   button_cancel->callback(Bookmarks_edit::cancel_cb, (void*)this);
 
    if (k > -1) {
       button_delete = new Fl_Button(8, h()-32, 80, 24, "Delete");
-      button_delete->callback(Bookgui_edit::delete_cb, (void*)this);
+      button_delete->callback(Bookmarks_edit::delete_cb, (void*)this);
    }
 
    end();
@@ -113,7 +114,7 @@ Bookgui_edit::Bookgui_edit(int k, const char *u, const char *t, int s)
    set_modal();
 }
 
-Bookgui_edit::~Bookgui_edit()
+Bookmarks_edit::~Bookmarks_edit()
 {
    dFree((void*)url);
 
@@ -126,9 +127,9 @@ Bookgui_edit::~Bookgui_edit()
       delete button_delete;
 }
 
-void Bookgui_edit::save_cb(Fl_Widget*, void *cbdata)
+void Bookmarks_edit::save_cb(Fl_Widget*, void *cbdata)
 {
-   Bookgui_edit *e = (Bookgui_edit*)cbdata;
+   Bookmarks_edit *e = (Bookmarks_edit*)cbdata;
    void *s = a_Bms_get_sec(e->section->value());
 
    if (e->key == -1) {
@@ -142,24 +143,24 @@ void Bookgui_edit::save_cb(Fl_Widget*, void *cbdata)
    }
 
    a_Bms_save();
-   a_Bookgui_reload();
+   a_Bookmarks_reload();
 
    e->hide();
 }
 
-void Bookgui_edit::cancel_cb(Fl_Widget*, void *cbdata)
+void Bookmarks_edit::cancel_cb(Fl_Widget*, void *cbdata)
 {
-   Bookgui_edit *e = (Bookgui_edit*)cbdata;
+   Bookmarks_edit *e = (Bookmarks_edit*)cbdata;
    e->hide();
 }
 
-void Bookgui_edit::delete_cb(Fl_Widget*, void *cbdata)
+void Bookmarks_edit::delete_cb(Fl_Widget*, void *cbdata)
 {
-   Bookgui_edit *e = (Bookgui_edit*)cbdata;
+   Bookmarks_edit *e = (Bookmarks_edit*)cbdata;
 
    a_Bms_del(e->key);
    a_Bms_save();
-   a_Bookgui_reload();
+   a_Bookmarks_reload();
 
    e->hide();
 }
@@ -167,11 +168,11 @@ void Bookgui_edit::delete_cb(Fl_Widget*, void *cbdata)
 
 /* -- Add/edit section dialog ---------------------------------------------- */
 
-class Bookgui_sec_edit : public Fl_Window
+class Bookmarks_sec_edit : public Fl_Window
 {
 public:
-   Bookgui_sec_edit(int k, const char *t = 0);
-   ~Bookgui_sec_edit();
+   Bookmarks_sec_edit(int k, const char *t = 0);
+   ~Bookmarks_sec_edit();
 
 private:
    int key;  // -1 to add, otherwise modifies
@@ -187,7 +188,7 @@ private:
    static void delete_cb(Fl_Widget*, void *cbdata);
 };
 
-Bookgui_sec_edit::Bookgui_sec_edit(int k, const char *t)
+Bookmarks_sec_edit::Bookmarks_sec_edit(int k, const char *t)
    : Fl_Window(450, 102, "Add/Edit Section")
 {
    key = k;
@@ -198,14 +199,14 @@ Bookgui_sec_edit::Bookgui_sec_edit(int k, const char *t)
    title_input->value(t);
 
    button_ok = new Fl_Return_Button(w()-176, h()-32, 80, 24, "OK");
-   button_ok->callback(Bookgui_sec_edit::save_cb, (void*)this);
+   button_ok->callback(Bookmarks_sec_edit::save_cb, (void*)this);
 
    button_cancel = new Fl_Button(w()-88, h()-32, 80, 24, "Cancel");
-   button_cancel->callback(Bookgui_sec_edit::cancel_cb, (void*)this);
+   button_cancel->callback(Bookmarks_sec_edit::cancel_cb, (void*)this);
 
    if (k > -1) {
       button_delete = new Fl_Button(8, h()-32, 80, 24, "Delete");
-      button_delete->callback(Bookgui_sec_edit::delete_cb, (void*)this);
+      button_delete->callback(Bookmarks_sec_edit::delete_cb, (void*)this);
    }
 
    end();
@@ -218,7 +219,7 @@ Bookgui_sec_edit::Bookgui_sec_edit(int k, const char *t)
    set_modal();
 }
 
-Bookgui_sec_edit::~Bookgui_sec_edit()
+Bookmarks_sec_edit::~Bookmarks_sec_edit()
 {
    delete title_input;
 
@@ -228,9 +229,9 @@ Bookgui_sec_edit::~Bookgui_sec_edit()
       delete button_delete;
 }
 
-void Bookgui_sec_edit::save_cb(Fl_Widget*, void *cbdata)
+void Bookmarks_sec_edit::save_cb(Fl_Widget*, void *cbdata)
 {
-   Bookgui_sec_edit *e = (Bookgui_sec_edit*)cbdata;
+   Bookmarks_sec_edit *e = (Bookmarks_sec_edit*)cbdata;
 
    if (e->key == -1) {
       a_Bms_sec_add(e->title_input->value());
@@ -239,24 +240,24 @@ void Bookgui_sec_edit::save_cb(Fl_Widget*, void *cbdata)
    }
 
    a_Bms_save();
-   a_Bookgui_reload();
+   a_Bookmarks_reload();
 
    e->hide();
 }
 
-void Bookgui_sec_edit::cancel_cb(Fl_Widget*, void *cbdata)
+void Bookmarks_sec_edit::cancel_cb(Fl_Widget*, void *cbdata)
 {
-   Bookgui_sec_edit *e = (Bookgui_sec_edit*)cbdata;
+   Bookmarks_sec_edit *e = (Bookmarks_sec_edit*)cbdata;
    e->hide();
 }
 
-void Bookgui_sec_edit::delete_cb(Fl_Widget*, void *cbdata)
+void Bookmarks_sec_edit::delete_cb(Fl_Widget*, void *cbdata)
 {
-   Bookgui_sec_edit *e = (Bookgui_sec_edit*)cbdata;
+   Bookmarks_sec_edit *e = (Bookmarks_sec_edit*)cbdata;
 
    a_Bms_sec_del(e->key);
    a_Bms_save();
-   a_Bookgui_reload();
+   a_Bookmarks_reload();
 
    e->hide();
 }
@@ -267,20 +268,20 @@ void Bookgui_sec_edit::delete_cb(Fl_Widget*, void *cbdata)
 /*
  * Add a new bookmark.
  */
-static void Bookgui_add_cb(Fl_Widget*, void*)
+static void Bookmarks_add_cb(Fl_Widget*, void*)
 {
    BrowserWindow *bw = (BrowserWindow*)vbw_last;
 
    const DilloUrl *url = a_History_get_url(NAV_TOP_UIDX(bw));
    const char *title = a_History_get_title_by_url(url, 1);
 
-   a_Bookgui_add(URL_STR(url), title);
+   Bookmarks_add(URL_STR(url), title);
 }
 
 /*
  * Open the selected bookmark.
  */
-static void Bookgui_open_cb(Fl_Widget*, void *r)
+static void Bookmarks_open_cb(Fl_Widget*, void *r)
 {
    dReturn_if_fail(vbw_last != NULL);
 
@@ -297,7 +298,7 @@ static void Bookgui_open_cb(Fl_Widget*, void *r)
          a_UIcmd_open_url_nw(bw, url);
 
    } else if (b == FL_RIGHT_MOUSE)
-      Bookgui_do_edit(r);
+      Bookmarks_do_edit(r);
 
    else
       a_UIcmd_open_url(bw, url);
@@ -308,12 +309,12 @@ static void Bookgui_open_cb(Fl_Widget*, void *r)
 /*
  * Callback for adding/editing sections.
  */
-static void Bookgui_section_cb(Fl_Widget*, void *r)
+static void Bookmarks_section_cb(Fl_Widget*, void *r)
 {
    int b = Fl::event_button(), s = Fl::event_state();
 
    if (r == NULL)
-      Bookgui_add_section();
+      Bookmarks_add_section();
 
    else if (b == FL_MIDDLE_MOUSE ||
             (b == FL_LEFT_MOUSE && s & FL_CTRL)) {
@@ -329,13 +330,13 @@ static void Bookgui_section_cb(Fl_Widget*, void *r)
       }
 
    } else if (b == FL_RIGHT_MOUSE)
-      Bookgui_do_sec_edit(r);
+      Bookmarks_do_sec_edit(r);
 }
 
 /*
  * Generate the bookmarks menu.
  */
-void Bookgui_generate_menu(void)
+void Bookmarks_generate_menu(void)
 {
    void *r;
    int k = 0;
@@ -351,31 +352,29 @@ void Bookgui_generate_menu(void)
    menu = dNew0(Fl_Menu_Item, (sc * 2) + bc + 2);
 
    // static item: add bookmark
-   menu[k].label(FL_NORMAL_LABEL, BOOKGUI_LABEL_ADD);
-   menu[k].callback(Bookgui_add_cb, NULL);
+   menu[k].label(FL_NORMAL_LABEL, BOOKMARKS_LABEL_ADD);
+   menu[k].callback(Bookmarks_add_cb, NULL);
    menu[k].shortcut(Keys::getShortcut(KEYS_ADD_BOOKMARK));
    k++;
 
    // static item: add section
-   menu[k].label(FL_NORMAL_LABEL, BOOKGUI_LABEL_ADD_SEC);
-   menu[k].callback(Bookgui_section_cb, NULL);
+   menu[k].label(FL_NORMAL_LABEL, BOOKMARKS_LABEL_ADD_SEC);
+   menu[k].callback(Bookmarks_section_cb, NULL);
    menu[k].flags |= FL_MENU_DIVIDER;
    k++;
 
    // add sections >= 1 first so submenus are at the top
    for (int i = 1; (r = a_Bms_get_sec(i)); i++) {
-      menu[k].label(FL_FREE_LABELTYPE,
-                    a_Bms_get_sec_title(r));
-      menu[k].callback(Bookgui_section_cb, r);
+      menu[k].label(FL_FREE_LABELTYPE, a_Bms_get_sec_title(r));
+      menu[k].callback(Bookmarks_section_cb, r);
       menu[k].flags |= FL_SUBMENU;  // create a submenu
       k++;
 
       // add bookmarks to the menu
       for (int j = 0; (r = a_Bms_get(j)); j++) {
          if (a_Bms_get_bm_section(r) == i) {
-            menu[k].label(FL_FREE_LABELTYPE,
-                          a_Bms_get_bm_title(r));
-            menu[k].callback(Bookgui_open_cb, r);
+            menu[k].label(FL_FREE_LABELTYPE, a_Bms_get_bm_title(r));
+            menu[k].callback(Bookmarks_open_cb, r);
             k++;
          }
       }
@@ -387,9 +386,8 @@ void Bookgui_generate_menu(void)
    // now come back to the first section (Unclassified)
    for (int j = 0; (r = a_Bms_get(j)); j++) {
       if (a_Bms_get_bm_section(r) == 0) {
-         menu[k].label(FL_FREE_LABELTYPE,
-                       a_Bms_get_bm_title(r));
-         menu[k].callback(Bookgui_open_cb, r);
+         menu[k].label(FL_FREE_LABELTYPE, a_Bms_get_bm_title(r));
+         menu[k].callback(Bookmarks_open_cb, r);
          k++;
       }
    }
@@ -398,7 +396,7 @@ void Bookgui_generate_menu(void)
 /*
  * Destroy the bookmarks menu.
  */
-void Bookgui_clean_menu(void)
+void Bookmarks_clean_menu(void)
 {
    if (menu != NULL)
       dFree(menu);
@@ -409,23 +407,23 @@ void Bookgui_clean_menu(void)
  * Note: This was originally an internal function, but we also call it in
  * a_UIcmd_preferences() in case the user changed prefs.bookmarks_file.
  */
-void a_Bookgui_reload(void)
+void a_Bookmarks_reload(void)
 {
-   Bookgui_clean_menu();
+   Bookmarks_clean_menu();
    menu = NULL;
 
    a_Bms_freeall();
    a_Bms_init();
-   // a_Bookgui_popup will generate a new menu on-demand
+   // a_Bookmarks_popup will generate a new menu on-demand
 }
 
 
 /*
  * Add a new bookmark.
  */
-void a_Bookgui_add(const char *url, const char *title)
+void Bookmarks_add(const char *url, const char *title)
 {
-   Bookgui_edit *e = new Bookgui_edit(-1, url, title, last_section);
+   Bookmarks_edit *e = new Bookmarks_edit(-1, url, title, last_section);
    e->show();
 
    while (e->shown())
@@ -437,9 +435,9 @@ void a_Bookgui_add(const char *url, const char *title)
 /*
  * Add a new section.
  */
-void Bookgui_add_section(void)
+void Bookmarks_add_section(void)
 {
-   Bookgui_sec_edit *e = new Bookgui_sec_edit(-1, NULL);
+   Bookmarks_sec_edit *e = new Bookmarks_sec_edit(-1, NULL);
    e->show();
 
    while (e->shown())
@@ -451,12 +449,12 @@ void Bookgui_add_section(void)
 /*
  * Edit an existing bookmark.
  */
-void Bookgui_do_edit(void *r)
+void Bookmarks_do_edit(void *r)
 {
-   Bookgui_edit *e = new Bookgui_edit(a_Bms_get_bm_key(r),
-                                      a_Bms_get_bm_url(r),
-                                      a_Bms_get_bm_title(r),
-                                      a_Bms_get_bm_section(r));
+   Bookmarks_edit *e = new Bookmarks_edit(a_Bms_get_bm_key(r),
+                                          a_Bms_get_bm_url(r),
+                                          a_Bms_get_bm_title(r),
+                                          a_Bms_get_bm_section(r));
    e->show();
 
    while (e->shown())
@@ -468,10 +466,10 @@ void Bookgui_do_edit(void *r)
 /*
  * Edit an existing section.
  */
-void Bookgui_do_sec_edit(void *r)
+void Bookmarks_do_sec_edit(void *r)
 {
-   Bookgui_sec_edit *e = new Bookgui_sec_edit(a_Bms_get_sec_num(r),
-                                              a_Bms_get_sec_title(r));
+   Bookmarks_sec_edit *e = new Bookmarks_sec_edit(a_Bms_get_sec_num(r),
+                                                  a_Bms_get_sec_title(r));
    e->show();
 
    while (e->shown())
@@ -483,7 +481,7 @@ void Bookgui_do_sec_edit(void *r)
 /*
  * Bookmarks popup menu (construction & popup)
  */
-void a_Bookgui_popup(BrowserWindow *bw, void *v_wid)
+void a_Bookmarks_popup(BrowserWindow *bw, void *v_wid)
 {
    const Fl_Menu_Item *popup;
    Fl_Widget *wid = (Fl_Widget*)v_wid;
@@ -491,13 +489,13 @@ void a_Bookgui_popup(BrowserWindow *bw, void *v_wid)
    if (!a_Bms_is_ready())
       a_Bms_init();  // load bookmarks on demand if needed
 
-   // Save the calling browser window for Bookgui_open_cb, since we need
+   // Save the calling browser window for Bookmarks_open_cb, since we need
    // its callback data to hold the URL.  Only one popup window can be open
    // at a time, so this should't cause problems with multiple windows.
    vbw_last = (void*)bw;
 
    if (menu == NULL)
-      Bookgui_generate_menu();
+      Bookmarks_generate_menu();
 
    popup = menu->popup(wid->x(), wid->y() + wid->h());
    if (popup)
@@ -505,16 +503,39 @@ void a_Bookgui_popup(BrowserWindow *bw, void *v_wid)
 }
 
 /*
- * Initialize the Bookgui module
+ * Public interface to add a new bookmark.
  */
-void a_Bookgui_init(void)
+void a_Bookmarks_add(BrowserWindow *bw, const DilloUrl *url)
 {
+   const char *title;
+   dReturn_if_fail(url != NULL);
+
+   if (!a_Bms_is_ready())
+      a_Bms_init();  /* load bookmarks on demand if needed */
+
+   /* if the page has no title, we'll use the url string */
+   title = a_History_get_title_by_url(url, 1);
+
+   Bookmarks_add(URL_STR(url), title);
 }
 
 /*
- * Free memory used by Bookgui
+ * Initialize the Bookmarks module
  */
-void a_Bookgui_freeall(void)
+void a_Bookmarks_init(void)
 {
-   Bookgui_clean_menu();
+   /* We do NOT call a_Bms_init() here, but instead load bookmarks
+    * on demand in a_Bookmarks_popup() and a_Bookmarks_add().
+    * The user might not need bookmarks right away, so this saves
+    * a little bit of initial loading time and memory at the expense
+    * of making the first bookmarks operation slightly slower. */
+}
+
+/*
+ * Free memory used by Bookmarks
+ */
+void a_Bookmarks_freeall(void)
+{
+   a_Bms_freeall();
+   Bookmarks_clean_menu();
 }

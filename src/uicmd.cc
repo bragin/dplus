@@ -37,12 +37,11 @@
 #include "xembed.hh"
 #include "print.hh"
 #include "icon.h"
-#include "bookmark.h"
+#include "bookmark.hh"
 #include "history.h"
 #include "msg.h"
 #include "prefs.h"
 #include "misc.h"
-#include "bookgui.hh"
 #include "prefsui.hh"
 #include "pixmaps.h"
 
@@ -977,7 +976,7 @@ void a_UIcmd_save_link(BrowserWindow *bw, const DilloUrl *url)
  */
 void a_UIcmd_book(void *vbw, void *v_wid)
 {
-   a_Bookgui_popup((BrowserWindow*)vbw, v_wid);
+   a_Bookmarks_popup((BrowserWindow*)vbw, v_wid);
 }
 
 /*
@@ -1149,7 +1148,7 @@ void a_UIcmd_preferences(void *vbw)
    BrowserWindow *bw = (BrowserWindow*)vbw;
    if (a_PrefsUI_show()) {
       BW2UI(bw)->change_panel(prefs.panel_size, prefs.small_icons);
-      a_Bookgui_reload();  // in case the user changed prefs.bookmarks_file
+      a_Bookmarks_reload();  // in case the user changed prefs.bookmarks_file
    }
 }
 
