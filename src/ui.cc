@@ -603,12 +603,10 @@ void UI::make_status_bar(int ww, int wh)
    StatusBar->box(FL_NO_BOX);
 
     // Status box
-    StatusOutput = new Fl_Output(0, wh-sh, ww-bm_w, sh);
-    StatusOutput->value("http://www.dillo.org");
-    StatusOutput->labelsize(8);
+    StatusOutput = new CustOutput(0, wh-sh, ww-bm_w, sh);
+    StatusOutput->labelsize(FL_NORMAL_SIZE - 2);
     StatusOutput->box(FL_THIN_DOWN_BOX);
     StatusOutput->clear_visible_focus();
-    StatusOutput->color(FL_GRAY_RAMP + 18);
 
     // Zoom
     Zoom = new Fl_Hor_Slider(ww-bm_w,wh-sh,bm_w,sh);
@@ -872,7 +870,8 @@ void UI::focus_main()
  */
 void UI::set_status(const char *str)
 {
-   StatusOutput->value(str);
+   if (str != NULL)
+      StatusOutput->value(str);
 }
 
 /*

@@ -5,9 +5,9 @@
 
 #include <FL/Fl_Window.H>
 #include <FL/Fl_Widget.H>
+#include <FL/Fl_Box.H>
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Input.H>
-#include <FL/Fl_Output.H>
 #include <FL/Fl_Image.H>
 #include <FL/Fl_Tabs.H>
 #include <FL/Fl_Hor_Slider.H>
@@ -169,6 +169,17 @@ public:
    }
 };
 
+/*
+ * An Fl_Box that behaves like an Fl_Output.
+ */
+class CustOutput : public Fl_Box
+{
+public:
+   CustOutput(int x, int y, int w, int h, const char *l=0) :
+      Fl_Box(x, y, w, h, l) { align(FL_ALIGN_INSIDE | FL_ALIGN_LEFT); };
+   void value(const char *v) { copy_label(v); redraw(); }
+};
+
 //
 // UI class definition -------------------------------------------------------
 //
@@ -183,7 +194,7 @@ class UI : public CustGroupVertical {
    Fl_Input  *Location, *Search;
    CustProgressBox *PProg, *IProg;
    Fl_Group *Panel, *Main;
-   Fl_Output *StatusOutput;
+   CustOutput *StatusOutput;
    Fl_Slider *Zoom;
    Findbar *FindBar;
 
