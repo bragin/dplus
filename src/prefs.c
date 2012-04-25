@@ -117,6 +117,7 @@ void a_Prefs_init(void)
    prefs.show_tools = TRUE;
    prefs.show_tooltip = TRUE;
    prefs.show_url = TRUE;
+   prefs.show_zoom = TRUE;
    prefs.small_icons = FALSE;
    prefs.start_page = a_Url_new(PREFS_START_PAGE, NULL);
    prefs.w3c_plus_heuristics = TRUE;

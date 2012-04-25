@@ -98,6 +98,7 @@ const SymNode_t symbols[] = {
    { "show_tools", &prefs.show_tools, PREFS_BOOL },
    { "show_tooltip", &prefs.show_tooltip, PREFS_BOOL },
    { "show_url", &prefs.show_url, PREFS_BOOL },
+   { "show_zoom", &prefs.show_zoom, PREFS_BOOL },
    { "small_icons", &prefs.small_icons, PREFS_BOOL },
    { "start_page", &prefs.start_page, PREFS_URL },
    { "w3c_plus_heuristics", &prefs.w3c_plus_heuristics, PREFS_BOOL },

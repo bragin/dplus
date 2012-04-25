@@ -70,6 +70,7 @@ struct _DilloPrefs {
    bool_t show_search;
    bool_t show_help;
    bool_t show_progress_box;
+   bool_t show_zoom;
    bool_t show_quit_dialog;
    bool_t fullwindow_start;
    bool_t load_images;

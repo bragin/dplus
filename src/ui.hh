@@ -10,6 +10,7 @@
 #include <FL/Fl_Output.H>
 #include <FL/Fl_Image.H>
 #include <FL/Fl_Tabs.H>
+#include <FL/Fl_Hor_Slider.H>
 
 #include "findbar.hh"
 
@@ -183,6 +184,7 @@ class UI : public CustGroupVertical {
    CustProgressBox *PProg, *IProg;
    Fl_Group *Panel, *Main;
    Fl_Output *StatusOutput;
+   Fl_Slider *Zoom;
    Findbar *FindBar;
 
    int MainIdx;

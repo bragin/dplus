@@ -1153,6 +1153,16 @@ void a_UIcmd_preferences(void *vbw)
    }
 }
 
+/*
+ * Change the page zoom.
+ * FIXME: There has to be a better way to do this -- repushes are painful.
+ */
+void a_UIcmd_zoom(BrowserWindow *bw, double font_factor)
+{
+   prefs.font_factor = font_factor;
+   a_UIcmd_repush(bw);
+}
+
 // UI binding functions -------------------------------------------------------
 
 /*

@@ -351,6 +351,14 @@ static void b1_cb(Fl_Widget *wid, void *cb_data)
 }
 
 /*
+ * Callback for the zoom slider.
+ */
+static void zoom_cb(Fl_Widget *wid, void *data)
+{
+   a_UIcmd_zoom(a_UIcmd_get_bw_by_widget(wid), ((Fl_Slider*)wid)->value());
+}
+
+/*
  * Callback for the bug meter button.
  */
 static void bugmeter_cb(Fl_Widget *wid, void *data)
@@ -601,6 +609,17 @@ void UI::make_status_bar(int ww, int wh)
     StatusOutput->box(FL_THIN_DOWN_BOX);
     StatusOutput->clear_visible_focus();
     StatusOutput->color(FL_GRAY_RAMP + 18);
+
+    // Zoom
+    Zoom = new Fl_Hor_Slider(ww-bm_w,wh-sh,bm_w,sh);
+    Zoom->box(FL_THIN_DOWN_BOX);
+    Zoom->size(64, Zoom->h());
+    Zoom->value(prefs.font_factor);
+    Zoom->bounds(0.0,10.0);
+    Zoom->step(0.1);
+    Zoom->tooltip("Zoom");
+    Zoom->callback(zoom_cb);
+    Zoom->clear_visible_focus();
 
     // Bug Meter
     BugMeter = new CustLightButton(ww-bm_w,wh-sh,bm_w,sh);
@@ -949,6 +968,8 @@ void UI::customize(int flags)
       SearchBar->hide();
    if ( !prefs.show_help )
       Help->hide();
+   if ( !prefs.show_zoom )
+      Zoom->hide();
    if ( !prefs.show_progress_box ) {
       IProg->hide();
       PProg->hide();
