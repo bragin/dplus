@@ -509,10 +509,17 @@ BrowserWindow *a_UIcmd_browser_window_new(int ww, int wh,
    win->resizable(DilloTabs->wizard());
    win->show();
 
+#ifdef MSDOS
+   if (old_bw == NULL) {
+      // DOS applications traditionally fill the whole screen
+      DilloTabs->window()->fullscreen();
+   }
+#else /* MSDOS */
    if (old_bw == NULL && prefs.xpos >= 0 && prefs.ypos >= 0) {
       // position the first window according to preferences
       DilloTabs->window()->position(prefs.xpos, prefs.ypos);
    }
+#endif /* MSDOS */
 
    win->callback(win_cb, DilloTabs);
 
