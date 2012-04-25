@@ -1,14 +1,8 @@
-SUBDIRS = lout widgets dw dlib dpip src doc
-if BUILD_DPI
-SUBDIRS += dpid dpi
-endif
+SUBDIRS = lout widgets dw dlib src doc
 if BUILD_TEST
 SUBDIRS += test
 endif
 
 EXTRA_DIST = Doxyfile dplusrc d_size.h
-if BUILD_DPI
-EXTRA_DIST += install-dpi-local
-endif
 
 sysconf_DATA = dplusrc

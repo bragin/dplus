@@ -21,9 +21,6 @@ noinst_PROGRAMS = \
 	dw-ui-test \
 	fltk-browser \
 	shapes
-if BUILD_DPI
-noinst_PROGRAMS += cookies
-endif
 
 dw_anchors_test_SOURCES = dw_anchors_test.cc
 dw_anchors_test_LDADD = \
@@ -172,8 +169,3 @@ shapes_LDADD = \
 	$(top_builddir)/dw/libDw-core.a \
 	$(top_builddir)/widgets/libDP-widgets.a \
 	$(top_builddir)/lout/liblout.a
-
-cookies_SOURCES = cookies.c
-cookies_LDADD = \
-	$(top_builddir)/dpip/libDpip.a \
-	$(top_builddir)/dlib/libDlib.a
