@@ -2888,8 +2888,7 @@ static void Html_tag_open_meta(DilloHtml *html, const char *tag, int tagsize)
          } else if (delay == 0) {
             /* zero-delay redirection */
             html->stop_parser = true;
-            if (a_Capi_dpi_verify_request(html->bw, new_url))
-               a_UIcmd_redirection0((void*)html->bw, new_url);
+            a_UIcmd_redirection0((void*)html->bw, new_url);
          } else {
             /* Send a custom HTML message.
              * TODO: This is a hairy hack,

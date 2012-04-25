@@ -12,7 +12,6 @@ bin_PROGRAMS = dplus
 
 dplus_LDADD = \
 	$(top_builddir)/dlib/libDlib.a \
-	$(top_builddir)/dpip/libDpip.a \
 	IO/libDiof.a \
 	$(top_builddir)/dw/libDw-widgets.a \
 	$(top_builddir)/dw/libDw-fltk.a \
@@ -120,8 +119,6 @@ dplus_SOURCES = \
 	image.hh \
 	menu.hh \
 	menu.cc \
-	dpiapi.c \
-	dpiapi.h \
 	file.c \
 	file.h \
 	pixmaps.h \

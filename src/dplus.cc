@@ -360,7 +360,6 @@ int main(int argc, char **argv)
 
    // initialize internal modules
    a_Sock_init();
-   a_Dpi_init();
    a_Dns_init();
    a_Web_init();
    a_Http_init();
@@ -470,7 +469,6 @@ int main(int argc, char **argv)
    a_Sock_freeall();
    /* TODO: auth, css */
 
-   //a_Dpi_dillo_exit();
    MSG("Dillo: normal exit!\n");
    return 0;
 }

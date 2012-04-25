@@ -27,10 +27,6 @@ void a_IO_ccc   (int Op, int Branch, int Dir, ChainLink *Info,
 void a_Dpi_ccc  (int Op, int Branch, int Dir, ChainLink *Info,
                  void *Data1, void *Data2);
 
-char *a_Dpi_send_blocking_cmd(const char *server_name, const char *cmd);
-void a_Dpi_dillo_exit(void);
-void a_Dpi_init(void);
-
 
 #ifdef __cplusplus
 }

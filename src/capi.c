@@ -24,9 +24,7 @@
 #include "chain.h"
 #include "history.h"
 #include "nav.h"
-#include "dpiapi.h"
 #include "uicmd.hh"
-#include "../dpip/dpip.h"
 
 #ifdef ENABLE_DOWNLOADS
 #  include "download.hh"
@@ -55,7 +53,6 @@ enum {
 /*
  * Local data
  */
-/* Data list for active dpi connections */
 static Dlist *CapiConns;      /* Data list for active connections; it holds
                                * pointers to capi_conn_t structures. */
 
@@ -144,47 +141,6 @@ static void Capi_conn_unref(capi_conn_t *conn)
 }
 
 /*
- * Compare function for searching a conn by server string
- */
-static int Capi_conn_by_server_cmp(const void *v1, const void *v2)
-{
-   const capi_conn_t *node = v1;
-   const char *server = v2;
-   dReturn_val_if_fail(node && node->server && server, 1);
-   return strcmp(node->server, server);
-}
-
-/*
- * Find connection data by server
- */
-static capi_conn_t *Capi_conn_find(char *server)
-{
-   return dList_find_custom(CapiConns, (void*)server, Capi_conn_by_server_cmp);
-}
-
-/*
- * Resume connections that were waiting for dpid to start.
- */
-static void Capi_conn_resume(void)
-{
-   int i;
-   DataBuf *dbuf;
-   capi_conn_t *conn;
-
-   for (i = 0; i < dList_length(CapiConns); ++i) {
-      conn = dList_nth_data (CapiConns, i);
-      if (conn->Flags & PENDING) {
-         dbuf = a_Chain_dbuf_new(conn->datastr,(int)strlen(conn->datastr), 0);
-         if (conn->InfoSend) {
-            a_Capi_ccc(OpSend, 1, BCK, conn->InfoSend, dbuf, NULL);
-         }
-         dFree(dbuf);
-         conn->Flags &= ~PENDING;
-      }
-   }
-}
-
-/*
  * Abort the connection for a given url, using its CCC.
  * (OpAbort 2,BCK removes the cache entry)
  * TODO: when conn is already done, the cache entry isn't removed.
@@ -210,95 +166,6 @@ void a_Capi_conn_abort_by_url(const DilloUrl *url)
 }
 
 /* ------------------------------------------------------------------------- */
-
-/*
- * Safety test: only allow GET|POST dpi-urls from dpi-generated pages.
- */
-int a_Capi_dpi_verify_request(BrowserWindow *bw, DilloUrl *url)
-{
-   const DilloUrl *referer;
-   int allow = FALSE;
-
-   if (dStrcasecmp(URL_SCHEME(url), "dpi") == 0) {
-      if (!(URL_FLAGS(url) & (URL_Post + URL_Get))) {
-         allow = TRUE;
-      } else {
-         /* only allow GET&POST dpi-requests from dpi-generated urls */
-         if (a_Nav_stack_size(bw)) {
-            referer = a_History_get_url(NAV_TOP_UIDX(bw));
-            if (dStrcasecmp(URL_SCHEME(referer), "dpi") == 0) {
-               allow = TRUE;
-            }
-         }
-      }
-   } else {
-      allow = TRUE;
-   }
-
-   if (!allow) {
-      MSG("a_Capi_dpi_verify_request: Permission Denied!\n");
-      MSG("  URL_STR : %s\n", URL_STR(url));
-      if (URL_FLAGS(url) & URL_Post) {
-         MSG("  URL_DATA: %s\n", dStr_printable(URL_DATA(url), 1024));
-      }
-   }
-   return allow;
-}
-
-/*
- * If the url belongs to a dpi server, return its name.
- */
-static int Capi_url_uses_dpi(DilloUrl *url, char **server_ptr)
-{
-   char *p, *server = NULL, *url_str = URL_STR(url);
-   Dstr *tmp;
-
-   if ((dStrncasecmp(url_str, "http:", 5) == 0) ||
-#ifdef ENABLE_SSL
-       (dStrncasecmp(url_str, "https:", 6) == 0) ||
-#endif /* ENABLE_SSL */
-       (dStrncasecmp(url_str, "file:", 5) == 0) ||
-       (dStrncasecmp(url_str, "about:", 6) == 0)) {
-      /* URL doesn't use dpi (server = NULL) */
-   } else if (dStrncasecmp(url_str, "dpi:/", 5) == 0) {
-      /* dpi prefix, get this server's name */
-      if ((p = strchr(url_str + 5, '/')) != NULL) {
-         server = dStrndup(url_str + 5, (uint_t)(p - url_str - 5));
-      } else {
-         server = dStrdup("?");
-      }
-      if (strcmp(server, "bm") == 0) {
-         dFree(server);
-         server = dStrdup("bookmarks");
-      }
-   } else if ((p = strchr(url_str, ':')) != NULL) {
-      tmp = dStr_new("proto.");
-      dStr_append_l(tmp, url_str, p - url_str);
-      server = tmp->str;
-      dStr_free(tmp, 0);
-   }
-
-   return ((*server_ptr = server) ? 1 : 0);
-}
-
-/*
- * Build the dpip command tag, according to URL and server.
- */
-static char *Capi_dpi_build_cmd(DilloWeb *web, char *server)
-{
-   char *cmd;
-
-   if (strcmp(server, "downloads") == 0) {
-      /* let the downloads server get it */
-      cmd = a_Dpip_build_cmd("cmd=%s url=%s destination=%s",
-                             "download", URL_STR(web->url), web->filename);
-
-   } else {
-      /* For everyone else, the url string is enough... */
-      cmd = a_Dpip_build_cmd("cmd=%s url=%s", "open_url", URL_STR(web->url));
-   }
-   return cmd;
-}
 
 /*
  * When dillo wants to open an URL, this can be either due to user action
@@ -363,10 +230,9 @@ static bool_t Capi_filters_test(const DilloUrl *wanted,
 int a_Capi_open_url(DilloWeb *web, CA_Callback_t Call, void *CbData)
 {
    int reload;
-   char *cmd, *server;
    capi_conn_t *conn = NULL;
    const char *scheme = URL_SCHEME(web->url);
-   int safe = 0, ret = 0, use_cache = 0;
+   int ret = 0, use_cache = 0;
 
    dReturn_val_if_fail((a_Capi_get_flags(web->url) & CAPI_IsCached) ||
                        Capi_filters_test(web->url, web->requester), 0);
@@ -377,7 +243,7 @@ int a_Capi_open_url(DilloWeb *web, CA_Callback_t Call, void *CbData)
 
    if (web->flags & WEB_Download) {
      /* download request: if cached save from cache, else
-      * for http, ftp or https, use the downloads dpi */
+      * for http, ftp or https, call a_Download_start() */
      if (a_Capi_get_flags_with_redirection(web->url) & CAPI_IsCached) {
         if (web->filename) {
            if ((web->stream = fopen(web->filename, "wb"))) {
@@ -391,26 +257,6 @@ int a_Capi_open_url(DilloWeb *web, CA_Callback_t Call, void *CbData)
         a_Download_start(URL_STR(web->url), web->filename);
 #endif /* ENABLE_DOWNLOADS */
      }
-
-   } else if (Capi_url_uses_dpi(web->url, &server)) {
-      /* dpi request */
-      if ((safe = a_Capi_dpi_verify_request(web->bw, web->url))) {
-         if (dStrcasecmp(scheme, "dpi") == 0) {
-            /* make "dpi:/" prefixed urls always reload. */
-            a_Url_set_flags(web->url, URL_FLAGS(web->url) | URL_E2EQuery);
-            reload = 1;
-         }
-         if (reload) {
-            a_Capi_conn_abort_by_url(web->url);
-            /* Send dpip command */
-            _MSG("a_Capi_open_url, reload url='%s'\n", URL_STR(web->url));
-            cmd = Capi_dpi_build_cmd(web, server);
-            a_Capi_dpi_send_cmd(web->url, web->bw, cmd, server, 1);
-            dFree(cmd);
-         }
-         use_cache = 1;
-      }
-      dFree(server);
 
    } else if (!dStrcasecmp(scheme, "http")) {
       /* http request */
@@ -447,6 +293,10 @@ int a_Capi_open_url(DilloWeb *web, CA_Callback_t Call, void *CbData)
    } else if (!dStrcasecmp(scheme, "about")) {
       /* internal request */
       use_cache = 1;
+
+   } else {
+      /* unsupported protocol */
+      a_UIcmd_set_msg(web->bw, "Unsupported protocol: %s", scheme);
    }
 
    if (use_cache) {
@@ -536,52 +386,6 @@ const char *a_Capi_set_content_type(const DilloUrl *url, const char *ctype,
 }
 
 /*
- * Send data to a dpi (e.g. add_bookmark, open_url, send_preferences, ...)
- * Most of the time we send dpi commands, but it also serves for raw data
- * as with "view source".
- */
-int a_Capi_dpi_send_data(const DilloUrl *url, void *bw,
-                         char *data, int data_sz, char *server, int flags)
-{
-   capi_conn_t *conn;
-   DataBuf *dbuf;
-
-   if (flags & 1) {
-      /* open a new connection to server */
-
-      /* Create a new connection data struct and add it to the list */
-      conn = Capi_conn_new(url, bw, server, data);
-      /* start the CCC operations */
-      a_Capi_ccc(OpStart, 2, BCK, a_Chain_new(), conn, server);
-      a_Capi_ccc(OpStart, 1, BCK, a_Chain_new(), conn, server);
-
-   } else {
-      /* Re-use an open connection */
-      conn = Capi_conn_find(server);
-      if (conn) {
-         /* found */
-         dbuf = a_Chain_dbuf_new(data, data_sz, 0);
-         a_Capi_ccc(OpSend, 1, BCK, conn->InfoSend, dbuf, NULL);
-         dFree(dbuf);
-      } else {
-         MSG(" ERROR: [a_Capi_dpi_send_data] No open connection found\n");
-      }
-   }
-
-   return 0;
-}
-
-/*
- * Send a dpi cmd.
- * (For instance: add_bookmark, open_url, send_preferences, ...)
- */
-int a_Capi_dpi_send_cmd(DilloUrl *url, void *bw, char *cmd, char *server,
-                        int flags)
-{
-   return a_Capi_dpi_send_data(url, bw, cmd, strlen(cmd), server, flags);
-}
-
-/*
  * Remove a client from the cache client queue.
  * force = also abort the CCC if this is the last client.
  */
@@ -627,9 +431,6 @@ void a_Capi_ccc(int Op, int Branch, int Dir, ChainLink *Info,
                a_Chain_link_new(Info, a_Capi_ccc, BCK, a_Http_ccc, 1, 1);
                a_Chain_bcb(OpStart, Info, Data2, NULL);
 #endif /* ENABLE_SSL */
-            } else {
-               a_Chain_link_new(Info, a_Capi_ccc, BCK, a_Dpi_ccc, 1, 1);
-               a_Chain_bcb(OpStart, Info, Data2, NULL);
             }
             break;
          case OpSend:
@@ -665,9 +466,6 @@ void a_Capi_ccc(int Op, int Branch, int Dir, ChainLink *Info,
                conn->SockFD = *(int*)Data1;
                /* communicate the FD through the answer branch */
                a_Capi_ccc(OpSend, 2, BCK, conn->InfoRecv, &conn->SockFD, "FD");
-            } else if (strcmp(Data2, "DpidOK") == 0) {
-               /* resume pending dpi requests */
-               Capi_conn_resume();
             }
             break;
          case OpAbort:
@@ -739,8 +537,6 @@ void a_Capi_ccc(int Op, int Branch, int Dir, ChainLink *Info,
                a_Cache_process_dbuf(IORead, dbuf->Buf, dbuf->Size, conn->url);
             } else if (strcmp(Data2, "send_status_message") == 0) {
                a_UIcmd_set_msg(conn->bw, "%s", Data1);
-            } else if (strcmp(Data2, "dialog") == 0) {
-               a_Dpiapi_dialog(conn->bw, conn->server, Data1);
             } else if (strcmp(Data2, "reload_request") == 0) {
                a_Nav_reload(conn->bw);
             } else if (strcmp(Data2, "start_send_page") == 0) {
