@@ -258,6 +258,7 @@ public:
 
 private:
    int top, rx, ry, rw, rh, lm, rm, hw, hm;
+   int iw, ltop, rtop;
 
    Fl_Tabs *tabs;
    Fl_Return_Button *buttonOK;
@@ -356,9 +357,9 @@ static void PrefsUI_free_fonts_list(void);
  *   the tab client area     rm = right margin       hm = hw margin
  */
 PrefsDialog::PrefsDialog()
-   : Fl_Window(360, 270, "Preferences")
+   : Fl_Window(400, 270, "Preferences")
 {
-   lm = 88, rm = 96, hw = 48, hm = 56;
+   lm = 108, rm = 116, hw = 68, hm = 76;
    begin();
 
    tabs = new Fl_Tabs(8, 8, w()-16, h()-48);
@@ -535,38 +536,43 @@ void PrefsDialog::make_view_tab()
    view->begin();
    top = ry + 8;
 
-   panels_label = new Fl_Box(rx+8, top, lm-8, 24, "Panels:");
-   panels_label->align(FL_ALIGN_INSIDE | FL_ALIGN_RIGHT);
+   int iw, ltop, rtop;
+   iw = (rw - 16) / 2;
+   ltop = rtop = top;
 
-   show_search = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
-                                     "Show search");
+   panels_label = new Fl_Box(rx+8, ltop, iw, 24, "Panels:");
+   panels_label->align(FL_ALIGN_INSIDE | FL_ALIGN_LEFT);
+   ltop += 28;
+
+   show_search = new Fl_Check_Button(rx+8, ltop, iw, 24,
+                                     "Show the search bar");
    show_search->value(prefs.show_search);
-   top += 28;
+   ltop += 28;
 
-   show_progress_box = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
-                                           "Show page load progress");
+   show_progress_box = new Fl_Check_Button(rx+8, ltop, iw, 24,
+                                           "Show progress bars");
    show_progress_box->value(prefs.show_progress_box);
-   top += 28;
+   ltop += 28;
 
-   fullwindow_start = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
+   fullwindow_start = new Fl_Check_Button(rx+8, ltop, iw, 24,
 				          "Hide panels on startup");
    fullwindow_start->value(prefs.fullwindow_start);
-   top += 32;
 
-   tabs_label = new Fl_Box(rx+8, top, lm-8, 24, "Tabs:");
-   tabs_label->align(FL_ALIGN_INSIDE | FL_ALIGN_RIGHT);
+   tabs_label = new Fl_Box(rx+iw+8, rtop, iw, 24, "Tabs:");
+   tabs_label->align(FL_ALIGN_INSIDE | FL_ALIGN_LEFT);
+   rtop += 28;
 
-   always_show_tabs = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
+   always_show_tabs = new Fl_Check_Button(rx+iw+8, rtop, iw, 24,
                                           "Always show the tab bar");
    always_show_tabs->value(prefs.always_show_tabs);
-   top += 28;
+   rtop += 28;
 
-   focus_new_tab = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
+   focus_new_tab = new Fl_Check_Button(rx+iw+8, rtop, iw, 24,
                                        "Focus new tabs");
    focus_new_tab->value(prefs.focus_new_tab);
-   top += 28;
+   rtop += 28;
 
-   right_click_closes_tab = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
+   right_click_closes_tab = new Fl_Check_Button(rx+iw+8, rtop, iw, 24,
                                                 "Right-click to close tabs");
    right_click_closes_tab->value(prefs.right_click_closes_tab);
 
