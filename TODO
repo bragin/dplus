@@ -19,7 +19,7 @@ Documentation:
 [ ] HACKING and developer documentation
 
 Network:
-[ ] Remove all remaining DPI code
+[X] Remove all remaining DPI code
 [X] Make DlGui a standard feature
 [ ] Clean up the HTTPS code
 [X] Fix EMFILE errors on MS-DOS
