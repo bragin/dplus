@@ -32,9 +32,6 @@
 #  include "download.hh"
 #endif /* ENABLE_DOWNLOADS */
 
-/* for testing dpi chat */
-#include "bookmark.h"
-
 typedef struct {
    DilloUrl *url;           /* local copy of web->url */
    void *bw;
@@ -742,9 +739,6 @@ void a_Capi_ccc(int Op, int Branch, int Dir, ChainLink *Info,
                a_Cache_process_dbuf(IORead, dbuf->Buf, dbuf->Size, conn->url);
             } else if (strcmp(Data2, "send_status_message") == 0) {
                a_UIcmd_set_msg(conn->bw, "%s", Data1);
-            } else if (strcmp(Data2, "chat") == 0) {
-               a_UIcmd_set_msg(conn->bw, "%s", Data1);
-               a_Bookmarks_chat_add(NULL, NULL, Data1);
             } else if (strcmp(Data2, "dialog") == 0) {
                a_Dpiapi_dialog(conn->bw, conn->server, Data1);
             } else if (strcmp(Data2, "reload_request") == 0) {
