@@ -573,7 +573,7 @@ void PrefsDialog::make_view_tab()
    rtop += 28;
 
    right_click_closes_tab = new Fl_Check_Button(rx+iw+8, rtop, iw, 24,
-                                                "Right-click to close tabs");
+                                                "Right-click tabs to close");
    right_click_closes_tab->value(prefs.right_click_closes_tab);
 
    view->end();
