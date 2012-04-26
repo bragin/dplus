@@ -53,6 +53,7 @@ const int32_t PREFSGUI_WHITE = 0xffffff;  /* prefs.allow_white_bg == 1 */
 const int32_t PREFSGUI_SHADE = 0xdcd1ba;  /* prefs.allow_white_bg == 0 */
 
 Dlist *fonts_list = NULL;
+const char *current_url = NULL;
 
 
 // Local functions -----------------------------------------------------------
@@ -286,6 +287,7 @@ private:
 
    Fl_Group *general;
    Fl_Input *home;
+   Fl_Button *use_current;
    Fl_Input *start_page;
    Fl_Choice *panel_size;
    Fl_Check_Button *small_icons;
@@ -367,6 +369,7 @@ private:
 static void PrefsUI_return_cb(Fl_Widget *widget, void *d = 0);
 static void PrefsUI_cancel_cb(Fl_Widget *widget, void *d = 0);
 
+static void PrefsUI_use_current_cb(Fl_Widget *widget, void *l = 0);
 static void PrefsUI_bookmarks_button_cb(Fl_Widget *widget, void *l = 0);
 
 static void PrefsUI_search_add_cb(Fl_Widget *widget, void *l = 0);
@@ -422,6 +425,7 @@ PrefsDialog::PrefsDialog()
 PrefsDialog::~PrefsDialog()
 {
    delete home;
+   delete use_current;
    delete start_page;
    delete panel_size;
    delete small_icons;
@@ -526,8 +530,11 @@ void PrefsDialog::make_general_tab()
    general->begin();
    top = ry + 8;
 
-   home = new D_Input(rx+lm, top, rw-rm, 24, "Home:");
+   home = new D_Input(rx+lm, top, rw-rm-74, 24, "Home:");
    home->value(URL_STR(prefs.home));
+
+   use_current = new Fl_Button(rx+lm+rw-rm-72, top, 72, 24, "Current");
+   use_current->callback(PrefsUI_use_current_cb, (void*)home);
    top += 28;
 
    start_page = new D_Input(rx+lm, top, rw-rm, 24, "Start page:");
@@ -1029,6 +1036,16 @@ static void PrefsUI_cancel_cb(Fl_Widget *widget, void *d)
 }
 
 /*
+ * "Use Current" button callback.
+ */
+static void PrefsUI_use_current_cb(Fl_Widget *widget, void *l)
+{
+   Fl_Input *i = (Fl_Input*)l;
+   i->value(current_url);
+   i->take_focus();
+}
+
+/*
  * Bookmarks button callback.
  */
 static void PrefsUI_bookmarks_button_cb(Fl_Widget *widget, void *l)
@@ -1169,7 +1186,6 @@ static void PrefsUI_free_fonts_list(void)
 }
 
 
-
 /*
  * Show the preferences dialog.
  */
@@ -1189,4 +1205,12 @@ int a_PrefsUI_show(void)
    PrefsUI_free_fonts_list();
 
    return retval;
+}
+
+/*
+ * Set the URL used for the "Use Current" button.
+ */
+void a_PrefsUI_set_current_url(const char *url)
+{
+   current_url = url;
 }

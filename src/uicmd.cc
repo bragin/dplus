@@ -1153,6 +1153,9 @@ void a_UIcmd_nav_jump(BrowserWindow *bw, int offset, int new_bw)
 void a_UIcmd_preferences(void *vbw)
 {
    BrowserWindow *bw = (BrowserWindow*)vbw;
+   const DilloUrl *url = a_History_get_url(NAV_TOP_UIDX(bw));
+   a_PrefsUI_set_current_url(URL_STR(url));
+
    if (a_PrefsUI_show()) {
       BW2UI(bw)->change_panel(prefs.panel_size, prefs.small_icons);
       a_Bookmarks_reload();  // in case the user changed prefs.bookmarks_file
