@@ -296,6 +296,7 @@ private:
 
    Fl_Group *view;
    Fl_Group *panels_group;
+   Fl_Check_Button *show_filemenu;
    Fl_Check_Button *show_search;
    Fl_Check_Button *show_progress_box;
    Fl_Check_Button *fullwindow_start;
@@ -303,6 +304,7 @@ private:
    Fl_Check_Button *always_show_tabs;
    Fl_Check_Button *focus_new_tab;
    Fl_Check_Button *right_click_closes_tab;
+   Fl_Check_Button *show_quit_dialog;
    Sane_Int_Input *width;
    Fl_Box *geometry_x;
    Sane_Int_Input *height;
@@ -428,6 +430,7 @@ PrefsDialog::~PrefsDialog()
    delete contrast_visited_color;
    delete general;
 
+   delete show_filemenu;
    delete show_search;
    delete show_progress_box;
    delete fullwindow_start;
@@ -435,6 +438,7 @@ PrefsDialog::~PrefsDialog()
    delete always_show_tabs;
    delete focus_new_tab;
    delete right_click_closes_tab;
+   delete show_quit_dialog;
    delete tabs_group;
    delete width;
    delete geometry_x;
@@ -569,7 +573,7 @@ void PrefsDialog::make_view_tab()
    iw = (rw - 16) / 2;
    ltop = rtop = top;
 
-   panels_group = new Fl_Group(rx+8, ltop+lh, iw-8, 88, "Panels:");
+   panels_group = new Fl_Group(rx+8, ltop+lh, iw-8, 116, "Panels:");
    panels_group->box(FL_ENGRAVED_BOX);
    panels_group->align(FL_ALIGN_TOP | FL_ALIGN_LEFT);
    panels_group->begin();
@@ -578,6 +582,11 @@ void PrefsDialog::make_view_tab()
       int rx = panels_group->x() - 4,
           ltop = panels_group->y() + 4,
           iw = panels_group->w() - 8;
+
+      show_filemenu = new Fl_Check_Button(rx+8, ltop, iw, 24,
+                                          "Show the File menu");
+      show_filemenu->value(prefs.show_filemenu);
+      ltop += 28;
 
       show_search = new Fl_Check_Button(rx+8, ltop, iw, 24,
                                         "Show the search bar");
@@ -597,7 +606,7 @@ void PrefsDialog::make_view_tab()
    panels_group->end();
    ltop += panels_group->h() + lh + 8;
 
-   tabs_group = new Fl_Group(rx+iw+8, rtop+lh, iw, 88, "Tabs:");
+   tabs_group = new Fl_Group(rx+iw+8, rtop+lh, iw, 116, "Tabs:");
    tabs_group->box(FL_ENGRAVED_BOX);
    tabs_group->align(FL_ALIGN_TOP | FL_ALIGN_LEFT);
    tabs_group->begin();
@@ -620,6 +629,11 @@ void PrefsDialog::make_view_tab()
       right_click_closes_tab = new Fl_Check_Button(rx+iw+8, rtop, iw, 24,
                                                    "Right-click tabs to close");
       right_click_closes_tab->value(prefs.right_click_closes_tab);
+      rtop += 28;
+
+      show_quit_dialog = new Fl_Check_Button(rx+iw+8, rtop, iw, 24,
+                                             "Warn when closing all");
+      show_quit_dialog->value(prefs.show_quit_dialog);
    }
 
    tabs_group->end();
@@ -867,12 +881,14 @@ void PrefsDialog::apply_general_tab()
  */
 void PrefsDialog::apply_view_tab()
 {
+   prefs.show_filemenu = show_filemenu->value();
    prefs.show_search = show_search->value();
    prefs.show_progress_box = show_progress_box->value();
    prefs.fullwindow_start = fullwindow_start->value();
    prefs.always_show_tabs = always_show_tabs->value();
    prefs.focus_new_tab = focus_new_tab->value();
    prefs.right_click_closes_tab = right_click_closes_tab->value();
+   prefs.show_quit_dialog = show_quit_dialog->value();
    prefs.width = width->value();
    prefs.height = height->value();
    prefs.font_factor = (double)font_factor->value() / 100.0;
