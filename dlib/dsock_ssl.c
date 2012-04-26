@@ -225,7 +225,7 @@ void Sock_ssl_init(void)
    }
 
    char buf[4096];
-   snprintf(buf, sizeof(buf) - 1, "%s/.dillo/certs/", dGethomedir());
+   snprintf(buf, sizeof(buf) - 1, "%s/certs/", dGetprofdir());
    if (SSL_CTX_load_verify_locations(ssl_context, NULL, buf) == 0) {
       MSG("OpenSSL: Error opening user x509 certificate location\n");
       /* return; */
