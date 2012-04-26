@@ -789,7 +789,8 @@ int UI::handle(int event)
          a_UIcmd_save(a_UIcmd_get_bw_by_widget(this));
          ret = 1;
       } else if (cmd == KEYS_FILE_MENU) {
-         a_UIcmd_file_popup(a_UIcmd_get_bw_by_widget(this), FileButton);
+         if (prefs.show_filemenu)
+            a_UIcmd_file_popup(a_UIcmd_get_bw_by_widget(this), FileButton);
          ret = 1;
       } else if (cmd == KEYS_HELP) {
          a_UIcmd_help(a_UIcmd_get_bw_by_widget(this));
