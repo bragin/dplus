@@ -955,12 +955,13 @@ void PrefsDialog::apply_view_tab()
  */
 void PrefsDialog::apply_browsing_tab()
 {
+   dFree(prefs.http_user_agent);
+   dFree(prefs.http_referer);
+
    prefs.load_images = load_images->value();
    prefs.load_stylesheets = load_stylesheets->value();
    prefs.parse_embedded_css = parse_embedded_css->value();
    prefs.enterpress_forces_submit = enterpress_forces_submit->value();
-
-   dFree(prefs.http_user_agent);
    switch (http_user_agent->value()) {
    case 1:
       prefs.http_user_agent = dStrdup(USER_AGENT_DILLO);
@@ -980,18 +981,16 @@ void PrefsDialog::apply_browsing_tab()
       break;
    }
    prefs.filter_auto_requests = filter_auto_requests->value();
-
-   dFree(prefs.http_referer);
    switch (http_referer->value()) {
-   case 1:
-      prefs.http_referer = dStrdup("host");
+   case 0:
+      prefs.http_referer = dStrdup("none");
       break;
    case 2:
       prefs.http_referer = dStrdup("path");
       break;
-   case 0:
+   case 1:
    default:
-      prefs.http_referer = dStrdup("none");
+      prefs.http_referer = dStrdup("host");
       break;
    }
 }
@@ -1046,12 +1045,11 @@ void PrefsDialog::apply_advanced_tab()
 {
    a_Url_free(prefs.http_proxy);
    dFree(prefs.no_proxy);
+   dFree(prefs.bookmarks_file);
 
    prefs.http_proxy = (strlen(http_proxy->value()) ?
 		       a_Url_new(http_proxy->value(), NULL) : NULL);
    prefs.no_proxy = dStrdup(no_proxy->value());
-
-   dFree(prefs.bookmarks_file);
    prefs.bookmarks_file = (bookmarks_file_check->value() &&
                            strlen(bookmarks_file->value()) > 0) ?
                           dStrdup(bookmarks_file->value()) : NULL;
