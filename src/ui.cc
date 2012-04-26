@@ -158,7 +158,8 @@ int SearchInput::handle(int e)
       a_UIcmd_search_popup(a_UIcmd_get_bw_by_widget(wid), wid);
       return 1;
 
-   } else if (e == FL_UNFOCUS && !strlen(value())) {
+   } else if (e == FL_UNFOCUS &&
+              (!strlen(value()) || textcolor() == FL_INACTIVE_COLOR)) {
       // If empty, display the name of the selected search engine
       char *label, *url, *source;
       source = (char *)dList_nth_data(prefs.search_urls,
@@ -799,6 +800,11 @@ int UI::handle(int event)
          a_UIcmd_view_page_source(a_UIcmd_get_bw_by_widget(this), NULL);
          ret = 1;
       }
+   } else if (event == FL_SHOW) {
+      // Make sure the search box shows the selected search engine
+      // in case we changed it in another tab.
+      if (Fl::focus() != Search)
+         Search->handle(FL_UNFOCUS);
    }
 
    if (!ret) {

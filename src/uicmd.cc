@@ -385,6 +385,10 @@ void CustTabs::switch_tab(CustTabButton *cbtn)
       cbtn->redraw();
       update_pack_offset();
 
+      // Make sure the search box shows the selected search engine
+      // in case we changed it in another tab.
+      cbtn->ui()->handle(FL_SHOW);
+
       // Update window title
       if ((bw = a_UIcmd_get_bw_by_widget(cbtn->ui()))) {
          const char *title = (cbtn->ui())->label();
