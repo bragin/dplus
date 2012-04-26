@@ -48,6 +48,15 @@ void a_Cookies_init(void)
 #include "../dlib/dsock.h"
 #include "dlib/dfcntl.h"
 
+/* This is to avoid an "excess initializers" compiler warning.
+ * The Single UNIX Specification only requires nine members in struct tm.
+ * Windows only uses those nine, but some modern Unix systems have more... */
+#ifdef _WIN32
+#  define TM_INIT(a,b,c,d,e,f,g,h,i,j,k) {a,b,c,d,e,f,g,h,i}
+#else
+#  define TM_INIT(a,b,c,d,e,f,g,h,i,j,k) {a,b,c,d,e,f,g,h,i,j,k}
+#endif
+
 
 /* The maximum length of a line in the cookie file */
 #define LINE_MAXLEN 4096
@@ -109,7 +118,7 @@ static const char *const cookies_txt_header_str =
 /* The epoch is Jan 1, 1970. When there is difficulty in representing future
  * dates, use the (by far) most likely last representable time in Jan 19, 2038.
  */
-static struct tm cookies_epoch_tm = {0, 0, 0, 1, 0, 70, 0, 0, 0, 0, 0};
+static struct tm cookies_epoch_tm = TM_INIT(0, 0, 0, 1, 0, 70, 0, 0, 0, 0, 0);
 static time_t cookies_epoch_time, cookies_future_time;
 
 /*
@@ -321,7 +330,7 @@ void a_Cookies_init(void)
 #ifndef HAVE_LOCKF
    struct flock lck;
 #endif
-   struct tm future_tm = {7, 14, 3, 19, 0, 138, 0, 0, 0, 0, 0};
+   struct tm future_tm = TM_INIT(7, 14, 3, 19, 0, 138, 0, 0, 0, 0, 0);
 
    /* Default setting */
    disabled = TRUE;
@@ -960,7 +969,7 @@ static void Cookies_validate_path(CookieData_t *cookie, const char *url_path)
 /*
  * Check whether host name A domain-matches host name B.
  */
-static bool_t Cookies_domain_matches(char *A, char *B)
+static bool_t Cookies_domain_matches(const char *A, const char *B)
 {
    int diff;
 
@@ -1047,7 +1056,7 @@ static uint_t Cookies_internal_dots_required(const char *host)
 /*
  * Validate cookies domain against some security checks.
  */
-static bool_t Cookies_validate_domain(CookieData_t *cookie, char *host)
+static bool_t Cookies_validate_domain(CookieData_t *cookie, const char *host)
 {
    uint_t i, internal_dots;
 
@@ -1082,8 +1091,8 @@ static bool_t Cookies_validate_domain(CookieData_t *cookie, char *host)
  * Set the value corresponding to the cookie string
  * Return value: 0 set OK, -1 disabled, -2 denied, -3 rejected.
  */
-static int Cookies_set(char *cookie_string, char *url_host,
-                       char *url_path, char *server_date)
+static int Cookies_set(char *cookie_string, const char *url_host,
+                       const char *url_path, const char *server_date)
 {
    CookieControlAction action;
    CookieData_t *cookie;
@@ -1187,8 +1196,8 @@ static void Cookies_add_matching_cookies(const char *domain,
 /*
  * Return a string that contains all relevant cookies as headers.
  */
-static char *Cookies_get(char *url_host, char *url_path,
-                         char *url_scheme)
+static char *Cookies_get(const char *url_host, const char *url_path,
+                         const char *url_scheme)
 {
    char *domain_str, *str;
    CookieData_t *cookie;
