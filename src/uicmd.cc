@@ -246,6 +246,7 @@ UI *CustTabs::add_new_tab(UI *old_ui, int focus)
    btn->clear_visible_focus();
    btn->box(FL_DIAMOND_UP_BOX);  // overridden with a custom type in dplus.cc
    btn->color(focus ? tabcolor_active : tabcolor_inactive);
+   btn->labelfont(focus ? FL_HELVETICA_BOLD : FL_HELVETICA);
    btn->labelcolor(fl_contrast(FL_FOREGROUND_COLOR,
                    focus ? tabcolor_active : tabcolor_inactive));
    btn->ui(new_ui);
@@ -376,11 +377,13 @@ void CustTabs::switch_tab(CustTabButton *cbtn)
       if ((idx = get_btn_idx(old_ui)) != -1) {
          btn = (CustTabButton*)Pack->child(idx);
          btn->color(tabcolor_inactive);
+         btn->labelfont(FL_HELVETICA);
          btn->labelcolor(fl_contrast(FL_FOREGROUND_COLOR, tabcolor_inactive));
          btn->redraw();
       }
       Wizard->value(cbtn->ui());
       cbtn->color(tabcolor_active);
+      cbtn->labelfont(FL_HELVETICA_BOLD);
       cbtn->labelcolor(fl_contrast(FL_FOREGROUND_COLOR, tabcolor_active));
       cbtn->redraw();
       update_pack_offset();
