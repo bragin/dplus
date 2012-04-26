@@ -33,7 +33,7 @@ Preferences:
 [X] Save preferences in prefsparser.cc, not PrefsGui
 [X] Initialize default search list in prefs.c
 [X] Split PrefsGui generation into separate functions
-[>] Implement the remaining useful preferences from dillorc
+[X] Implement the remaining useful preferences from dillorc
 [X] Change the configuration filename
 [X] Import preferences and bookmarks from Dillo
 
