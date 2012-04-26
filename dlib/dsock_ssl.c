@@ -28,6 +28,16 @@
 #include "dlib.h"
 #include "dsock.h"
 
+/* This is to avoid a pack of compiler warnings when we're building with
+ * CyaSSL, as its config.h conflicts with our own (included through dlib.h). */
+#undef PACKAGE
+#undef PACKAGE_BUGREPORT
+#undef PACKAGE_NAME
+#undef PACKAGE_STRING
+#undef PACKAGE_TARNAME
+#undef PACKAGE_VERSION
+#undef VERSION
+
 #include <openssl/ssl.h>
 #include <openssl/rand.h>
 #include <openssl/err.h>
