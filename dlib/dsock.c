@@ -14,13 +14,16 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include <errno.h>
+
 #include "dsock.h"
 
 /*
  * Initialize the underlying socket interface
  */
-void a_Sock_init()
+void a_Sock_init(void)
 {
 #ifdef _WIN32
    WSADATA wsaData;
@@ -37,7 +40,7 @@ void a_Sock_init()
 /*
  * Clean up the underlying socket interface
  */
-void a_Sock_freeall()
+void a_Sock_freeall(void)
 {
 #ifdef ENABLE_SSL
    Sock_ssl_freeall();
@@ -112,7 +115,7 @@ int dClose(int fd)
 /*
  * Read from an active socket
  */
-int dRead(int fd, void *buf, size_t len)
+ssize_t dRead(int fd, void *buf, size_t len)
 {
 #ifdef ENABLE_SSL
    void *conn = Sock_ssl_connection(fd);
@@ -121,7 +124,7 @@ int dRead(int fd, void *buf, size_t len)
 #endif
 
 #ifdef _WIN32
-   int retval = recv(fd, buf, len, 0);
+   ssize_t retval = recv(fd, buf, len, 0);
    if (NOT_A_SOCKET)
 #endif
       return read(fd, buf, len);
@@ -134,7 +137,7 @@ int dRead(int fd, void *buf, size_t len)
 /*
  * Write to an active socket
  */
-int dWrite(int fd, void *buf, size_t len)
+ssize_t dWrite(int fd, const void *buf, size_t len)
 {
 #ifdef ENABLE_SSL
    void *conn = Sock_ssl_connection(fd);

@@ -78,16 +78,16 @@ extern "C" {
 #endif /* _WIN32 */
 
 /* Global initialization and cleanup */
-void a_Sock_init();
-void a_Sock_freeall();
+void a_Sock_init(void);
+void a_Sock_freeall(void);
 
 /* Portability wrapper for connect() */
 int dConnect(int s, const struct sockaddr *name, int namelen);
 
 /* File descriptor operations */
 int dClose(int fd);
-int dRead(int fd, void *buf, size_t len);
-int dWrite(int fd, void *buf, size_t len);
+ssize_t dRead(int fd, void *buf, size_t len);
+ssize_t dWrite(int fd, const void *buf, size_t len);
 
 /*
  * The functions below provide transparent SSL support
@@ -115,12 +115,12 @@ void a_Sock_ssl_error_handler(SslCertProblemCb_t handler);
  */
 void *Sock_ssl_connection(int fd);
 
-void Sock_ssl_init();
-void Sock_ssl_freeall();
+void Sock_ssl_init(void);
+void Sock_ssl_freeall(void);
 
 int Sock_ssl_close(void *conn);
 int Sock_ssl_read(void *conn, void *buf, size_t len);
-int Sock_ssl_write(void *conn, void *buf, size_t len);
+int Sock_ssl_write(void *conn, const void *buf, size_t len);
 
 #endif /* ENABLE_SSL */
 

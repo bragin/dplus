@@ -24,6 +24,7 @@
 
 #include <stdio.h>
 #include <errno.h>
+
 #include "dlib.h"
 #include "dsock.h"
 
@@ -77,7 +78,7 @@ void *Sock_ssl_connection(int fd)
 /*
  * Add a new SSL connection information node
  */
-void Sock_ssl_conn_new(int fd, SSL *ssl)
+static void Sock_ssl_conn_new(int fd, SSL *ssl)
 {
    struct SConn_t *conn = dNew0(struct SConn_t, 1);
    conn->fd = fd;
@@ -97,7 +98,7 @@ void Sock_ssl_conn_new(int fd, SSL *ssl)
 /*
  * Remove an SSL connection information node
  */
-void Sock_ssl_conn_free(int fd)
+static void Sock_ssl_conn_free(int fd)
 {
    struct SConn_t *prev = NULL;
    struct SConn_t *curr = conn_list;
@@ -191,7 +192,7 @@ void a_Sock_ssl_error_handler(SslCertProblemCb_t handler)
 /*
  * Initialize the OpenSSL library
  */
-void Sock_ssl_init()
+void Sock_ssl_init(void)
 {
    SSL_library_init();
    SSL_load_error_strings();
@@ -234,7 +235,7 @@ void Sock_ssl_init()
 /*
  * Clean up the OpenSSL library
  */
-void Sock_ssl_freeall()
+void Sock_ssl_freeall(void)
 {
    SSL_CTX_free(ssl_context);
 }
@@ -265,7 +266,7 @@ int Sock_ssl_read(void *conn, void *buf, size_t len)
 /*
  * Write data to an open SSL connection
  */
-int Sock_ssl_write(void *conn, void *buf, size_t len)
+int Sock_ssl_write(void *conn, const void *buf, size_t len)
 {
    struct SConn_t *c = (struct SConn_t*)conn;
    return SSL_write(c->ssl, buf, len);
