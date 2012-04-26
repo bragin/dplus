@@ -24,12 +24,12 @@
  * Return the program icon as a character string.
  * The specific implementation varies across platforms.
  */
-char *a_Icon_load()
+char *a_Icon_load(void)
 {
 #ifdef _WIN32
    HMODULE hModule = GetModuleHandle(NULL);  /* running process */
    return (char*)LoadImage(hModule, MAKEINTRESOURCE(IDI_MAIN_ICON),
-                           IMAGE_ICON, 16, 16, NULL);
+                           IMAGE_ICON, 16, 16, 0);
 #else /* _WIN32 */
    return (char*)0;
 #endif /* _WIN32 */

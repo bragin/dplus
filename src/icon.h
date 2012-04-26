@@ -6,7 +6,7 @@ extern "C" {
 #endif /* __cplusplus */
 
 
-char *a_Icon_load();
+char *a_Icon_load(void);
 
 
 #ifdef __cplusplus

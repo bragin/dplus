@@ -128,10 +128,15 @@ void a_Print_page(void *vbw)
          fl_font(FL_HELVETICA, 12);  // reset the font to calculate margins
 
          // TODO: clip this text if it's wider than the printable area
-         fl_draw(title, 0, 0);                            // title; top left
-         fl_draw(urlStr, 0, hPage + margin);              // URL; bottom left
-         fl_draw(pageNum, wPage - fl_width(pageNum), 0);  // number; top right
-         fl_draw(printDate, wPage - fl_width(printDate), hPage + margin);
+
+         // Title in the top left
+         fl_draw(title, 0, 0);
+         // URL in the bottom left
+         fl_draw(urlStr, 0, hPage + margin);
+         // Page number in the top right
+         fl_draw(pageNum, wPage - (int)fl_width(pageNum), 0);
+         // Date in the bottom right
+         fl_draw(printDate, wPage - (int)fl_width(printDate), hPage + margin);
 
          p->end_page();
 
