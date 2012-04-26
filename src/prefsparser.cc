@@ -247,8 +247,7 @@ void PrefsWriter::writeOption(FILE *fp, const void *n)
             break;
          /* Kludge to avoid hard-coding a user agent version in the config */
          if (!strcmp(node->name, "http_user_agent") &&
-             (!strncmp(c, "Dillo/", 6) ||
-              !strncmp(c, "Mozilla/4.0 (compatible; Dillo ", 31))) {
+             !strncmp(c, "Mozilla/4.0 (compatible; DPlus ", 31)) {
             fprintf(fp, "#");
          }
          fprintf(fp, "%s%s=%s\n", strlen(c) ? "" : "#", node->name, c);

@@ -43,8 +43,6 @@ AC_ARG_ENABLE(gif,    [  --disable-gif           Disable support for GIF images]
               enable_gif=$enableval, enable_gif=yes)
 AC_ARG_ENABLE(threaded-dns,[  --disable-threaded-dns  Disable the advantage of a reentrant resolver library],
               enable_threaded_dns=$enableval, enable_threaded_dns=yes)
-AC_ARG_ENABLE(mozilla-user-agent,[  --enable-mozilla-user-agent  Use a Mozilla/4.0 user agent for compatibility],
-              enable_mozilla_user_agent=$enableval, enable_mozilla_user_agent=yes)
 AC_ARG_ENABLE(downloads,[  --enable-downloads      Enable support for downloads (requires libcurl)],
               enable_downloads=$enableval, enable_downloads=yes)
 AC_ARG_ENABLE(shared_libcurl,[  --enable-shared-libcurl Build using a shared libcurl (default is static)],
@@ -517,14 +515,6 @@ if test "x$curl_ok" = "xyes"; then
   AC_DEFINE([ENABLE_DOWNLOADS], [1], [Enable support for downloads])
 fi
 
-dnl ------------------------------------
-dnl Build using a Mozilla/4.0 user agent
-dnl ------------------------------------
-dnl
-if test "x$enable_mozilla_user_agent" = "xyes"; then
-  AC_DEFINE([ENABLE_MOZILLA_USER_AGENT], [1], [Use a Mozilla/4.0 user agent string])
-fi
-
 AM_CONDITIONAL(BUILD_TEST, [test x$enable_test = xyes])
 
 dnl ---------------------------
@@ -576,9 +566,6 @@ fi
 if test "x$enable_cyassl" = "xyes" ; then
   CFLAGS="$CFLAGS -DENABLE_SSL"
   LIBS="$LIBS -lcyassl"
-fi
-if test "x$enable_mozilla_user_agent" = "xyes"; then
-  CFLAGS="$CFLAGS -DENABLE_MOZILLA_USER_AGENT"
 fi
 if test "x$enable_downloads" = "xyes" && test "x$curl_ok" = "xyes" ; then
   CPPFLAGS="$CPPFLAGS -DENABLE_DOWNLOADS"

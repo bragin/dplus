@@ -32,13 +32,9 @@
 #  define PREFS_FONT_MONOSPACE  "Courier New"
 #endif /* _WIN32 */
 
-/* Most sites don't recognize Dillo's user agent string, but many will
+/* Most sites don't recognize DPlus's user agent string, but many will
  * recognize Mozilla/4.0 and generate simpler HTML code (e.g., Google). */
-#ifdef ENABLE_MOZILLA_USER_AGENT
-#  define PREFS_HTTP_USER_AGENT "Mozilla/4.0 (compatible; Dillo " VERSION ")"
-#else  /* use Dillo's default user agent */
-#  define PREFS_HTTP_USER_AGENT "Dillo/" VERSION
-#endif
+#define PREFS_HTTP_USER_AGENT "Mozilla/4.0 (compatible; DPlus " VERSION ")"
 
 /*-----------------------------------------------------------------------------
  * Global Data

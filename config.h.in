@@ -9,9 +9,6 @@
 /* Enable JPEG images */
 #undef ENABLE_JPEG
 
-/* Use a Mozilla/4.0 user agent string */
-#undef ENABLE_MOZILLA_USER_AGENT
-
 /* Enable PNG images */
 #undef ENABLE_PNG
 
