@@ -15,7 +15,6 @@
 // Some more abstruse options (like the option to hide the Preferences dialog!)
 // still require manually editing the configuration file.
 
-// TODO: Finish reorganizing the dialog.
 // TODO: Clean up some of the (insane) geometry calculations.
 
 #include <FL/fl_ask.H>
@@ -316,12 +315,11 @@ private:
    Fl_Check_Button *load_images;
    Fl_Check_Button *load_stylesheets;
    Fl_Check_Button *parse_embedded_css;
+   Fl_Group *pages_group;
+   Fl_Check_Button *enterpress_forces_submit;
    Fl_Input *http_user_agent;
    Fl_Choice *filter_auto_requests;
-   Fl_Box *bookmarks_file_label;
-   Fl_Check_Button *bookmarks_file_check;
-   Fl_Input *bookmarks_file;
-   Fl_Button *bookmarks_button;
+   Fl_Choice *http_referer;
 
    Fl_Group *fonts;
    Font_Choice *font_serif;
@@ -341,11 +339,13 @@ private:
    Fl_Button *search_move_up;
    Fl_Button *search_move_dn;
 
-   Fl_Group *network;
-   Fl_Input *http_language;
+   Fl_Group *advanced;
    Fl_Input *http_proxy;
    Fl_Input *no_proxy;
-   Fl_Choice *http_referer;
+   Fl_Box *bookmarks_file_label;
+   Fl_Check_Button *bookmarks_file_check;
+   Fl_Input *bookmarks_file;
+   Fl_Button *bookmarks_button;
 
    bool applied_;
 
@@ -354,14 +354,14 @@ private:
    void make_browsing_tab();
    void make_fonts_tab();
    void make_search_tab();
-   void make_network_tab();
+   void make_advanced_tab();
 
    void apply_general_tab();
    void apply_view_tab();
    void apply_browsing_tab();
    void apply_fonts_tab();
    void apply_search_tab();
-   void apply_network_tab();
+   void apply_advanced_tab();
 };
 
 static void PrefsUI_return_cb(Fl_Widget *widget, void *d = 0);
@@ -400,7 +400,7 @@ PrefsDialog::PrefsDialog()
    make_browsing_tab();
    make_fonts_tab();
    make_search_tab();
-   make_network_tab();
+   make_advanced_tab();
 
    tabs->end();
 
@@ -451,12 +451,11 @@ PrefsDialog::~PrefsDialog()
    delete load_stylesheets;
    delete parse_embedded_css;
    delete content_group;
+   delete enterpress_forces_submit;
+   delete pages_group;
    delete http_user_agent;
    delete filter_auto_requests;
-   delete bookmarks_file_label;
-   delete bookmarks_file_check;
-   delete bookmarks_file;
-   delete bookmarks_button;
+   delete http_referer;
    delete browsing;
 
    delete font_serif;
@@ -477,11 +476,13 @@ PrefsDialog::~PrefsDialog()
    delete search_move_dn;
    delete search;
 
-   delete http_language;
    delete http_proxy;
    delete no_proxy;
-   delete http_referer;
-   delete network;
+   delete bookmarks_file_label;
+   delete bookmarks_file_check;
+   delete bookmarks_file;
+   delete bookmarks_button;
+   delete advanced;
 
    delete tabs;
    delete buttonOK;
@@ -499,7 +500,7 @@ void PrefsDialog::apply()
    apply_browsing_tab();
    apply_fonts_tab();
    apply_search_tab();
-   apply_network_tab();
+   apply_advanced_tab();
 
    applied_ = true;
 }
@@ -696,10 +697,29 @@ void PrefsDialog::make_browsing_tab()
       parse_embedded_css = new Fl_Check_Button(rx+8, ltop, iw, 24,
                                                "Use embedded styles");
       parse_embedded_css->value(prefs.parse_embedded_css);
-      ltop += 28;
    }
 
    content_group->end();
+   ltop += content_group->h() + lh + 8;
+
+   pages_group = new Fl_Group(rx+8, ltop+lh, iw-8, 32, "Page behavior:");
+   pages_group->box(FL_ENGRAVED_BOX);
+   pages_group->align(FL_ALIGN_TOP | FL_ALIGN_LEFT);
+   pages_group->begin();
+
+   {
+      int rx = pages_group->x() - 4,
+          ltop = pages_group->y() + 4,
+          iw = pages_group->w() - 8;
+
+      enterpress_forces_submit = new Fl_Check_Button(rx+8, ltop, iw, 24,
+                                                    "Enter key submits form");
+      enterpress_forces_submit->value(prefs.enterpress_forces_submit);
+   }
+
+   pages_group->end();
+
+   // FIXME: These are really advanced options, but they look better here.
 
    // It's tempting to make this an Fl_Input_Choice, but FLTK interprets
    // the "/" character as the start of a submenu. (Can this be disabled?)
@@ -715,22 +735,21 @@ void PrefsDialog::make_browsing_tab()
    filter_auto_requests->add("Allow all requests");
    filter_auto_requests->add("From same domain only");
    filter_auto_requests->value(prefs.filter_auto_requests);
+   rtop += lh + 28;
 
-   top = ry + rh - 64;
-   bookmarks_file_label = new Fl_Box(rx+8, top, lm-8, 24, "Bookmarks:");
-   bookmarks_file_label->align(FL_ALIGN_INSIDE | FL_ALIGN_RIGHT);
-
-   bookmarks_file_check = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
-                                              "Use a custom bookmarks file");
-   bookmarks_file_check->value(prefs.bookmarks_file == NULL ? 0 : 1);
-   top += 28;
-
-   bookmarks_file = new D_Input(rx+lm, top, rw-rm-74, 24);
-   bookmarks_file->value(prefs.bookmarks_file);
-
-   bookmarks_button = new Fl_Button(rx+lm+rw-rm-72, top, 72, 24, "Browse...");
-   bookmarks_button->callback(PrefsUI_bookmarks_button_cb,
-                              (void*)bookmarks_file);
+   // Note: The misspelling is intentional; "Referer" is the
+   // actual name of this header given in the HTTP specification.
+   http_referer = new Fl_Choice(rx+iw+8, rtop+lh, iw, 24, "HTTP referer:");
+   http_referer->align(FL_ALIGN_TOP | FL_ALIGN_LEFT);
+   http_referer->add("Don't send referer");
+   http_referer->add("Send hostname only");
+   http_referer->add("Send hostname + path");
+   if (!strcmp(prefs.http_referer, "none"))
+      http_referer->value(0);
+   else if (!strcmp(prefs.http_referer, "host"))
+      http_referer->value(1);
+   else if (!strcmp(prefs.http_referer, "path"))
+      http_referer->value(2);
 
    browsing->end();
 }
@@ -824,17 +843,15 @@ void PrefsDialog::make_search_tab()
 }
 
 /*
- * Create the Network tab.
+ * Create the Advanced tab.
+ * FIXME: This is really just whatever options I wanted to have in the
+ * Preferences dialog, but couldn't get to fit elsewhere.
  */
-void PrefsDialog::make_network_tab()
+void PrefsDialog::make_advanced_tab()
 {
-   network = new Fl_Group(rx, ry, rw, rh, "Network");
-   network->begin();
+   advanced = new Fl_Group(rx, ry, rw, rh, "Advanced");
+   advanced->begin();
    top = ry + 8;
-
-   http_language = new D_Input(rx+lm, top, rw-rm, 24, "Languages:");
-   http_language->value(prefs.http_language);
-   top += 32;
 
    http_proxy = new D_Input(rx+lm, top, rw-rm, 24, "HTTP proxy:");
    http_proxy->value(URL_STR(prefs.http_proxy));
@@ -844,19 +861,22 @@ void PrefsDialog::make_network_tab()
    no_proxy->value(prefs.no_proxy);
    top += 32;
 
-   http_referer = new Fl_Choice(rx+lm, top, rw-rm, 24, "Referer:");
-   http_referer->add("Don't send referer");
-   http_referer->add("Send hostname only");
-   http_referer->add("Send hostname and path");
-   if (!strcmp(prefs.http_referer, "none"))
-      http_referer->value(0);
-   else if (!strcmp(prefs.http_referer, "host"))
-      http_referer->value(1);
-   else if (!strcmp(prefs.http_referer, "path"))
-      http_referer->value(2);
+   bookmarks_file_label = new Fl_Box(rx+8, top, lm-8, 24, "Bookmarks:");
+   bookmarks_file_label->align(FL_ALIGN_INSIDE | FL_ALIGN_RIGHT);
+
+   bookmarks_file_check = new Fl_Check_Button(rx+lm, top, rw-rm, 24,
+                                              "Use custom bookmarks file");
+   bookmarks_file_check->value(prefs.bookmarks_file == NULL ? 0 : 1);
    top += 28;
 
-   network->end();
+   bookmarks_file = new D_Input(rx+lm, top, rw-rm-74, 24);
+   bookmarks_file->value(prefs.bookmarks_file);
+
+   bookmarks_button = new Fl_Button(rx+lm+rw-rm-72, top, 72, 24, "Browse...");
+   bookmarks_button->callback(PrefsUI_bookmarks_button_cb,
+                              (void*)bookmarks_file);
+
+   advanced->end();
 }
 
 /*
@@ -902,15 +922,22 @@ void PrefsDialog::apply_browsing_tab()
    prefs.load_images = load_images->value();
    prefs.load_stylesheets = load_stylesheets->value();
    prefs.parse_embedded_css = parse_embedded_css->value();
+   prefs.enterpress_forces_submit = enterpress_forces_submit->value();
 
    dFree(prefs.http_user_agent);
    prefs.http_user_agent = dStrdup(http_user_agent->value());
    prefs.filter_auto_requests = filter_auto_requests->value();
-
-   dFree(prefs.bookmarks_file);
-   prefs.bookmarks_file = (bookmarks_file_check->value() &&
-                           strlen(bookmarks_file->value()) > 0) ?
-                          dStrdup(bookmarks_file->value()) : NULL;
+   switch (http_referer->value()) {
+   case 0:
+      prefs.http_referer = dStrdup("none");
+      break;
+   case 1:
+      prefs.http_referer = dStrdup("host");
+      break;
+   case 2:
+      prefs.http_referer = dStrdup("path");
+      break;
+   }
 }
 
 /*
@@ -959,28 +986,20 @@ void PrefsDialog::apply_search_tab()
 /*
  * Apply the Network tab.
  */
-void PrefsDialog::apply_network_tab()
+void PrefsDialog::apply_advanced_tab()
 {
-   dFree(prefs.http_language);
    a_Url_free(prefs.http_proxy);
    dFree(prefs.no_proxy);
    dFree(prefs.http_referer);
 
-   prefs.http_language = dStrdup(http_language->value());
    prefs.http_proxy = (strlen(http_proxy->value()) ?
 		       a_Url_new(http_proxy->value(), NULL) : NULL);
    prefs.no_proxy = dStrdup(no_proxy->value());
-   switch (http_referer->value()) {
-   case 0:
-      prefs.http_referer = dStrdup("none");
-      break;
-   case 1:
-      prefs.http_referer = dStrdup("host");
-      break;
-   case 2:
-      prefs.http_referer = dStrdup("path");
-      break;
-   }
+
+   dFree(prefs.bookmarks_file);
+   prefs.bookmarks_file = (bookmarks_file_check->value() &&
+                           strlen(bookmarks_file->value()) > 0) ?
+                          dStrdup(bookmarks_file->value()) : NULL;
 }
 
 
