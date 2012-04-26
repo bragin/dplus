@@ -759,6 +759,8 @@ void PrefsDialog::make_browsing_tab()
    else if (strlen(prefs.http_user_agent) > 6 &&
             !strncmp(prefs.http_user_agent, "Opera/", 6))
       http_user_agent->value(4);
+   else
+      http_user_agent->value(0);
    rtop += lh + 28;
 
    filter_auto_requests = new Fl_Choice(rx+iw+8, rtop+lh, iw, 24,
@@ -782,6 +784,8 @@ void PrefsDialog::make_browsing_tab()
       http_referer->value(1);
    else if (!strcmp(prefs.http_referer, "path"))
       http_referer->value(2);
+   else
+      http_referer->value(0);
 
    browsing->end();
 }
