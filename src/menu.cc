@@ -175,6 +175,16 @@ static void Menu_save_page_cb(Fl_Widget*, void*)
 }
 
 /*
+ * Print current page
+ */
+static void Menu_print_page_cb(Fl_Widget*, void*)
+{
+#ifdef ENABLE_PRINTER
+   a_UIcmd_print_page(popup_bw);
+#endif /* ENABLE_PRINTER */
+}
+
+/*
  * View current page source
  */
 static void Menu_view_page_source_cb(Fl_Widget*, void*)
@@ -343,6 +353,10 @@ void a_Menu_page_popup(BrowserWindow *bw, const DilloUrl *url,
        Menu_find_text_cb,0,0,0,0,0,0},
       {"S&ave page as...", Keys::getShortcut(KEYS_SAVE),
        Menu_save_page_cb,0,0,0,0,0,0},
+#ifdef ENABLE_PRINTER
+      {"&Print page...", Keys::getShortcut(KEYS_PRINT),
+       Menu_print_page_cb,0,0,0,0,0,0},
+#endif /* ENABLE_PRINTER */
       {0,0,0,0,0,0,0,0,0}
    };
 
