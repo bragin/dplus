@@ -296,7 +296,7 @@ int a_Capi_open_url(DilloWeb *web, CA_Callback_t Call, void *CbData)
 
    } else {
       /* unsupported protocol */
-      a_UIcmd_set_msg(web->bw, "Unsupported protocol: %s", scheme);
+      a_UIcmd_set_msg(web->bw, "ERROR: %s protocol is not supported", scheme);
    }
 
    if (use_cache) {
