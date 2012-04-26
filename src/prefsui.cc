@@ -632,7 +632,7 @@ void PrefsDialog::make_view_tab()
       rtop += 28;
 
       show_quit_dialog = new Fl_Check_Button(rx+iw+8, rtop, iw, 24,
-                                             "Warn when closing all");
+                                             "Warn on window close");
       show_quit_dialog->value(prefs.show_quit_dialog);
    }
 
