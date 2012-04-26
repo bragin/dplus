@@ -977,15 +977,17 @@ void PrefsDialog::apply_browsing_tab()
    }
    prefs.filter_auto_requests = filter_auto_requests->value();
 
+   dFree(prefs.http_referer);
    switch (http_referer->value()) {
-   case 0:
-      prefs.http_referer = dStrdup("none");
-      break;
    case 1:
       prefs.http_referer = dStrdup("host");
       break;
    case 2:
       prefs.http_referer = dStrdup("path");
+      break;
+   case 0:
+   default:
+      prefs.http_referer = dStrdup("none");
       break;
    }
 }
@@ -1040,7 +1042,6 @@ void PrefsDialog::apply_advanced_tab()
 {
    a_Url_free(prefs.http_proxy);
    dFree(prefs.no_proxy);
-   dFree(prefs.http_referer);
 
    prefs.http_proxy = (strlen(http_proxy->value()) ?
 		       a_Url_new(http_proxy->value(), NULL) : NULL);
