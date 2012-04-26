@@ -218,7 +218,7 @@ static void custTabButtonUpBoxDraw(int x, int y, int w, int h, Fl_Color c)
 
 static void custTabButtonDownBoxDraw(int x, int y, int w, int h, Fl_Color c)
 {
-   custTabButtonUpBoxDraw(x, y, w, h, (Fl_Color)51);
+   custTabButtonUpBoxDraw(x, y, w, h, fl_lighter(c));
 }
 
 /*
@@ -398,6 +398,7 @@ int main(int argc, char **argv)
    Fl::set_boxtype(FL_DIAMOND_DOWN_BOX, custTabButtonDownBoxDraw, 0, 0, 1, 0);
 
    checkPreferredFonts();
+   Fl::get_system_colors();
 
    // Create a new UI/bw pair
    BrowserWindow *bw = a_UIcmd_browser_window_new(0, 0, xid, NULL);
@@ -407,8 +408,6 @@ int main(int argc, char **argv)
     * immediately-available URLs from the cmdline (e.g. about:splash).
     */
    ((Fl_Widget *)bw->ui)->window()->make_current();
-
-   Fl::get_system_colors();
 
    /* Proxy authentication */
    if (prefs.http_proxyuser && !a_Http_proxy_auth()) {

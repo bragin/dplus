@@ -128,7 +128,7 @@ public:
    {
       flat = false;
       norm_color = color();
-      light_color = 51;
+      light_color = fl_lighter(norm_color);
    }
    virtual int handle(int e)
    {
