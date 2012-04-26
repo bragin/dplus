@@ -49,6 +49,15 @@
 #include "../dlib/dlib.h"
 #include "msg.h"
 
+#define USER_AGENT_DEFAULT "Mozilla/4.0 (compatible; DPlus " VERSION ")"
+#define USER_AGENT_DILLO "Dillo/3.0.2"
+#define USER_AGENT_IE \
+   "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)"
+#define USER_AGENT_FIREFOX \
+   "Mozilla/5.0 (Windows NT 6.1; rv:11.0) Gecko/20100101 Firefox/11.0"
+#define USER_AGENT_OPERA \
+   "Opera/9.80 (Windows NT 6.1; U; en) Presto/2.10.229 Version/11.61"
+
 const int32_t PREFSGUI_WHITE = 0xffffff;  /* prefs.allow_white_bg == 1 */
 const int32_t PREFSGUI_SHADE = 0xdcd1ba;  /* prefs.allow_white_bg == 0 */
 
@@ -319,7 +328,7 @@ private:
    Fl_Check_Button *parse_embedded_css;
    Fl_Group *pages_group;
    Fl_Check_Button *enterpress_forces_submit;
-   Fl_Input *http_user_agent;
+   Fl_Choice *http_user_agent;
    Fl_Choice *filter_auto_requests;
    Fl_Choice *http_referer;
 
@@ -728,12 +737,28 @@ void PrefsDialog::make_browsing_tab()
 
    // FIXME: These are really advanced options, but they look better here.
 
-   // It's tempting to make this an Fl_Input_Choice, but FLTK interprets
-   // the "/" character as the start of a submenu. (Can this be disabled?)
-   http_user_agent = new D_Input(rx+iw+8, rtop+lh, iw, 24, "User agent:");
+   http_user_agent = new Fl_Choice(rx+iw+8, rtop+lh, iw, 24, "User agent:");
    http_user_agent->align(FL_ALIGN_TOP | FL_ALIGN_LEFT);
-   http_user_agent->value(prefs.http_user_agent);
-   http_user_agent->redraw();
+   http_user_agent->add("Identify as DPlus");
+   http_user_agent->add("Identify as Dillo");
+   http_user_agent->add("Identify as IE");
+   http_user_agent->add("Identify as Firefox");
+   http_user_agent->add("Identify as Opera");
+   if (strlen(prefs.http_user_agent) > 31 &&
+       !strncmp(prefs.http_user_agent, "Mozilla/4.0 (compatible; DPlus ", 31))
+      http_user_agent->value(0);
+   else if (strlen(prefs.http_user_agent) > 6 &&
+            !strncmp(prefs.http_user_agent, "Dillo/", 6))
+      http_user_agent->value(1);
+   else if (strlen(prefs.http_user_agent) > 25 &&
+            !strncmp(prefs.http_user_agent, "Mozilla/5.0 (compatible; ", 25))
+      http_user_agent->value(2);
+   else if (strlen(prefs.http_user_agent) > 21 &&
+            !strncmp(prefs.http_user_agent, "Mozilla/5.0 (Windows ", 21))
+      http_user_agent->value(3);
+   else if (strlen(prefs.http_user_agent) > 6 &&
+            !strncmp(prefs.http_user_agent, "Opera/", 6))
+      http_user_agent->value(4);
    rtop += lh + 28;
 
    filter_auto_requests = new Fl_Choice(rx+iw+8, rtop+lh, iw, 24,
@@ -932,8 +957,26 @@ void PrefsDialog::apply_browsing_tab()
    prefs.enterpress_forces_submit = enterpress_forces_submit->value();
 
    dFree(prefs.http_user_agent);
-   prefs.http_user_agent = dStrdup(http_user_agent->value());
+   switch (http_user_agent->value()) {
+   case 1:
+      prefs.http_user_agent = dStrdup(USER_AGENT_DILLO);
+      break;
+   case 2:
+      prefs.http_user_agent = dStrdup(USER_AGENT_IE);
+      break;
+   case 3:
+      prefs.http_user_agent = dStrdup(USER_AGENT_FIREFOX);
+      break;
+   case 4:
+      prefs.http_user_agent = dStrdup(USER_AGENT_OPERA);
+      break;
+   case 0:
+   default:
+      prefs.http_user_agent = dStrdup(USER_AGENT_DEFAULT);
+      break;
+   }
    prefs.filter_auto_requests = filter_auto_requests->value();
+
    switch (http_referer->value()) {
    case 0:
       prefs.http_referer = dStrdup("none");
