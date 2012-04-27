@@ -514,8 +514,9 @@ BrowserWindow *a_UIcmd_browser_window_new(int ww, int wh,
 
 #ifdef MSDOS
    if (old_bw == NULL) {
-      // DOS applications traditionally fill the whole screen
-      DilloTabs->window()->fullscreen();
+      // Hack to make the window fill the whole screen
+      // (Nano-X doesn't play nice with DilloTabs->window()->fullscreen())
+      DilloTabs->window()->resize(0, 0, Fl::w() - 10, Fl::h() - 23);
    }
 #else /* MSDOS */
    if (old_bw == NULL && prefs.xpos >= 0 && prefs.ypos >= 0) {
