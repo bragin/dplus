@@ -24,7 +24,7 @@ const char *const AboutSplash=
 "<body bgcolor='#778899' text='black' link='#0000c0' alink='#c00000' "
 "vlink='#800080'>\n"
 "<div>&nbsp;</div>\n"
-"<table align='center' width='512' border='1' cellpadding='8' "
+"<table align='center' width='520' border='1' cellpadding='8' "
 "cellspacing='0'>\n"
 "<tr><td width='100%' bgcolor='#d3d3d3' align='left' valign='top'>\n"
 "<h1 align='center'>D+ Browser</h1>\n"
