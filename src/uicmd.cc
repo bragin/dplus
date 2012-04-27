@@ -14,7 +14,6 @@
 
 #include <stdio.h>
 #include <stdarg.h>
-#include <unistd.h>     /* for access */
 #include <math.h>       /* for rint */
 
 #include <FL/Fl.H>
@@ -1368,17 +1367,10 @@ void a_UIcmd_set_buttons_sens(BrowserWindow *bw)
  */
 void a_UIcmd_help(BrowserWindow *bw)
 {
-   char *path = dStrconcat(DILLO_DOCDIR, "user_help.html", NULL);
    char *urlstr;
    DilloUrl *url;
 
-   if (access(path, R_OK) == 0) {
-      urlstr = dStrconcat("file:", path, NULL);
-   } else {
-      MSG("Can't read local help file at \"%s\"."
-          " Getting remote help...\n", path);
-      urlstr = dStrdup(HELP_URL);
-   }
+   urlstr = dStrdup(HELP_URL);
    url = a_Url_new(urlstr, NULL);
 
    // Use a new browser window or tab, depending on the user's
@@ -1389,9 +1381,7 @@ void a_UIcmd_help(BrowserWindow *bw)
       a_UIcmd_open_url_nw(bw, url);
 
    a_Url_free(url);
-
    dFree(urlstr);
-   dFree(path);
 }
 
 /*
