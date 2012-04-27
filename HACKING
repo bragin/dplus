@@ -1,0 +1,115 @@
+---------------------------
+ D+ Browser Developer Info
+---------------------------
+
+"All hope abandon ye who enter here."
+                       - Dante's The Divine Comedy, trans. H. F. Cary (1814)
+
+"Dillo internals are not of a simple nature."
+                       - Dillo's New Developer Info
+                         <http://www.dillo.org/developer.html>
+
+
+Table of Contents
+-----------------
+
+  1. Before You Begin
+  2. Coding Style
+  3. Internal APIs
+
+
+1. Before You Begin
+-------------------
+
+First, a bit of history.
+
+Web browser internals are complex and messy, especially when you don't have
+any kind of development plan.  DPlus is derived from Dillo, whose codebase is
+astonishingly dense and convoluted for a program of its size.  Documentation
+is scarce, and what is available is often several years out of date.  The code
+has evolved with little sense of direction, and the developers seem unclear
+about what they want or who comprises their target audience.
+
+Key parts of the code, in particular the renderer and input/output system,
+are not well understood even within the Dillo Project; my impression, based
+on private emails from several core developers, is that the only person who
+understands that code is Jorge Arellano Cid (Dillo's lead developer) himself.
+Dillo's display widget, Dw, was originally developed by a separate team
+outside the Dillo Project, and uses a markedly different coding style and
+internal APIs from the rest of the application code.
+
+Dillo was originally developed around a plugin mechanism called DPI, which
+accounts for much of the complexity.  (See http://www.dillo.org/dpi1.html
+for an overview of DPI.)  While an interesting idea in theory, in practice
+DPI code is complex, non-portable, and difficult to maintain.  In addition,
+the design of DPI essentially allows for the execution of arbitrary code,
+posing a significant potential security risk.  DPlus no longer includes DPI
+support, and most of the functionality formerly provided by DPI programs has
+been built into the browser; however, there is still some DPI cruft left over
+in the input/output system because we frankly do not understand its workings
+well enough to completely remove it.
+
+I am not saying this to slander the Dillo developers; indeed, I think highly
+of their work to use it as the base for my own.  But before you start hacking
+on DPlus, you should really know what you're getting into.  I have done my
+best to clean up the existing code, and make my own additions as easy to follow
+as possible.  However, there is only so much one developer can do.
+
+In short, there's some pretty ugly code in here.  You have been warned.
+
+
+2. Coding Style
+---------------
+
+DPlus strictly follows the Dillo Project's "Naming & Coding Design,"
+documented in doc/NC_design.txt.
+
+Adherence to good coding style is not optional; it is essential to writing
+readable (and ultimately maintainable) code.  For this reason, any code that
+does not follow style will not be accepted into DPlus.  Note that in practice,
+DPlus is much stricter about function commenting and other rules than Dillo.
+
+Platform-specific code is acceptable, but only when necessary to provide
+identical functionality across different platforms.  It should be isolated
+as much as possible from other code.  DPlus currently uses the following
+preprocessor macros to test for specific platforms:
+
+  Macro        Platform                      Rationale
+  -----        --------                      ---------
+  _WIN32       Microsoft Windows             Defined by all Windows compilers
+
+  MSDOS        MS-DOS and compatible         The shortest of several widely-
+                                             supported macros
+
+When possible, test for features instead of platforms; e.g., instead of
+
+  #if !defined(_WIN32) && !defined(MSDOS)
+     // Some OSes exit dillo without this (not GNU/Linux).
+     signal(SIGPIPE, SIG_IGN);
+  #endif /* !_WIN32 && !MSDOS */
+
+you could write
+
+  #ifdef SIGPIPE
+     // Some OSes exit dillo without this (not GNU/Linux).
+     signal(SIGPIPE, SIG_IGN);
+  #endif /* SIGPIPE */
+
+
+3. Internal APIs
+----------------
+
+The main internal APIs of interest are:
+
+  - dlib (src/dlib.h)
+    Provides memory allocation, string manipulation, lists, and many other
+    useful features.  Required for C code, available for C++.
+
+  - dsock (src/dsock.h)
+    Provides portable sockets support.
+
+  - dfcntl (src/dfcntl.h)
+    Provides a portable fcntl() implementation.
+
+  - widgets (widgets/*.h)
+    Provides several custom FLTK widgets for the user interface.
