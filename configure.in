@@ -1,6 +1,7 @@
 dnl Process this file with aclocal, autoconf and automake.
 
 AC_INIT([dplus], [0.5])
+AC_DEFINE([RELEASE_DATE], ["Apr 28 2012"], [Program release date])
 
 dnl Detect the canonical target build environment
 AC_CANONICAL_TARGET
@@ -560,7 +561,9 @@ if test "x$enable_threaded_dns" = "xyes" ; then
   CFLAGS="$CFLAGS -DD_DNS_THREADED"
 fi
 if test "x$enable_ssl" = "xyes" ; then
-  CFLAGS="$CFLAGS -DENABLE_SSL"
+  dnl Note: -DENABLE_OPENSSL is used to display the advertising
+  dnl on about:splash as required by the OpenSSL software license.
+  CFLAGS="$CFLAGS -DENABLE_SSL -DENABLE_OPENSSL"
   LIBS="$LIBS -lcrypto -lssl"
 fi
 if test "x$enable_cyassl" = "xyes" ; then
