@@ -20,7 +20,8 @@ Table of Contents
   4. Project History
   5. Building and Installing
   6. Developer Information
-  7. Contact
+  7. Copyrights
+  8. Contact
 
 
 1. Features
@@ -128,7 +129,38 @@ Please see the `BUILDING' file.
 Please see the `HACKING' file.
 
 
-7. Contact
+7. Copyrights
+-------------
+
+DPlus is copyright (c) 2010-2012, Benjamin Johnson.
+Dillo is copyright (c) 1999-2011, Jorge Arellano Cid and contributors.
+
+DPlus may include or link to a number of third-party libraries, which are
+subject to the following copyright terms:
+
+  - FLTK is copyright 1998-2010 by Bill Spitzak and others. (GPLv2)
+
+  - OpenSSL is copyright (c) 1998-2012 The OpenSSL Project. All rights
+    reserved. (OpenSSL License + SSLeay License)
+
+  - CyaSSL is copyright (c) 2006-2012 Sawtooth Consulting Ltd. (GPLv2)
+
+  - libcurl is copyright (c) 1998-2012 Daniel Stenberg, et al. (cURL license)
+
+  - libjpeg is copyright (c) 1991-1998 Thomas G. Lane; 2002-2009 Guido
+    Vollbeding. (Independent JPEG Group license)
+
+  - libpng is copyright (c) 1998-2012 Glenn Randers-Pehrson; 1996, 1997
+    Andreas Dilger; 1995, 1996 Guy Eric Schalnat, Group 42, Inc. (libpng
+    license)
+
+  - zlib is copyright (c) 1995-2010 Jean-loup Gailly and Mark Adler. (zlib
+    license)
+
+  - Additional third-party copyrights and licensing terms may apply.
+
+
+8. Contact
 ----------
 
 Benjamin Johnson <obeythepenguin@users.sourceforge.net>
