@@ -739,7 +739,7 @@ void PrefsDialog::make_browsing_tab()
 
    http_user_agent = new Fl_Choice(rx+iw+8, rtop+lh, iw, 24, "User agent:");
    http_user_agent->align(FL_ALIGN_TOP | FL_ALIGN_LEFT);
-   http_user_agent->add("Identify as DPlus");
+   http_user_agent->add("Use default");
    http_user_agent->add("Identify as Dillo");
    http_user_agent->add("Identify as IE");
    http_user_agent->add("Identify as Firefox");
