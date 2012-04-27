@@ -41,6 +41,7 @@ void a_Html_input_delete(DilloHtmlInput* input);
 void a_Html_form_submit2(void *v_form);
 void a_Html_form_reset2(void *v_form);
 void a_Html_form_display_hiddens2(void *v_form, bool display);
+void a_Html_form_create_search2(void *v_form, const char *label);
 
 
 /*

@@ -7,6 +7,8 @@ extern "C" {
 
 
 int a_PrefsUI_show(void);
+void a_PrefsUI_add_search(const char *label, const char *url);
+
 void a_PrefsUI_set_current_url(const char *url);
 
 

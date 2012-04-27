@@ -174,7 +174,7 @@ public:
 class Search_edit : public Fl_Window
 {
 public:
-   Search_edit(const char *l = 0, const char *u = 0);
+   Search_edit(const char *t = 0, const char *l = 0, const char *u = 0);
    ~Search_edit();
 
    inline const char *search_label() const { return label_input->value(); }
@@ -195,8 +195,8 @@ private:
    static void cancel_cb(Fl_Widget*, void *cbdata);
 };
 
-Search_edit::Search_edit(const char *l, const char *u)
-   : Fl_Window(450, 130, "Add/Edit Search Engine")
+Search_edit::Search_edit(const char *t, const char *l, const char *u)
+   : Fl_Window(450, 130, t)
 {
    begin();
 
@@ -221,11 +221,6 @@ Search_edit::Search_edit(const char *l, const char *u)
    accepted_ = false;
 
    end();
-   if (strlen(u) > 0)
-      label("Edit Search Engine");
-   else
-      label("Add Search Engine");
-
    set_modal();
 }
 
@@ -283,8 +278,6 @@ public:
    ~PrefsDialog();
 
    void apply();
-   void write();
-
    inline bool applied() const { return applied_; }
 
 private:
@@ -374,6 +367,8 @@ private:
    void apply_search_tab();
    void apply_advanced_tab();
 };
+
+static void PrefsUI_write(void);
 
 static void PrefsUI_return_cb(Fl_Widget *widget, void *d = 0);
 static void PrefsUI_cancel_cb(Fl_Widget *widget, void *d = 0);
@@ -516,18 +511,6 @@ void PrefsDialog::apply()
    apply_advanced_tab();
 
    applied_ = true;
-}
-
-/*
- * Write preferences to configuration file.
- */
-void PrefsDialog::write()
-{
-   FILE *fp;
-   if ((fp = Paths::getWriteFP(PATHS_RC_PREFS)))
-      PrefsWriter::write(fp);
-   else
-      fl_alert("Could not open %s for writing!", PATHS_RC_PREFS);
 }
 
 /*
@@ -1057,6 +1040,19 @@ void PrefsDialog::apply_advanced_tab()
 
 
 /*
+ * Write preferences to configuration file.
+ */
+static void PrefsUI_write(void)
+{
+   FILE *fp;
+   if ((fp = Paths::getWriteFP(PATHS_RC_PREFS)))
+      PrefsWriter::write(fp);
+   else
+      fl_alert("Could not open %s for writing!", PATHS_RC_PREFS);
+}
+
+
+/*
  * OK button callback.
  */
 static void PrefsUI_return_cb(Fl_Widget *widget, void *d)
@@ -1065,7 +1061,7 @@ static void PrefsUI_return_cb(Fl_Widget *widget, void *d)
    PrefsDialog *dialog = (PrefsDialog*)d;
 
    dialog->apply();  // apply our new preferences
-   dialog->write();  // save our preferences to disk
+   PrefsUI_write();  // save our preferences to disk
 
    dialog->hide();
 }
@@ -1109,7 +1105,7 @@ static void PrefsUI_search_add_cb(Fl_Widget *widget, void *l)
 {
    Fl_Select_Browser *sl = (Fl_Select_Browser*)l;
 
-   Search_edit *e = new Search_edit("", "");
+   Search_edit *e = new Search_edit("Add Search Engine", "", "");
    e->show();
 
    while (e->shown())
@@ -1135,7 +1131,7 @@ static void PrefsUI_search_edit_cb(Fl_Widget *widget, void *l)
 
    dReturn_if(a_Misc_parse_search_url(source, &label, &url) < 0);
 
-   Search_edit *e = new Search_edit(label, url);
+   Search_edit *e = new Search_edit("Edit Search Engine", label, url);
    e->show();
 
    while (e->shown())
@@ -1251,6 +1247,27 @@ int a_PrefsUI_show(void)
    PrefsUI_free_fonts_list();
 
    return retval;
+}
+
+/*
+ * Show the "Add Search Engine" dialog.
+ */
+void a_PrefsUI_add_search(const char *label, const char *url)
+{
+   Search_edit *e = new Search_edit("Add Search Engine", label, url);
+   e->show();
+
+   while (e->shown())
+      Fl::wait();
+
+   if (e->accepted()) {
+      const char *u = dStrconcat(e->search_label(), " ",
+                                 e->search_url(), NULL);
+      dList_append(prefs.search_urls, (void*)u);
+      PrefsUI_write();
+   }
+
+   delete e;
 }
 
 /*

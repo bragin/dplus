@@ -246,6 +246,17 @@ static void Menu_form_hiddens_cb(Fl_Widget*, void *user_data)
       a_Html_form_display_hiddens(doc, popup_form, !visible);
 }
 
+/*
+ * Create a new search from a form.
+ */
+static void Menu_form_create_search_cb(Fl_Widget*, void*)
+{
+   void *doc = a_Bw_get_url_doc(popup_bw, popup_url);
+
+   if (doc)
+      a_Html_form_create_search(doc, popup_form);
+}
+
 static void Menu_stylesheet_cb(Fl_Widget*, void *vUrl)
 {
    const DilloUrl *url = (const DilloUrl *) vUrl;
@@ -501,7 +512,8 @@ void a_Menu_form_popup(BrowserWindow *bw, const DilloUrl *page_url,
    static Fl_Menu_Item pm[] = {
       {"&Submit form", 0, Menu_form_submit_cb,0,0,0,0,0,0},
       {"&Reset form", 0, Menu_form_reset_cb,0,0,0,0,0,0},
-      {0, 0, Menu_form_hiddens_cb, &hiddens_visible, 0,0,0,0,0},
+      {0, 0, Menu_form_hiddens_cb, &hiddens_visible, FL_MENU_DIVIDER,0,0,0,0},
+      {"&Add search engine...", 0, Menu_form_create_search_cb, 0,0,0,0,0,0},
       {0,0,0,0,0,0,0,0,0}
    };
 

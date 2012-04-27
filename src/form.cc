@@ -23,6 +23,8 @@
 #include "msg.h"
 #include "prefs.h"
 #include "uicmd.hh"
+#include "prefsui.hh"
+#include "dialog.hh"
 
 using namespace lout;
 using namespace dw;
@@ -117,6 +119,7 @@ public:
    void submit(DilloHtmlInput *active_input, EventButton *event);
    void reset ();
    void display_hiddens(bool display);
+   void create_search(const char *label);
    void addInput(DilloHtmlInput *input, DilloHtmlInputType type);
    void setEnabled(bool enabled);
 };
@@ -226,6 +229,11 @@ void a_Html_form_reset2(void *vform)
 void a_Html_form_display_hiddens2(void *vform, bool display)
 {
    ((DilloHtmlForm *)vform)->display_hiddens(display);
+}
+
+void a_Html_form_create_search2(void *vform, const char *label)
+{
+   ((DilloHtmlForm *)vform)->create_search(label);
 }
 
 /*
@@ -1431,6 +1439,45 @@ void DilloHtmlForm::display_hiddens(bool display)
       }
    }
   showing_hiddens = display;
+}
+
+/*
+ * Create a new search from the current form.
+ */
+void DilloHtmlForm::create_search(const char *label)
+{
+   Dstr *search_url;
+   DilloUrl *url;
+   char *url_str, *token;
+   int count = 0, found_query = 0;
+
+   /* Search currently only works with HTTP GET forms... */
+   if (method != DILLO_HTML_METHOD_GET) {
+      a_Dialog_msg("Cannot create a search because this form does not use "
+                   "HTTP GET.");
+      return;
+   }
+
+   url = buildQueryUrl(NULL);
+   url_str = dStrdup(URL_STR(url));
+   a_Url_free(url);
+
+   // Assume the first field without a value is the query string.
+   // TODO: Try to find a more reliable heuristic.
+   search_url = dStr_new("");
+   while ((token = dStrsep(&url_str, "?&"))) {
+      dStr_append(search_url, (count == 0) ? "" : (count == 1) ? "?" : "&");
+      dStr_append(search_url, token);
+      if (!found_query && count > 0 && token[strlen(token)-1] == '=') {
+         found_query = 1;
+         dStr_append(search_url, "%s");
+      }
+      count++;
+   }
+   dFree(url_str);
+
+   a_PrefsUI_add_search(label, search_url->str);
+   dStr_free(search_url, 1);
 }
 
 void DilloHtmlForm::setEnabled(bool enabled)

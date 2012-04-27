@@ -259,6 +259,20 @@ void a_Html_form_display_hiddens(void *v_html, void *v_form, bool_t display)
 }
 
 /*
+ * Used by the "Create search..." form menuitem.
+ */
+void a_Html_form_create_search(void *v_html, void *v_form)
+{
+   DilloHtml *html = (DilloHtml*)v_html;
+   const char *title = a_History_get_title_by_url(html->page_url, 1);
+
+   if (Html_contains_form(html, v_form)) {
+      /* it's still valid */
+      a_Html_form_create_search2(v_form, title);
+   }
+}
+
+/*
  * Set the URL data for image maps.
  */
 static void Html_set_link_coordinates(DilloHtml *html, int link, int x, int y)
