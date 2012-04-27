@@ -17,6 +17,9 @@
 
 // TODO: Clean up some of the (insane) geometry calculations.
 
+// TODO: Determine if the dialog's layout actually makes sense.
+//       (See some of the comments tagged 'FIXME' below.)
+
 #include <FL/fl_ask.H>
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H>
@@ -289,8 +292,9 @@ private:
 
    Fl_Group *general;
    Fl_Input *home;
-   Fl_Button *use_current;
+   Fl_Button *use_current_home;
    Fl_Input *start_page;
+   Fl_Button *use_current_start;
    Fl_Choice *panel_size;
    Fl_Check_Button *small_icons;
    Fl_Box *colors_label;
@@ -429,8 +433,9 @@ PrefsDialog::PrefsDialog()
 PrefsDialog::~PrefsDialog()
 {
    delete home;
-   delete use_current;
+   delete use_current_home;
    delete start_page;
+   delete use_current_start;
    delete panel_size;
    delete small_icons;
    delete colors_label;
@@ -525,12 +530,17 @@ void PrefsDialog::make_general_tab()
    home = new D_Input(rx+lm, top, rw-rm-74, 24, "Home:");
    home->value(URL_STR(prefs.home));
 
-   use_current = new Fl_Button(rx+lm+rw-rm-72, top, 72, 24, "Current");
-   use_current->callback(PrefsUI_use_current_cb, (void*)home);
+   use_current_home = new Fl_Button(rx+lm+rw-rm-72, top, 72, 24, "Current");
+   use_current_home->callback(PrefsUI_use_current_cb, (void*)home);
    top += 28;
 
-   start_page = new D_Input(rx+lm, top, rw-rm, 24, "Start page:");
+   // I've thought about making this a drop-down, since new users might find
+   // the separate home and start pages confusing, but I'll leave it for now.
+   start_page = new D_Input(rx+lm, top, rw-rm-74, 24, "Start page:");
    start_page->value(URL_STR(prefs.start_page));
+
+   use_current_start = new Fl_Button(rx+lm+rw-rm-72, top, 72, 24, "Current");
+   use_current_start->callback(PrefsUI_use_current_cb, (void*)start_page);
    top += 32;
 
    panel_size = new Fl_Choice(rx+lm, top, (rw/2)-hw, 24, "Panel size:");
