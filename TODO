@@ -15,8 +15,8 @@ Documentation:
 [X] README
 [ ] BUILDING/INSTALL
 [ ] AUTHORS
-[ ] ChangeLog
-[ ] HACKING and developer documentation
+[X] ChangeLog
+[X] HACKING and developer documentation
 
 Network:
 [X] Remove all remaining DPI code
