@@ -14,8 +14,10 @@ Table of Contents
 -----------------
 
   1. Before You Begin
-  2. Coding Style
-  3. Internal APIs
+  2. Code Organization
+  3. Coding Style
+  4. Internal APIs
+  5. Other Documentation
 
 
 1. Before You Begin
@@ -58,7 +60,32 @@ as possible.  However, there is only so much one developer can do.
 In short, there's some pretty ugly code in here.  You have been warned.
 
 
-2. Coding Style
+2. Code Organization
+--------------------
+
+dlib/
+  Contains several internal APIs used in the application code.
+  See "Internal APIs," below.
+
+dw/
+  The display widget, Dw, which performs low-level layout and drawing
+  operations.  (Note: HTML parsing is part of the application code, below.)
+
+lout/
+  "Lots of Useful Tools."  Contains several internal APIs mainly used in Dw.
+
+src/
+  The main application code, including the user interface, HTML/CSS parsers,
+  input/output system, etc.  This is what you're probably most interested in.
+
+test/
+  Test suite for Dw.
+
+widgets/
+  Custom FLTK widgets used in Dw and the application's user interface.
+
+
+3. Coding Style
 ---------------
 
 DPlus strictly follows the Dillo Project's "Naming & Coding Design,"
@@ -96,7 +123,7 @@ you could write
   #endif /* SIGPIPE */
 
 
-3. Internal APIs
+4. Internal APIs
 ----------------
 
 The main internal APIs of interest are:
@@ -113,3 +140,17 @@ The main internal APIs of interest are:
 
   - widgets (widgets/*.h)
     Provides several custom FLTK widgets for the user interface.
+
+
+5. Other Documentation
+----------------------
+
+See doc/README for an overview of Dillo's developer documentation.
+It's incomplete and several years out of date, but it's still a start...
+
+You might also want to check the Dillo homepage at http://www.dillo.org/,
+particularly the "New Developer" and "Documentation" pages.
+
+Eventually, I intend to properly document my own changes and additions to
+the code.  In the meantime, the source files are well-commented and extremely
+readable, at least compared to what was there before.
