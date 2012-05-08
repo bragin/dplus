@@ -1,3 +1,10 @@
++----------------------------------------------------------------------------+
+|                                                                            |
+| The real build/installation instructions are in the `BUILDING' file.       |
+| This file is only included because autoconf complains if it's not present. |
+|                                                                            |
++----------------------------------------------------------------------------+
+
 Basic Installation
 ==================
 

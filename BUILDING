@@ -1,0 +1,190 @@
+-------------------------------
+ D+ Browser Build Instructions
+-------------------------------
+
+Please note: If there is a binary package available for your system, USE IT.
+The only reason you should build DPlus from source is if no binary package is
+available, or you are modifying the source code.
+
+Also note that if you're building DPlus from source, you should really know
+enough already that you don't need these instructions in the first place.
+
+
+Table of Contents
+-----------------
+
+  1. Build Environment
+  2. Dependencies
+  3. Building DPlus
+  4. Configuration Options
+  5. Installing DPlus
+
+
+1. Build Environment
+--------------------
+
+To build DPlus, you will need a Unix-like command line and the GNU development
+toolchain.  Windows users can use MinGW (http://www.mingw.org/); DOS users can
+use DJGPP (http://www.delorie.com/djgpp/).
+
+In theory, it should be possible to build DPlus with other compilers; however,
+the build system currently only supports the GNU tools.
+
+Instructions for Windows and DOS users are available on the DPlus homepage.
+Users of other platforms should refer to their system's documentation.
+
+
+2. Dependencies
+---------------
+
+Prebuilt dependency libraries for Windows and DOS are available on the
+DPlus homepage.  Users of other platforms should refer to their system's
+documentation or individual dependencies' homepages for availability.
+
+  Name                             Download Site
+  ----                             -------------
+  FLTK (version 1.3.x)             http://www.fltk.org/
+
+  libiconv                         http://www.gnu.org/software/libiconv/
+
+  libjpeg                          http://www.ijg.org/
+
+  libpng                           http://www.libpng.org/pub/png/libpng.html
+
+  zlib                             http://zlib.net/
+
+  OpenSSL                          http://www.openssl.org/
+  (optional; for HTTPS support)
+
+  CyaSSL                           http://www.yassl.com/yaSSL/Home.html
+  (optional; alternative to OpenSSL)
+
+  libcurl                          http://curl.haxx.se/
+  (optional; for downloads support)
+
+  libunicows                       http://libunicows.sourceforge.net/
+  (required for building on Windows)
+
+  dlfcn-win32                      http://code.google.com/p/dlfcn-win32/
+  (required for building on Windows)
+
+  Nullsoft Scriptable              http://nsis.sourceforge.net/
+    Install System
+  (required for building the Windows installer)
+
+  Nano-X, MicroWindows, NXlib      http://code.google.com/p/
+                                     nanox-microwindows-nxlib-fltk-for-dos/
+  (required for building on DOS)
+
+  Watt-32                          http://home.broadpark.no/~gvanem/
+  (required for building on DOS)
+
+
+3. Building DPlus
+-----------------
+
+The procedure for building DPlus is fairly straightforward.
+Note that in the steps below, "$ " represents the Unix shell prompt:
+
+  1. Unpack the DPlus source archive.
+     If you're reading this file, so far so good.
+
+  2. Generate a ./configure script:
+     $ sh autogen.sh
+
+     Note: DPlus does not include a ./configure script because in testing,
+     I've found scripts generated on one platform or autoconf version rarely
+     work on another platform or autoconf version.  Don't ask me how other
+     projects do it; I'm not an expert on autoconf's black magic.
+
+  3. Configure DPlus:
+     $ ./configure
+
+     The ./configure script accepts a whole bunch of other options; see
+     the section "Configuration Options," below.
+
+  4. Build DPlus:
+     $ make
+
+     This shouldn't take too long, maybe about five minutes on most systems.
+     However, it might take a bit longer if you enabled the Dw test suite or
+     certain debugging options.
+
+If all goes well, the DPlus executable should be located in ./src/dplus (or
+./src/dplus.exe on Windows and DOS).
+
+
+4. Configuration Options
+------------------------
+
+The DPlus ./configure script accepts a lot of options.
+The most useful of these are described below:
+
+  --enable-debug [default: ?]
+      Builds DPlus with additional symbols for debugging in gdb.  This is
+      the default anyway on most systems, but not MinGW and certain others,
+      and adding this option is a good idea when debugging just in case.
+
+  --enable-test [default: disabled]
+      Enables building the Dw test suite along with DPlus itself.  (See the
+      `HACKING' file for more information on Dw.)  This is only useful for
+      developers working on the Dw code; most users do NOT need this.
+
+  --enable-ssl [default: disabled]
+      Builds DPlus with HTTPS support via OpenSSL.
+      This option is mutually exclusive with --enable-cyassl, below.
+
+  --enable-cyassl [default: disabled]
+      Builds DPlus with HTTPS support via CyaSSL.
+      CyaSSL is a lightweight alternative to OpenSSL designed for embedded
+      systems; for size reasons, it is our preferred SSL library on Windows.
+      This option is mutually exclusive with --enable-ssl, above.
+
+  --disable-cookies [default: enabled]
+      Disables all support for cookies.
+
+  --enable-persistent-cookies [default: disabled]
+      Writes cookies to disk rather than keeping them in memory only.
+      This option is only provided for backwards compatibility with Dillo,
+      and is NOT RECOMMENDED because of its significant privacy implications.
+      Honestly I'm not sure why I included it in DPlus in the first place.
+
+  --disable-threaded-dns [default: ?]
+      Builds DPlus without a threaded DNS resolver.  This is the default on
+      Windows and DOS, which do not support threads at all, and really should
+      be the default on other platforms, since BSD and most non-Linux systems
+      do not provide reliable thread support.
+
+  --disable-downloads [default: enabled]
+      Builds DPlus without downloads support.  You'd be crazy to do this,
+      of course, considering that downloading files is one of DPlus's (few)
+      strong suits.  Installing libcurl isn't THAT painful.
+
+  --enable-shared-libcurl [default: disabled]
+      Links DPlus to a shared libcurl (the default is to statically link).
+      This is recommended on Unix systems with a system libcurl package.
+
+  --enable-printer [default: disabled]
+      Builds DPlus with printing support.  Printing in DPlus honestly doesn't
+      work that well, and probably never will, but we enable it in our binary
+      releases anyway because it is sometimes a nice feature to have.
+
+The official Windows binaries are built using
+  $ CFLAGS='-Os' CXXFLAGS='-Os' \
+    ./configure --prefix= --enable-cyassl --enable-printer
+
+
+5. Installing DPlus
+-------------------
+
+On Unix, run `make install' as root:
+  $ sudo make install
+You can then start DPlus by running
+  $ dplus
+
+On Windows, copy the src\dplus.exe executable to any convenient directory
+and run it, or build an installer using the included NSIS script (dplus.nsi).
+
+On DOS, extract the dist\DOSDIST.zip file to C:\DPLUS, then copy the
+src\dplus.exe executable to C:\DPLUS\BIN.  You can start DPlus by running
+C:\DPLUS\DPLUS.BAT.
