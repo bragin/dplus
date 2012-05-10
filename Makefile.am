@@ -3,6 +3,4 @@ if BUILD_TEST
 SUBDIRS += test
 endif
 
-EXTRA_DIST = Doxyfile dplusrc d_size.h
-
-sysconf_DATA = dplusrc
+EXTRA_DIST = Doxyfile d_size.h
