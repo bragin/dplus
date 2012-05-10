@@ -6,7 +6,7 @@
 
 !define VERSION "0.5"
 Name "D+ Browser"
-OutFile "dplus-setup-${VERSION}.exe"
+OutFile "dplus-${VERSION}-setup.exe"
 InstallDir $PROGRAMFILES\DPlus
 InstallDirRegKey HKLM "Software\DPlus" "Install_Dir"
 SetCompressor lzma
