@@ -140,5 +140,4 @@ dplus.res: dplus.rc dplus.ico
 	$(RC) -O coff -o $@ $<
 endif
 
-EXTRA_DIST = chg srch keysrc
-sysconf_DATA = keysrc
+EXTRA_DIST = chg srch
