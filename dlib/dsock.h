@@ -21,6 +21,7 @@ extern "C" {
 
 #ifdef ENABLE_LEGACY_WINSOCK
 #  include <winsock.h>
+#  include <sys/types.h>
 #else
 #  include <winsock2.h>
 #  ifdef DSOCK_TCPIP
