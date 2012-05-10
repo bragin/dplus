@@ -1,4 +1,4 @@
-man_MANS = dillo.1
+man_MANS = dplus.1
 EXTRA_DIST = \
         $(man_MANS) \
 	index.doc \

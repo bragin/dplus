@@ -1,0 +1,72 @@
+.TH dplus 1 "May 11, 2012" "version 0.5" "USER COMMANDS"
+.SH NAME
+dplus \- web browser
+.SH SYNOPSIS
+.B dplus
+.RI [ OPTION ]...
+.RB [ \-\- ]
+.RI [ URL | FILE ]...
+.SH DESCRIPTION
+.PP
+DPlus is a graphical web browser with an emphasis on security, performance,
+and portability.
+.SH OPTIONS
+.TP
+\fB\-f\fR, \fB\-\-fullwindow\fR
+Start in full window mode: hide address bar, navigation buttons, menu, and
+status bar.
+.TP
+\fB\-g\fR, \fB\-\-geometry \fIGEO\fR
+Set initial window position where \fIGEO\fR is
+\fIW\fBx\fIH\fR[{\fB+\-\fR}\fIX\fR{\fB+\-\fR}\fIY\fR].
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Display this help text and exit.
+.TP
+\fB\-l\fR, \fB\-\-local\fR
+Don't load images for these URL(s).
+.TP
+\fB\-v\fR, \fB\-\-version\fR
+Display version info and exit.
+.TP
+\fB\-x\fR, \fB\-\-xid \fIXID\fR
+Open first DPlus window in an existing window whose window ID is \fIXID\fR.
+.SH EXIT STATUS
+.TP
+.B 0
+No error.
+.TP
+.B 1
+Internal error.
+.TP
+.B 2
+Error in command line arguments.
+.SH ENVIRONMENT
+.TP
+.BR "HOME " "(or " "HOMEDRIVE " "and " "HOMEPATH " "on Cygwin)"
+User's home directory.
+.TP
+.B http_proxy
+URL of proxy to send HTTP traffic through.
+.SH FILES
+.TP
+.I ~/.dplus/bookmark.txt
+User bookmarks
+.TP
+.I ~/.dplus/certs/
+Saved certificates for HTTPS.
+.TP
+.I ~/.dplus/cookiesrc
+Cookie settings
+.TP
+.I ~/.dplus/dplusrc
+Configuration file.
+.TP
+.I ~/.dplus/keysrc
+Keybindings.
+.TP
+.I ~/.dplus/style.css
+User style sheet
+.SH SEE ALSO
+.BR D+ Browser homepage:
+.B http://dplus-browser.sourceforge.net/
