@@ -5,8 +5,9 @@
 DPlus is a graphical web browser with an emphasis on security, performance,
 and portability.
 
-It is based on Dillo (http://www.dillo.org/); the name "D+" reflects the
-developer's opinion of the Dillo Project's code quality and organization.
+It is based on Dillo (http://www.dillo.org/); the name "D+" is meant to
+suggest a smaller, yet improved, Dillo.  The name also serves as a concise
+evaluation of the browser's rendering quality.
 
 DPlus currently supports Windows, DOS, OS X, and Unix systems.
 
@@ -63,12 +64,10 @@ Table of Contents
 
   - No support for HTML frames.
 
-  - No support for SSL certificate validation.
+  - No support for SSL certificate validation (we pretend it's by design).
     DO NOT USE DPLUS FOR ONLINE BANKING AND OTHER SENSITIVE TRANSACTIONS.
 
   - No support for FTP and other non-HTTP protocols.
-
-  - Little hope for rendering improvements due to poor code design.
 
 
 3. Compatibility
@@ -76,6 +75,8 @@ Table of Contents
 
   - Microsoft Windows 95, 98, Me, NT 4.0, 2000, XP, Vista, and 7,
     including all x64 versions.
+
+  - Microsoft Windows NT 3.51, using a specialized build.
 
   - DOS and compatible systems (tested mainly on MS-DOS 6.22 and FreeDOS).
 
@@ -102,19 +103,14 @@ have made abundantly clear they are not interested in outside contributions.
 The initial release, DPlus 0.5, is forked from the final Dillo-Win32 3.0p9
 release.  It will essentially be "Dillo-Win32 improved," with a cleaner user
 interface, greater portability, numerous bugfixes, and a less misleading name
-than the original program.  (The renderer, however, is still just as bad.)
+than the original program; only the renderer remains largely untouched.
 
 At the moment there are no plans for long-term development.
 I (Benjamin Johnson) am releasing DPlus because, despite my sworn intention
 never to touch the Dillo code again, I have found it useful and necessary for
-my own purposes to fix a few glaring problems in Dillo-Win32.  I suspect the
-two or three other people who care about these things may find it useful, too.
-
-However, developing a web browser requires planning and commitment, and I
-have neither the time nor interest to make this anything more than a one-off
-release.  Please read through the `HACKING' file before you try to persuade
-me otherwise; nothing short of large quantities of money and/or bass guitars
-will work, anyhow (though those two both work exceedingly well).
+my own purposes to fix a few glaring problems in Dillo-Win32.  However,
+developing a web browser requires planning and commitment, and I have neither
+the time nor interest to make this anything more than a one-off release.
 
 
 5. Building and Installing
@@ -164,6 +160,3 @@ subject to the following copyright terms:
 ----------
 
 Benjamin Johnson <obeythepenguin@users.sourceforge.net>
-
-PLEASE NOTE: I do NOT provide technical support for DPlus; chances are I
-will delete such emails unanswered and unread.
