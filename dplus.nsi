@@ -18,15 +18,12 @@ RequestExecutionLevel highest
 
 !include dist\FileAssociation.nsh
 
-Page license
 Page components
 Page directory
 Page instfiles
 
 UninstPage uninstConfirm
 UninstPage instfiles
-
-LicenseData COPYING
 
 ; ----------------------------------------
 
@@ -41,9 +38,6 @@ Section "!D+ Browser"
 	File src\dplus.exe
 	File src\dplus.exe.manifest
 	File dist\unicows.dll  ; needed on Windows 9x; harmless on others
-
-	File /oname=README.TXT README
-	File /oname=COPYING.TXT COPYING
 
 	WriteRegStr HKLM "Software\DPlus" "Install_Dir" "$INSTDIR"
 
