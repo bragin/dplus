@@ -61,7 +61,7 @@ Section "!D+ Browser"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\DPlus" "UninstallString" "$INSTDIR\uninst.exe"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\DPlus" "NoModify" 1
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\DPlus" "NoRepair" 1
-	WriteUninstaller "uninstall.exe"
+	WriteUninstaller "uninst.exe"
 SectionEnd
 
 Section "Create Start menu shortcut"
