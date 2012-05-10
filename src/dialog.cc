@@ -21,7 +21,9 @@
 
 #include <FL/Fl_Window.H>
 #include <FL/Fl_File_Chooser.H>
-#include <FL/Fl_Native_File_Chooser.H>
+#ifdef ENABLE_NATIVE_DIALOGS
+#  include <FL/Fl_Native_File_Chooser.H>
+#endif
 #include <FL/Fl_Return_Button.H>
 #include <FL/Fl_Text_Display.H>
 #include <FL/Fl_Button.H>
@@ -40,7 +42,9 @@
 /*
  * Local Data
  */
+#ifdef ENABLE_NATIVE_DIALOGS
 static char *fname_str = NULL;
+#endif
 
 //----------------------------------------------------------------------------
 
@@ -80,6 +84,7 @@ const char *a_Dialog_passwd(const char *msg)
 const char *a_Dialog_save_file(const char *msg,
                                const char *pattern, const char *fname)
 {
+#ifdef ENABLE_NATIVE_DIALOGS
    Fl_Native_File_Chooser fc;
    fc.type(Fl_Native_File_Chooser::BROWSE_SAVE_FILE);
 
@@ -91,6 +96,9 @@ const char *a_Dialog_save_file(const char *msg,
    fname_str = fc.show() ? NULL : dStrdup(fc.filename());
 
    return fname_str;
+#else /* ENABLE_NATIVE_DIALOGS */
+   return fl_file_chooser(msg, pattern, fname);
+#endif /* ENABLE_NATIVE_DIALOGS */
 }
 
 /*
@@ -116,6 +124,7 @@ const char *a_Dialog_select_file(const char *msg,
 char *a_Dialog_open_file(const char *msg,
                          const char *pattern, const char *fname)
 {
+#ifdef ENABLE_NATIVE_DIALOGS
    Fl_Native_File_Chooser fc;
    fc.type(Fl_Native_File_Chooser::BROWSE_FILE);
 
@@ -127,6 +136,12 @@ char *a_Dialog_open_file(const char *msg,
    fname_str = fc.show() ? NULL : dStrdup(fc.filename());
 
    return fname_str ? a_Misc_escape_chars(fname_str, "% ") : NULL;
+#else /* ENABLE_NATIVE_DIALOGS */
+   const char *fc_name;
+ 
+   fc_name = fl_file_chooser(msg, pattern, fname);
+   return (fc_name) ? a_Misc_escape_chars(fc_name, "% ") : NULL;
+#endif /* ENABLE_NATIVE_DIALOGS */
 }
 
 /*
