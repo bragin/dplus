@@ -18,14 +18,17 @@ extern "C" {
  */
 #define NOGDI
 #define WIN32_LEAN_AND_MEAN
-#include <winsock2.h>
 
-#ifdef DSOCK_TCPIP
-#  include <ws2tcpip.h>      /* required for low-level TCP/IP operations */
-#endif
-
-#ifdef DSOCK_WSPIAPI
-#  include <wspiapi.h>       /* required for getaddrinfo pre-Windows XP */
+#ifdef ENABLE_LEGACY_WINSOCK
+#  include <winsock.h>
+#else
+#  include <winsock2.h>
+#  ifdef DSOCK_TCPIP
+#     include <ws2tcpip.h>   /* required for low-level TCP/IP operations */
+#  endif
+#  ifdef DSOCK_WSPIAPI
+#     include <wspiapi.h>    /* required for getaddrinfo pre-Windows XP */
+#  endif
 #endif
 
 #define ECONNREFUSED         WSAECONNREFUSED

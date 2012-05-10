@@ -44,6 +44,8 @@ AC_ARG_ENABLE(gif,    [  --disable-gif           Disable support for GIF images]
               enable_gif=$enableval, enable_gif=yes)
 AC_ARG_ENABLE(threaded-dns,[  --disable-threaded-dns  Disable the advantage of a reentrant resolver library],
               enable_threaded_dns=$enableval, enable_threaded_dns=yes)
+AC_ARG_ENABLE(legacy-winsock,[  --enable-legacy-winsock Build using the Windows Sockets 1.1 library],
+              enable_legacy_winsock=$enableval, enable_legacy_winsock=no)
 AC_ARG_ENABLE(downloads,[  --disable-downloads     Disables support for downloads],
               enable_downloads=$enableval, enable_downloads=yes)
 AC_ARG_ENABLE(shared_libcurl,[  --enable-shared-libcurl Build using a shared libcurl (default is static)],
@@ -143,7 +145,11 @@ dnl
 case $target in
   *-*-mingw*)
     dnl Building on MinGW: use Windows sockets
-    LIBS="$LIBS -lws2_32"
+    if test "x$enable_legacy_winsock" = "xyes" ; then
+      LIBS="$LIBS -lwsock32"
+    else
+      LIBS="$LIBS -lws2_32"
+    fi
     enable_threaded_dns=no
     ;;
 
@@ -559,6 +565,9 @@ if test "x$enable_insure" = "xyes" ; then
 fi
 if test "x$enable_threaded_dns" = "xyes" ; then
   CFLAGS="$CFLAGS -DD_DNS_THREADED"
+fi
+if test "x$enable_legacy_winsock" = "xyes" ; then
+  CFLAGS="$CFLAGS -DENABLE_LEGACY_WINSOCK -DENABLE_LEGACY_DNS"
 fi
 if test "x$enable_ssl" = "xyes" ; then
   dnl Note: -DENABLE_OPENSSL is used to display the advertising

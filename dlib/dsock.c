@@ -27,7 +27,11 @@ void a_Sock_init(void)
 {
 #ifdef _WIN32
    WSADATA wsaData;
+#  ifdef ENABLE_LEGACY_WINSOCK
+   int iResult = WSAStartup(MAKEWORD(1,1), &wsaData);
+#  else
    int iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
+#  endif
    if (iResult != NO_ERROR)
       exit(1);
 #endif  /* _WIN32 */

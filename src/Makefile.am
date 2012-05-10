@@ -106,6 +106,7 @@ dplus_SOURCES = \
 	bookmark.hh \
 	dns.c \
 	dns.h \
+	dns_alt.c \
 	gif.c \
 	dgif.h \
 	jpeg.c \

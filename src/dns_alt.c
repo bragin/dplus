@@ -1,5 +1,5 @@
 /*
- * File: dns.c
+ * File: dns_alt.c
  *
  * Copyright (C) 1999-2007 Jorge Arellano Cid <jcid@dillo.org>
  *
@@ -10,11 +10,14 @@
  */
 
 /*
- * Non blocking pthread-handled Dns scheme
+ * This is an alternate DNS implementation for backwards-compatibility with
+ * older systems, mainly Windows 95 and NT 3.51 with Windows Sockets 1.1.
+ * Newer systems should use the implementation in dns.c, which offers better
+ * performance and is IPv6-aware.
  */
 
 
-#ifndef ENABLE_LEGACY_DNS
+#ifdef ENABLE_LEGACY_DNS
 
 
 /*
@@ -219,92 +222,59 @@ void a_Dns_init(void)
 /*
  * Allocate a host structure and add it to the list
  */
-
-static void Dns_note_hosts(Dlist *list, struct addrinfo *res0)
+static void Dns_note_hosts(Dlist *list, int af, struct hostent *host)
 {
-   struct addrinfo *res;
-   DilloHost *dh;
+   int i;
 
-   for (res = res0; res; res = res->ai_next) {
-
-      if (res->ai_family == AF_INET) {
-         struct sockaddr_in *in_addr;
-
-         if (res->ai_addrlen < sizeof(struct sockaddr_in)) {
-            continue;
-         }
-
-         dh = dNew0(DilloHost, 1);
-         dh->af = AF_INET;
-
-         in_addr = (struct sockaddr_in*) res->ai_addr;
-         dh->alen = sizeof (struct in_addr);
-         memcpy(&dh->data[0], &in_addr->sin_addr.s_addr, dh->alen);
-
-         dList_append(list, dh);
-#ifdef ENABLE_IPV6
-      } else if (res->ai_family == AF_INET6) {
-         struct sockaddr_in6 *in6_addr;
-
-         if (res->ai_addrlen < sizeof(struct sockaddr_in6)) {
-            continue;
-         }
-
-         dh = dNew0(DilloHost, 1);
-         dh->af = AF_INET6;
-
-         in6_addr = (struct sockaddr_in6*) res->ai_addr;
-         dh->alen = sizeof (struct in6_addr);
-         memcpy(&dh->data[0], &in6_addr->sin6_addr.s6_addr, dh->alen);
-
-         dList_append(list, dh);
-#endif
-      }
+   if (host->h_length > DILLO_ADDR_MAX)
+      return;
+   for (i = 0; host->h_addr_list[i]; i++) {
+      DilloHost *dh = dNew0(DilloHost, 1);
+      dh->af = af;
+      dh->alen = host->h_length;
+      memcpy(&dh->data[0], host->h_addr_list[i], (size_t)host->h_length);
+      dList_append(list, dh);
    }
 }
 
+#ifdef D_DNS_THREADED
 /*
  *  Server function (runs on its own thread)
  */
 static void *Dns_server(void *data)
 {
+   struct hostent *host;
    int channel = VOIDP2INT(data);
-   struct addrinfo hints, *res0;
-   int error;
-   Dlist *hosts;
-   size_t length, i;
-   char addr_string[40];
+   Dlist *hosts = dList_new(2);
 
-   memset(&hints, 0, sizeof(hints));
-   hints.ai_family = AF_UNSPEC;
-   hints.ai_socktype = SOCK_STREAM;
+   MSG("Dns_server: starting...\n ch: %d host: %s\n",
+       channel, dns_server[channel].hostname);
 
-   hosts = dList_new(2);
-
-   _MSG("Dns_server: starting...\n ch: %d host: %s\n",
-        channel, dns_server[channel].hostname);
-
-   error = getaddrinfo(dns_server[channel].hostname, NULL, &hints, &res0);
-
-   if (error != 0) {
-      dns_server[channel].status = error;
-      if (error == EAI_NONAME)
-         MSG("DNS error: HOST_NOT_FOUND\n");
-      else if (error == EAI_AGAIN)
-         MSG("DNS error: TRY_AGAIN\n");
-#ifdef EAI_NODATA
-      /* Some FreeBSD don't have this anymore */
-      else if (error == EAI_NODATA)
-         MSG("DNS error: NO_ADDRESS\n");
-#endif
-      else if (h_errno == EAI_FAIL)
-         MSG("DNS error: NO_RECOVERY\n");
-   } else {
-      Dns_note_hosts(hosts, res0);
-      dns_server[channel].status = 0;
-      freeaddrinfo(res0);
+#ifdef ENABLE_IPV6
+   if (ipv6_enabled) {
+      host = gethostbyname2(dns_server[channel].hostname, AF_INET6);
+      if (host) {
+         Dns_note_hosts(hosts, AF_INET6, host);
+      }
    }
+#endif
 
+   host = gethostbyname(dns_server[channel].hostname);
+
+   if (!host) {
+      dns_server[channel].status = h_errno;
+      if (h_errno == HOST_NOT_FOUND)
+         MSG("DNS error: HOST_NOT_FOUND\n");
+      else if (h_errno == TRY_AGAIN)
+         MSG("DNS error: TRY_AGAIN\n");
+      else if (h_errno == NO_RECOVERY)
+         MSG("DNS error: NO_RECOVERY\n");
+      else if (h_errno == NO_ADDRESS)
+         MSG("DNS error: NO_ADDRESS\n");
+   } else {
+      dns_server[channel].status = 0;
+      Dns_note_hosts(hosts, AF_INET, host);
+   }
    if (dList_length(hosts) > 0) {
       dns_server[channel].status = 0;
    } else {
@@ -313,24 +283,62 @@ static void *Dns_server(void *data)
    }
 
    /* tell our findings */
-   MSG("Dns_server [%d]: %s is", channel,
-       dns_server[channel].hostname);
-   if ((length = dList_length(hosts))) {
-      for (i = 0; i < length; i++) {
-         a_Dns_dillohost_to_string(dList_nth_data(hosts, i),
-                                   addr_string, sizeof(addr_string));
-         MSG(" %s", addr_string);
-      }
-      MSG("\n");
-   } else {
-      MSG(" (nil)\n");
-   }
+   MSG(5, "Dns_server [%d]: %s is %p\n", channel,
+       dns_server[channel].hostname, hosts);
    dns_server[channel].addr_list = hosts;
    dns_server[channel].ip_ready = TRUE;
 
    return NULL;                 /* (avoids a compiler warning) */
 }
+#endif
 
+#ifndef D_DNS_THREADED
+/*
+ *  Blocking server-function (it doesn't use threads)
+ */
+static void Dns_blocking_server(void)
+{
+   int channel = 0;
+   struct hostent *host = NULL;
+   Dlist *hosts = dList_new(2);
+
+   MSG("Dns_blocking_server: starting...\n");
+   MSG("Dns_blocking_server: dns_server[%d].hostname = %s\n",
+       channel, dns_server[channel].hostname);
+
+#ifdef ENABLE_IPV6
+   if (ipv6_enabled) {
+      host = gethostbyname2(dns_server[channel].hostname, AF_INET6);
+      if (host) {
+         Dns_note_hosts(hosts, AF_INET6, host);
+      }
+   }
+#endif
+
+   host = gethostbyname(dns_server[channel].hostname);
+
+   if (!host) {
+      dns_server[channel].status = h_errno;
+   } else {
+      Dns_note_hosts(hosts, AF_INET, host);
+   }
+   if (dList_length(hosts) > 0) {
+      /* at least one entry on the list is ok */
+      dns_server[channel].status = 0;
+   } else {
+      dList_free(hosts);
+      hosts = NULL;
+   }
+
+   /* write IP to server data channel */
+   MSG("Dns_blocking_server: IP of %s is %p\n",
+       dns_server[channel].hostname, hosts);
+   dns_server[channel].addr_list = hosts;
+   dns_server[channel].ip_ready = TRUE;
+
+   MSG("Dns_blocking_server: leaving...\n");
+}
+#endif
 
 /*
  *  Request function (spawn a server and let it handle the request)
@@ -363,7 +371,7 @@ static void Dns_server_req(int channel, const char *hostname)
    pthread_create(&dns_server[channel].th1, &thrATTR, Dns_server,
                   INT2VOIDP(dns_server[channel].channel));
 #else
-   Dns_server(0);
+   Dns_blocking_server();
 #endif
 }
 
@@ -511,18 +519,11 @@ void a_Dns_freeall(void)
  */
 void a_Dns_dillohost_to_string(DilloHost *host, char *dst, size_t size)
 {
-   struct sockaddr_in sa_host;
-   sa_host.sin_family = host->af;
-   memcpy(&sa_host.sin_addr, host->data, host->alen);
+   struct in_addr in_addr;
+   memcpy(&in_addr, host->data, host->alen);
 
-   switch (getnameinfo((struct sockaddr*)&sa_host, sizeof(sa_host),
-                       dst, size, NULL, 0, NI_NUMERICHOST)) {
-      case EAI_FAMILY:
-         snprintf(dst, size, "Unknown address family");
-      case EAI_MEMORY:
-         snprintf(dst, size, "Buffer too small");
-   }
+   strncpy(dst, inet_ntoa(in_addr), size);
 }
 
 
-#endif /* !ENABLE_LEGACY_DNS */
+#endif /* ENABLE_LEGACY_DNS */
