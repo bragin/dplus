@@ -36,7 +36,6 @@ Section "!D+ Browser"
 
 	SetOutPath $INSTDIR
 	File src\dplus.exe
-	File src\dplus.exe.manifest
 	File dist\unicows.dll  ; needed on Windows 9x; harmless on others
 
 	WriteRegStr HKLM "Software\DPlus" "Install_Dir" "$INSTDIR"
