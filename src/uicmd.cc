@@ -14,6 +14,7 @@
 
 #include <stdio.h>
 #include <stdarg.h>
+#include <string.h>     /* for strchr, strrchr */
 #include <math.h>       /* for rint */
 
 #include <FL/Fl.H>
