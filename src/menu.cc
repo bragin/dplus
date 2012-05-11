@@ -79,7 +79,7 @@ static void filemenu_cb(Fl_Widget*, void *data)
  */
 static void searchmenu_cb(Fl_Widget*, void *data)
 {
-   prefs.search_url_idx = (int)data;
+   prefs.search_url_idx = *((int *) data);
 }
 
 
