@@ -817,10 +817,6 @@ static char *UIcmd_make_save_filename(const char *pathstr)
       if (strlen(++name) > MaxLen) {
          name = name + strlen(name) - MaxLen;
       }
-      /* Remove '?' and trailing cruft from the filename */
-      if ((n = strchr(pathstr, '?'))) {
-         *n = 0;
-      }
       /* Replace %20 and ' ' with '_' in Filename */
       o = n = FileName = dStrdup(name);
       for (int i = 0; o[i]; i++) {
@@ -829,6 +825,10 @@ static char *UIcmd_make_save_filename(const char *pathstr)
                 i+=2, '_' : o[i];
       }
       *n = 0;
+      /* Remove '?' and trailing cruft from the filename */
+      if ((n = strchr(FileName, '?'))) {
+         *n = 0;
+      }
    } else {
       FileName = dStrdup(pathstr);
    }
