@@ -6,8 +6,15 @@ This ChangeLog provides a broad overview of changes between releases.
 Please see the Mercurial commit log for more specific details.
 
 
-Version 0.5 (not released yet)
-------------------------------
+Version 0.5a (June 12, 2012)
+----------------------------
+
+General:
+- Moved the Windows 9x profile directory to %windir%\Application Data\DPlus.
+
+
+Version 0.5 (May 11, 2012)
+--------------------------
 
 General:
 - Initial release (forked from Dillo-3.0).
