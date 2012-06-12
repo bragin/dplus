@@ -40,6 +40,12 @@ Section "!D+ Browser"
 
 	WriteRegStr HKLM "Software\DPlus" "Install_Dir" "$INSTDIR"
 
+	; Workaround for users upgrading from dplus-0.5 on Windows 9x.
+	; Move the profile dir from %windir% to %windir%\Application Data.
+	IfFileExists "$windir\DPlus\*.*" 0 +3
+	CreateDirectory "$windir\Application Data"
+	Rename "$windir\DPlus" "$windir\Application Data\DPlus"
+
 	; Make DPlus a valid browser choice for the Windows XP+ start menu
 	; FIXME: This doesn't currently appear to work -- does anyone know why?
 	WriteRegStr HKLM "Software\Clients\StartMenuInternet\dplus.exe\DefaultIcon" "" '"$INSTDIR\dplus.exe",0'
