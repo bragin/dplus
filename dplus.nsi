@@ -4,7 +4,7 @@
 ;
 ; ---------------------------------------------------------------------------
 
-!define VERSION "0.5"
+!define VERSION "0.5a"
 Name "D+ Browser"
 OutFile "dplus-${VERSION}-setup.exe"
 InstallDir $PROGRAMFILES\DPlus
