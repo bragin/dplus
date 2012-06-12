@@ -913,8 +913,9 @@ char *dGetprofdir ()
          else if (getenv("HOMEDRIVE") && getenv("HOMEPATH"))
             profdir = dStrconcat(getenv("HOMEDRIVE"), getenv("HOMEPATH"),
                                  "/Application Data/DPlus", NULL);
-         else if (getenv("windir")) /* fallback for Windows 95/98/Me */
-            profdir = dStrconcat(getenv("windir"), "/DPlus", NULL);
+         else if (getenv("windir"))
+            profdir = dStrconcat(getenv("windir"),
+                                 "/Application Data/DPlus", NULL);
          else /* this should never happen */
             profdir = dStrconcat(dGethomedir(), "/.dplus", NULL);
       }
