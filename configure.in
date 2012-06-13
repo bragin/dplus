@@ -347,6 +347,10 @@ if test "x$enable_cyassl" = "xyes"; then
       LDFLAGS="$LDFLAGS -L/mingw/cyassl/lib"
       CPPFLAGS="$CPPFLAGS -I/mingw/cyassl/include"
       ;;
+    *-*-*djgpp*)
+      LDFLAGS="$LDFLAGS -L/dev/env/DJDIR/cyassl/lib"
+      CPPFLAGS="$CPPFLAGS -I/dev/env/DJDIR/cyassl/include"
+      ;;
   esac
 
   AC_CHECK_HEADER(openssl/ssl.h, cyassl_ok=yes, cyassl_ok=no)
