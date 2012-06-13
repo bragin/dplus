@@ -11,6 +11,7 @@ Version 0.5a (June 12, 2012)
 
 General:
 - Moved the Windows 9x profile directory to %windir%\Application Data\DPlus.
+- Build the MS-DOS version using CyaSSL rather than OpenSSL.
 
 
 Version 0.5 (May 11, 2012)
