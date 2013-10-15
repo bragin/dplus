@@ -6,6 +6,15 @@ This ChangeLog provides a broad overview of changes between releases.
 Please see the Mercurial commit log for more specific details.
 
 
+Version 0.5b (October 15, 2013)
+-------------------------------
+
+General:
+- No changes to the browser source. However, the FLTK library on Windows
+  and MS-DOS has been patched to not create its own preferences directory,
+  which would disqualify DPlus from most "portable application" listings.
+
+
 Version 0.5a (June 12, 2012)
 ----------------------------
 

@@ -11,12 +11,12 @@ BEGIN
     BEGIN
       VALUE "CompanyName", "Benjamin Johnson"
       VALUE "FileDescription", "D+ Browser"
-      VALUE "FileVersion", "0.5a"
+      VALUE "FileVersion", "0.5b"
       VALUE "InternalName", "DPlus"
       VALUE "LegalCopyright", "GNU GPL v3"
       VALUE "OriginalFilename", "dplus.exe"
       VALUE "ProductName", "D+ Browser"
-      VALUE "ProductVersion", "0.5a"
+      VALUE "ProductVersion", "0.5b"
     END
   END
 
